@@ -1,0 +1,4 @@
+[[redirects]]
+from = "/booking-complete"
+to = "/booking-complete"
+status = 200
