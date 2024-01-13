@@ -1,25 +1,24 @@
 name: Deploy
 
-# Trigger the workflow on push and
-# pull request events on the master branch
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
-# Authenticate to the the server via ssh
-# and run our deployment script
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to Server
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
         uses: vakratundsolutions2/P2CARE@main
         with:
+          node-version: '14.x'
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: "cd /root/P2CARE && ./.script/deploy.sh"
+          
