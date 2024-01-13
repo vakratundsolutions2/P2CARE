@@ -34,7 +34,7 @@ mongoose
   .catch((error) => {
     console.log(error.message);
   });
-
+//test comment for CD
 // const generateSecretKey = () => {
 //   return crypto.randomBytes(32).toString("hex");
 // };
