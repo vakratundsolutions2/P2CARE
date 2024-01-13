@@ -26,10 +26,9 @@ const {reviewHosptialRouter}=require("./routes/reviewHospital")
  const mongoose = require("mongoose");
 require("dotenv").config();
 // const PORT = process.env.PORT ;
+const uri=`${process.env.mongoUrl}`;
 mongoose
-  .connect(
-    
-      `mongodb+srv://sohebs5050:sohebs5050@cluster0.wdmot5y.mongodb.net/blog?retryWrites=true&w=majority`
+  .connect(uri
   )
   .then(() => console.log("Connected!"))
   .catch((error) => {
@@ -94,6 +93,9 @@ app.use(function (req, res, next) {
 //   console.log(`listening on port ${PORT}`);
 // });
 
+/*app.get('/ur',(req,res)=>{
+res.send(req.url);
+});*/
 
 
 // error handler

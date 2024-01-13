@@ -72,11 +72,11 @@ const DoctorList = () => {
   useEffect(() => {
     if (search) {
       axios
-        .get(`http://localhost:3001/doctor/searchdoctor/${search}`)
+        .get(`${baseUrl}doctor/searchdoctor/${search}`)
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`http://localhost:3001/doctor/alldoctor`)
+        .get(`${baseUrl}doctor/alldoctor`)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search, delDoc]);

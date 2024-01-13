@@ -1,1 +1,2 @@
-export const baseUrl = "http://localhost:3001/";
+export const baseUrl = "https://api.vakratundsolutions.in/";
+//"http://localhost:3001/";
