@@ -35,7 +35,7 @@ mongoose
     console.log(error.message);
   });
 
-//test comment 2 for CD on VPS
+
 // const generateSecretKey = () => {
 //   return crypto.randomBytes(32).toString("hex");
 // };
