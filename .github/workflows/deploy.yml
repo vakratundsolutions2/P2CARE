@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
-        uses: vakratundsolutions2/P2CARE@main
+        uses: actions/setup-node@v1
         with:
           node-version: '14.x'
           host: ${{ secrets.HOST }}
