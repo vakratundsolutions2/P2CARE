@@ -596,6 +596,78 @@ input[type=text], input[type=password] {
   appearance: none;
 }
 
+
+/* Header.css */
+.header {
+  background-color: #333;
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 1.5rem;
+}
+
+.main-menu-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav {
+  list-style: none;
+  display: flex;
+}
+
+.main-nav li {
+  margin: 0 15px;
+}
+
+.menu-btn {
+  display: none;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .main-menu-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
+    background-color: #1CA39C;
+  }
+
+  .main-nav.mobile {
+    display: flex;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 input, button, a {
   -webkit-transition: all 0.4s ease;
   -ms-transition: all 0.4s ease;
@@ -9983,7 +10055,7 @@ html.menu-opened body {
 }
 
 .doc-content {
-  padding: 20px;
+  padding: 10px;
 }
 @media (max-width: 767.98px) {
   .doc-content {
@@ -19921,6 +19993,7 @@ a.mute-video.stop {
   margin-bottom: 0;
   max-width: 180px;
   text-align: center;
+  justify-content: center;
 }
 .main-wrapper.home-ten .specialities-section-one .specialities-block ul li .specialities-img {
   padding-bottom: 18px;

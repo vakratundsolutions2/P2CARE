@@ -4,30 +4,35 @@ import { IoArrowBack } from "react-icons/io5";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addServiceCategory, allServiceCategory, resetState, updateServiceCategory } from "../../features/serviceCategory/sCategorySlice";
+import { addServiceCategory, getAServiceCategory, resetState, updateServiceCategory } from "../../features/serviceCategory/sCategorySlice";
 
 const AddServiceCategory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const sCategory = useSelector((state) => state?.sCategory?.sCategories);
-
   const catId = location.pathname.split("/")[3];
 
-  useEffect(() => {
-    dispatch(allServiceCategory());
-    dispatch(resetState());
-  }, []);
 
-  const updateData = sCategory?.filter((e) => {
-    return e._id === catId;
-  });
+  useEffect(() => {
+    if (catId !== undefined || "") {
+      dispatch(getAServiceCategory(catId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [catId]);
+
+  const sCategory = useSelector((state) => state?.sCategory);
+  const {SingleData} = sCategory
+
+
+  
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      Name: updateData ? updateData[0]?.Name : "",
-      ForService: updateData ? updateData[0]?.ForService : "",
-      Icon: updateData ? updateData[0]?.Icon : "",
-      status: updateData ? updateData[0]?.status : "",
+      Name: SingleData?.Name ||"",
+      ForService: SingleData?.ForService || "",
+      Icon: SingleData?.Icon || "",
+      status: SingleData?.status || "",
     },
 
     onSubmit: async (values) => {
@@ -39,8 +44,14 @@ const AddServiceCategory = () => {
       formData.append("ForService", ForService);
       if (catId === undefined || "") {
         dispatch(addServiceCategory(formData));
+           setTimeout(() => {
+             dispatch(resetState());
+           }, 300);
       } else {
         dispatch(updateServiceCategory({ id: catId, formData: formData }));
+           setTimeout(() => {
+             dispatch(resetState());
+           }, 300);
       }
     },
   });

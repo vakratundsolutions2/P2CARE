@@ -5,9 +5,16 @@ import toast from "react-hot-toast";
 
 
 
-export const getPatients = createAsyncThunk("patient/get-patient", async (thunkAPI) => {
+export const getPatients = createAsyncThunk("patient/get-patients", async (thunkAPI) => {
   try {
     return await patientService.getPatient();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+export const getAPatient = createAsyncThunk("patient/get-patient", async (id,thunkAPI) => {
+  try {
+    return await patientService.getAPatient(id);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -48,7 +55,7 @@ export const deleteAPatient = createAsyncThunk(
   );
   
 const initialState = {
-//  patient:[],
+ Patients:[],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -104,9 +111,8 @@ export const patientSlice = createSlice({
         state.isSuccess = true;
         state.message = action.payload.message;
         state.newPatient = action.payload?.data;
-        if(state.isSuccess === true){
-
-          toast.success('Patient Added successfully')
+        if (state.isSuccess === true) {
+          toast.success("Patient Added successfully");
         }
       })
       .addCase(createAPatient.rejected, (state, action) => {
@@ -130,7 +136,25 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.message = action.error;
-      });
+      })
+      .addCase(getAPatient.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAPatient.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.SingleData = action.payload?.data;
+      })
+      .addCase(getAPatient.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(resetState, () => initialState);
+
+
      
   },
 });

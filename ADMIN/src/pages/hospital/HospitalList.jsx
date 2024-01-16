@@ -70,11 +70,11 @@ const HospitalList = () => {
   useEffect(() => {
     if (search) {
       axios
-        .get(`http://localhost:3001/hospital/searchhospital/${search}`)
+        .get(`${baseUrl}hospital/searchhospital/${search}`)
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`http://localhost:3001/hospital/allhospital`)
+        .get(`${baseUrl}hospital/allhospital`)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search, delId]);

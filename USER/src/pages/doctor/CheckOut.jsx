@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
+import { getADoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
 import { getPatients } from "../../features/patient/patientSlice";
 import { useFormik } from "formik";
@@ -17,36 +17,38 @@ const CheckOut = () => {
   const doctorID = data.split("&")[0].split("=")[1];
   // console.log(date);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getAllDoctors());
+    if (doctorID !== undefined) {
+      dispatch(getADoctor(doctorID));
+    } else {
+      dispatch(resetState());
+    }
+  }, [doctorID]);
+  useEffect(() => {
+
     dispatch(resetState());
     dispatch(getPatients());
   }, []);
 
-  const DoctorState = useSelector((state) => state?.doctor?.allDoctors);
-  const USERState = useSelector((state) => state.auth?.user?.data?.user);
-  console.log(USERState);
-  const DOC = DoctorState?.filter((e) => {
-    return e?._id === doctorID;
-  });
+  const DoctorState = useSelector((state) => state?.doctor);
+  const  {SingleData} = DoctorState
+  const USERState = useSelector((state) => state.auth?.user?.user);
+  
 
-  console.log(DOC);
-  const DOCTOR = DOC[0];
 
-  console.log(DOCTOR);
+
   console.log(USERState);
 
   const formik = useFormik({
     initialValues: {
-      doctor: DOCTOR?._id,
+      doctor: SingleData?._id,
       date: date,
       time: time,
       user: USERState?._id,
       name: USERState?.Name,
       email: USERState?.Email,
       gender: "",
-      transactionid:'',
+      transactionid: "",
       // Amount: DOCTOR?.price,
     },
     // validationSchema: schema,
@@ -288,7 +290,7 @@ const CheckOut = () => {
                           <button
                             type="submit"
                             className="btn btn-primary submit-btn"
-                            onClick={() => checkoutHandler(DOCTOR.price)}
+                            onClick={() => checkoutHandler(SingleData?.price)}
                           >
                             Confirm and Pay
                           </button>
@@ -310,15 +312,20 @@ const CheckOut = () => {
                   <div className="card-body">
                     {/* <!-- Booking Doctor Info --> */}
                     <div className="booking-doc-info">
-                      <a href="doctor-profile.html" className="booking-doc-img">
+                      <Link
+                        to={`/doctor-profile/${SingleData?._id}`}
+                        className="booking-doc-img"
+                      >
                         <img
-                          src={`${baseUrl}doctor/${DOCTOR?.image}`}
+                          src={`${baseUrl}doctor/${SingleData?.image}`}
                           alt="User Image"
                         />
-                      </a>
+                      </Link>
                       <div className="booking-info">
                         <h4>
-                          <a href="doctor-profile.html">{DOCTOR.doctorName}</a>
+                          <Link to={`/doctor-profile/${SingleData?._id}`}>
+                            {SingleData?.doctorName}
+                          </Link>
                         </h4>
                         <div className="rating">
                           <i className="fas fa-star filled"></i>
@@ -333,7 +340,7 @@ const CheckOut = () => {
                         <div className="clinic-details">
                           <p className="doc-location">
                             <i className="fas fa-map-marker-alt"></i>{" "}
-                            {DOCTOR.location}
+                            {SingleData?.location}
                           </p>
                         </div>
                       </div>
@@ -352,7 +359,7 @@ const CheckOut = () => {
                         </ul>
                         <ul className="booking-fee">
                           <li>
-                            Consulting Fee <span>{DOCTOR?.price}</span>
+                            Consulting Fee <span>{SingleData?.price}</span>
                           </li>
                           {/* <li>
                             Booking Fee <span>$10</span>
@@ -366,7 +373,7 @@ const CheckOut = () => {
                             <li>
                               <span>Total</span>
                               <span className="total-cost">
-                                {DOCTOR?.price}
+                                {SingleData?.price}
                               </span>
                             </li>
                           </ul>

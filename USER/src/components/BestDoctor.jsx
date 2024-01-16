@@ -20,10 +20,9 @@ const BestDoctor = () => {
 
       useEffect(() => {
         dispatch(getAllDoctors());
-        // dispatch(GetAllAvailable());
-        // dispatch(allDoctorCategory());
+        
       }, []);
-        const Doctor = useSelector((state) => state.doctor?.allDoctors);
+        const Doctor = useSelector((state) => state.doctor?.doctors);
         const DoctorState = Doctor?.slice(0, 4);
 
         console.log(DoctorState);

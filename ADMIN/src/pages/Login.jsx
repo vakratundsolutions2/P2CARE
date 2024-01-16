@@ -7,7 +7,7 @@ import { IoMail } from "react-icons/io5";
 import * as yup from "yup";
 import CustomInput from "../components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { login, resetState } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 let schema = yup.object().shape({
@@ -34,6 +34,7 @@ const Login = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       dispatch(login(values));
+      dispatch(resetState())
     },
   });
 

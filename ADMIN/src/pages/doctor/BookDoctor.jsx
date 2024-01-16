@@ -10,6 +10,7 @@ import {
   addtime,
   alltime,
   deletetime,
+  getAtime,
   resetState,
   updatetime,
 } from "../../features/time/timeSlice";
@@ -18,29 +19,30 @@ import moment from "moment";
 import dayjs from "dayjs";
 
 const BookDoctor = () => {
+  const TimeId = location.pathname.split("/")[3];
   const [TIME, setTIME] = useState([])
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const timeState = useSelector((state) => state.time.AllTimes);
-  const TimeId = location.pathname.split("/")[3];
-
+  const timeState = useSelector((state) => state.time);
+  const { SingleData } = timeState;
   useEffect(() => {
-    dispatch(alltime());
-    dispatch(resetState());
-  }, []);
+    if (TimeId !== undefined || '') {
+      dispatch(getAtime(TimeId));
+      dispatch(resetState());
+    } else {
+      dispatch(resetState());
+    }
+  }, [TimeId]);
 
-  const updateData = timeState?.filter((e) => {
-    return e._id === TimeId;
-  });
-  // console.log(updateData[0].Time[0]);
+ 
+
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues: {
-      Time:
-        updateData ? updateData[0].Time : "",
-      
-      
-      status: updateData ? updateData[0]?.status : "",
+      Time: SingleData?.Time || "",
+
+      status: SingleData?.status || "",
     },
 
     onSubmit: (values) => {
@@ -52,7 +54,7 @@ const BookDoctor = () => {
         dispatch(updatetime({ id: TimeId, formData: values }));
         dispatch(resetState());
       }
-      console.log(TIME);
+      
     },
   });
 

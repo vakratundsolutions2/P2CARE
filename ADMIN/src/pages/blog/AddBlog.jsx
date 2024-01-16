@@ -4,7 +4,13 @@ import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAllBlogCategory } from "../../features/blogCategory/BlogCategorySlice";
-import { AddBlogs, UpdateBlog } from "../../features/blog/blogSlice";
+import {
+  AddBlogs,
+  GetABlog,
+  UpdateBlog,
+  resetState,
+} from "../../features/blog/blogSlice";
+import { useLocation } from "react-router-dom";
 
 let schema = yup.object().shape({
   title: "",
@@ -16,38 +22,50 @@ let schema = yup.object().shape({
   metatitle: "",
 });
 const AddBlog = () => {
+  const location = useLocation();
+  const blogId = location.pathname.split("/")[3];
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (blogId !== undefined) {
+      dispatch(GetABlog(blogId));
+      dispatch(resetState());
+    } else {
+      dispatch(resetState());
+    }
+  }, [blogId]);
+
   useEffect(() => {
     dispatch(GetAllBlogCategory());
+    dispatch(resetState());
   }, []);
 
   const AllCategory = useSelector(
     (state) => state.blogCategory?.BlogCategories
   );
-  const AllBlogs = useSelector((state) => state.blog.AllBlogs);
+  const BlogState = useSelector((state) => state.blog);
+  const { SingleBlog } = BlogState;
 
-  const blogId = location.pathname.split("/")[3];
-  const updateData = AllBlogs?.filter((e) => {
-    return e._id === blogId;
-  });
-  console.log(updateData);
+  console.log(SingleBlog);
 
   const formik = useFormik({
+    enableReinitialize: true,
+
     initialValues: {
-      title: updateData ? updateData[0]?.title : "",
-      blogcontent: updateData ? updateData[0]?.blogcontent : "",
-      author: updateData ? updateData[0]?.author : "",
-      slug: updateData ? updateData[0]?.slug : "",
-      blogtags: updateData ? updateData[0]?.blogtags : "",
-      metatag: updateData ? updateData[0]?.metatag : "",
-      metatitle: updateData ? updateData[0]?.metatitle : "",
-      ogmetatitle: updateData ? updateData[0]?.ogmetatitle : "",
-      metadescription: updateData ? updateData[0]?.metadescription : "",
-      ogmetadescription: updateData ? updateData[0]?.ogmetadescription : "",
-      blogimage: updateData ? updateData[0]?.blogimage : "",
-      ogmetaimage: updateData ? updateData[0]?.ogmetaimage : "",
-      category: updateData ? updateData[0]?.category : "",
-      status: updateData ? updateData[0]?.status : "",
+      title: SingleBlog?.title || "",
+      blogcontent: SingleBlog?.blogcontent || "",
+      author: SingleBlog?.author || "",
+      slug: SingleBlog?.slug || "",
+      blogtags: SingleBlog?.blogtags || "",
+      metatag: SingleBlog?.metatag || "",
+      metatitle: SingleBlog?.metatitle || "",
+      ogmetatitle: SingleBlog?.ogmetatitle || "",
+      metadescription: SingleBlog?.metadescription || "",
+      ogmetadescription: SingleBlog?.ogmetadescription || "",
+      blogimage: SingleBlog?.blogimage || "",
+      ogmetaimage: SingleBlog?.ogmetaimage || "",
+      category: SingleBlog?.category || "",
+      status: SingleBlog?.status || "",
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -85,7 +103,11 @@ const AddBlog = () => {
 
       if (blogId === undefined || "") {
         dispatch(AddBlogs(formData));
-      }else{
+        formik.resetForm();
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      } else {
         dispatch(UpdateBlog({ id: blogId, formData: formData }));
       }
     },

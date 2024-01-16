@@ -13,6 +13,11 @@ const getDoctors = async () => {
 
   return res.data;
 };
+const getADoctor = async (id) => {
+  const res = await axios.get(`${baseUrl}doctor/searchdoctorbyid/${id}`, config);
+
+  return res.data;
+};
 
 const deleteDoctor = async (id) => {
   const response = await axios.delete(
@@ -35,6 +40,7 @@ const doctorService = {
   getDoctors,
   deleteDoctor,
   updateDoctor,
+  getADoctor,
 };
 
 export default doctorService;

@@ -25,11 +25,12 @@ const AssignDoctor = () => {
 
     dispatch(resetState());
   }, []);
-  const HospitalState = useSelector((state) => state.hospital.AllHospitals);
+  const HospitalState = useSelector((state) => state.hospital.hospitals);
   const dCategory = useSelector((state) => state?.dCategory?.dCategories);
-  const allDoctors = useSelector((state) => state?.doctor?.allDoctors);
+  const allDoctors = useSelector((state) => state?.doctor?.doctors);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       hospital: "",
       doctor: "",

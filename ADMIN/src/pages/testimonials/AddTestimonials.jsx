@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AddTestimonial, GetAllTestimonial, UpdateTestimonial, resetState } from "../../features/testimonial/testimonialSlice";
+import { AddTestimonial, GetATestimonial, GetAllTestimonial, UpdateTestimonial, resetState } from "../../features/testimonial/testimonialSlice";
 import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 
@@ -11,25 +11,27 @@ const AddTestimonials = () => {
   const navigate = useNavigate();
   const testimonialId = location.pathname.split("/")[3];
 
-
-  const testimonialState = useSelector((state) => state?.testimonial?.AllTestimonials);
-
-
-  useEffect(() => {
-    dispatch(GetAllTestimonial());
+useEffect(() => {
+  if (testimonialId !== undefined || "") {
+    dispatch(GetATestimonial(testimonialId));
+  } else {
     dispatch(resetState());
-  }, []);
+  }
+}, [testimonialId]);
 
-  const updateData = testimonialState?.filter((e) => {
-    return e._id === testimonialId;
-  });
+  const testimonialState = useSelector((state) => state?.testimonial);
+  const { SingleData} = testimonialState
+
+
+
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: updateData ? updateData[0]?.name : "",
-      designation: updateData ? updateData[0]?.designation : "",
-      description: updateData ? updateData[0]?.description : "",
-      image: updateData ? updateData[0]?.image : "",
+      name: SingleData?.name || "",
+      designation:SingleData?.designation || "",
+      description: SingleData?.description || "",
+      image: SingleData?.image || "",
     },
 
     onSubmit: (values) => {

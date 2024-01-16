@@ -9,7 +9,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
-  const USER = useSelector((state)=>state.auth.user.data.user) 
+  const USER = useSelector((state)=>state?.auth?.admin?.ADMIN?.user) 
   
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -169,7 +169,7 @@ const MainLayout = () => {
                     label: "All Blogs",
                   },
                   {
-                    key: "blog-cat",
+                    key: "blog-category-list",
                     label: "Category",
                   },
                   {
@@ -215,8 +215,8 @@ const MainLayout = () => {
                 pointAtCenter: true,
               }}
             >
-              <Button className="px-4 mx-5">
-                 {USER?.Username}{" "}
+              <Button className="px-4 mx-5 btn-primary ">
+                {USER?.Username}{" "}
               </Button>
             </Dropdown>
             {/* <nav className="navbar navbar-expand-lg d-flex align-items-center ">

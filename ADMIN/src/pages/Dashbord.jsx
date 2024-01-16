@@ -20,10 +20,10 @@ const Dashboard = () => {
   
   
   const patientState = useSelector((state) =>state.patient?.Patients)
-  const doctorState = useSelector((state) => state?.doctor?.allDoctors);
-  const hospitalState = useSelector((state) => state?.hospital?.AllHospitals);
+  const doctorState = useSelector((state) => state?.doctor?.doctors);
+  const hospitalState = useSelector((state) => state?.hospital?.hospitals);
   const serviceState = useSelector((state) => state?.service?.Services);
-  const blogState = useSelector((state) => state?.blog?.AllBlogs);
+  const blogState = useSelector((state) => state?.blog?.blogs);
   return (
     <div className="dashbord">
       <h3 className="mb-4 title">Dashboard</h3>

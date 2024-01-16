@@ -6,13 +6,13 @@ import { GetAllBlogs, resetState } from "../../features/blog/blogSlice";
 import { baseUrl } from "../../utils/baseUrl";
 
 const BlogList = () => {
-  const blogState = useSelector((state)=>state.blog.AllBlogs)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(GetAllBlogs());
     dispatch(resetState());
     
   }, [])
+  const blogState = useSelector((state)=>state.blog.blogs)
   console.log(blogState);  
 
   return (
@@ -36,7 +36,7 @@ const BlogList = () => {
                       <div className="col-md-6 col-sm-12" key={i}>
                         <div className="blog grid-blog">
                           <div className="blog-image">
-                            <Link to="/blog-details">
+                            <Link to={`/blog-details/${e?._id}`}>
                               <img
                                 className="img-fluid"
                                 src={`${baseUrl}blog/${e?.blogimage}`}

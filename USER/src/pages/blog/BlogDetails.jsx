@@ -1,7 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { GetABlog, resetState } from "../../features/blog/blogSlice";
 
 function BlogDetails() {
+
+  const location = useLocation();
+  const blogId = location.pathname.split("/")[2];
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (blogId !== undefined) {
+      dispatch(GetABlog(blogId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [blogId]);
+ const BlogState = useSelector((state) => state.blog);
+ const { SingleBlog } = BlogState;
+ console.log(SingleBlog);
+
   return (
     <>
       <BreadCrum location={"Blog Details "} heading={'Blog Details'} />

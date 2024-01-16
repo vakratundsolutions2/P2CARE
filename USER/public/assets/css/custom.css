@@ -552,6 +552,44 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 14px !important;
 }
 
+/* Add these styles to your CSS file or style tag */
+.specialities-carousel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.specialities-item {
+  text-align: center;
+  padding: 15px;
+}
+
+/* Adjust the styles for larger screens */
+@media (min-width: 768px) {
+  .specialities-carousel-wrapper {
+    max-width: 80%;
+    margin: 15px 10px; /* Center the container */
+   
+
+  }
+}
+
+/* Adjust the styles for smaller screens */
+@media (max-width: 576px) {
+  .specialities-carousel-wrapper {
+    max-width: 100%;
+    margin: 0 auto; /* Center the container */
+  }
+
+  .specialities-item {
+    padding: 10px;
+  }
+}
+
+
+
+
+
 .material-icons {
   font-family: "Material Icons";
   font-weight: normal;
@@ -9608,6 +9646,9 @@ html.menu-opened body {
   background-color: #ffffff;
   margin: 0;
   padding: 80px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 @media (max-width: 991.98px) {
   .specialities-section-one {
@@ -9629,6 +9670,8 @@ html.menu-opened body {
 .specialities-section-one .specialities-slider-one .owl-item img {
   width: auto;
 }
+
+
 .specialities-section-one .specialities-item {
   background: #ffffff;
   border: 1px solid #E6E6E6;
@@ -9640,6 +9683,8 @@ html.menu-opened body {
   -webkit-transition: 0.7s;
   -ms-transition: 0.7s;
   transition: 0.7s;
+
+  
 }
 .specialities-section-one .specialities-item:hover {
   background: #ffffff;
@@ -9982,7 +10027,7 @@ html.menu-opened body {
 }
 
 .doc-content {
-  padding: 20px;
+  padding: 10px;
 }
 @media (max-width: 767.98px) {
   .doc-content {
@@ -19876,6 +19921,8 @@ a.mute-video.stop {
     margin: 0 0 40px;
   }
 }
+
+
 .main-wrapper.home-ten .specialities-section-one .specialities-block ul li:last-child {
   margin-right: 0;
 }

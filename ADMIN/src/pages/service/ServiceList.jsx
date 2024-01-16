@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import CustomModal from "../../components/CustomModal";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { baseUrl } from "../../utils/baseUrl";
 
 const columns = [
   {
@@ -57,11 +58,11 @@ const ServiceList = () => {
   useEffect(() => {
     if (search) {
       axios
-        .get(`http://localhost:3001/service/searchservice/${search}`)
+        .get(`${baseUrl}service/searchservice/${search}`)
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`http://localhost:3001/service/allservice`)
+        .get(`${baseUrl}service/allservice`)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search, delId]);

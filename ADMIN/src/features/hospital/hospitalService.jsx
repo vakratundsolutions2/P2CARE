@@ -20,6 +20,15 @@ const allHospital = async () => {
 
   return res.data;
 };
+const getAHospital = async (id) => {
+  const res = await axios.get(
+    `${baseUrl}hospital/searchhospitalbyid/${id}`,
+
+    config
+  );
+
+  return res.data;
+};
 const deleteHospital = async (id) => {
   const res = await axios.delete(
     `${baseUrl}hospital/deletehospital/${id}`,
@@ -45,5 +54,6 @@ const hospitalService = {
   allHospital,
   uppdateHospital,
   deleteHospital,
+  getAHospital,
 };
 export default hospitalService;

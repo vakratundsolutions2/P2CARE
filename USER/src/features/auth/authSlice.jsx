@@ -1,8 +1,8 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
 import toast from "react-hot-toast";
-const getUserLocalStorage = localStorage.getItem("user")
-? JSON.parse(localStorage.getItem("user"))
+const getUserLocalStorage = localStorage.getItem("USER")
+? JSON.parse(localStorage.getItem("USER"))
 : null;
 const initialState = {
   user: getUserLocalStorage,
@@ -27,6 +27,16 @@ export const register = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       return await authService.reg(user);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const logout = createAsyncThunk(
+  "auth/user-logout",
+  async ( thunkAPI) => {
+    try {
+      return await authService.out();
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -80,6 +90,27 @@ export const authSlice = createSlice({
         if(state.isError === true) {
         toast.error('Unexpected error');}
       });
+    builder.addCase(logout.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(logout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+      }),
+      builder.addCase(logout.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.user = null;
+        if (state.isError === true) {
+          toast.error("Unexpected error");
+        }
+      });
+          builder.addCase(resetState, () => initialState);
+
   },
 });
 

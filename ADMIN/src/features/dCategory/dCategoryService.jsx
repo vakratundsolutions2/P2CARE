@@ -17,6 +17,14 @@ const getDoctorCategory = async () => {
 
   return res.data;
 };
+const getDoctorACategory = async (id) => {
+  const res = await axios.get(
+    `${baseUrl}doctorcategory/searchcategorybyid/${id}`,
+    config
+  );
+
+  return res.data;
+};
 
 const deleteCategory = async (id) => {
   const response = await axios.delete(
@@ -39,6 +47,7 @@ const doctorCategoryService = {
   getDoctorCategory,
   deleteCategory,
   updateCategory,
+  getDoctorACategory,
 };
 
 export default doctorCategoryService;

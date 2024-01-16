@@ -3,39 +3,43 @@ import {  useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  allDoctorCategory,
+
   createDoctorCategory,
+  getADoctorCategory,
   resetState,
   updateDoctorCategory,
 } from "../../features/dCategory/dCategorySlice.jsx";
 import CustomInput from "../../components/CustomInput.jsx";
 import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
+import Loding from "../../components/Loding.jsx";
 
 const AddDoctorCategory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const dCategory = useSelector((state) => state?.dCategory?.dCategories);
-
   const catId = location.pathname.split("/")[3];
+   useEffect(() => {
+     if (catId !== undefined || "") {
+       dispatch(getADoctorCategory(catId));
+       dispatch(resetState());
+     } else {
+       dispatch(resetState());
+     }
+   }, [catId]);
+  
+  const dCategory = useSelector((state) => state?.dCategory);
+   const {SingleData  , isLoading} = dCategory
+   
 
-  useEffect(() => {
-    dispatch(allDoctorCategory());
-    dispatch(resetState());
-  }, []);
 
-  const updateData = dCategory?.filter((e) => {
-    return e._id === catId;
-  });
-
+  
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: updateData ? updateData[0]?.name : "",
-      image: updateData ? updateData[0]?.image : "",
-      status: updateData ? updateData[0]?.status : "",
+      name: SingleData?.name || "",
+      image: SingleData?.image || "",
+      status: SingleData?.status || "",
     },
-
-
 
     onSubmit: async (values) => {
       const { image, status, name } = values;
@@ -46,7 +50,7 @@ const AddDoctorCategory = () => {
       if (catId === undefined || "") {
         dispatch(createDoctorCategory(formData));
       } else {
-        dispatch(updateDoctorCategory({ id: catId, formData : formData}));
+        dispatch(updateDoctorCategory({ id: catId, formData: formData }));
       }
     },
   });
@@ -64,6 +68,8 @@ const AddDoctorCategory = () => {
       <div className="my-3 mb-4 justify-content-center d-flex">
         <div className="col-sm-8">
           <div className="card p-5">
+            {isLoading === true && <Loding />}
+
             <h3 className=" title text-center mb-3 ">
               {catId !== undefined ? "Edit" : "Add"} Category
             </h3>

@@ -41,7 +41,7 @@ function App() {
             <Route path="blog-details/:id" element={<BlogDetails />} />
 
             <Route path="hospitals" element={<HospitalList />} />
-            <Route path="hospital-profile" element={<HospitalProfile />} />
+            <Route path="hospital-profile/:id" element={<HospitalProfile />} />
 
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />

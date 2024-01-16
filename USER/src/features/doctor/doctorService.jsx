@@ -3,24 +3,16 @@ import { baseUrl } from "../../utils/baseUrl";
 import { config } from "../../utils/axiosConfig";
 
 
+
 const getDoctors = async () => {
   const res = await axios.get(`${baseUrl}doctor/alldoctor`, config);
 
   return res.data;
 };
-const updateDoctor = async (DrData) => {
-  console.log(DrData);
-  const response = await axios.put(
-    `${baseUrl}doctor/updatedoctor/${DrData.id}`,
-    DrData.formData,
-    config
-  );
-  return response.data;
-};
+const getADoctor = async (id) => {
+  const res = await axios.get(`${baseUrl}doctor/searchdoctorbyid/${id}`, config);
 
-const AllAvailable = async () => {
-  const response = await axios.get(`${baseUrl}available/alltime`, config);
-  return response.data;
+  return res.data;
 };
 
 
@@ -28,8 +20,8 @@ const AllAvailable = async () => {
 
 const doctorService = {
   getDoctors,
-  updateDoctor,
-  AllAvailable,
+  getADoctor,
+
 };
 
 export default doctorService;

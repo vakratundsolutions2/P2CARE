@@ -12,7 +12,7 @@ const HospitalList = () => {
     dispatch(resetState());
   }, []);
 
-  const HospitalState = useSelector((state) => state.hospital?.AllHospitals);
+  const HospitalState = useSelector((state) => state.hospital?.hospitals);
   console.log(HospitalState);
   return (
     <div>
@@ -484,7 +484,7 @@ const HospitalList = () => {
                               <div className="doctor-widget-one">
                                 <div className="doc-info-left">
                                   <div className="doctor-img">
-                                    <Link to="doctor-profile">
+                                    <Link to={`/hospital-profile/${e?._id}`}>
                                       <img
                                         src={`${baseUrl}hospital/${e.hospitallogo}`}
                                         className="img-fluid"
@@ -499,7 +499,7 @@ const HospitalList = () => {
                                   </div>
                                   <div className="doc-info-cont">
                                     <h4 className="doc-name">
-                                      <Link to="/hospital-profile">
+                                      <Link to={`/hospital-profile/${e?._id}`}>
                                         {e?.hospitalname}
                                       </Link>
                                       <i className="fas fa-circle-check"></i>
@@ -554,7 +554,7 @@ const HospitalList = () => {
                                   <div className="clinic-booking book-appoint">
                                     <Link
                                       className="btn btn-primary"
-                                      to="/hospital-profile"
+                                      to={`/hospital-profile/${e?._id}`}
                                     >
                                       View Profile
                                     </Link>

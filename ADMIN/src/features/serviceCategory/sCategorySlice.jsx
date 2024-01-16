@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import sCategoryService from "./sCategoryService";
 import toast from "react-hot-toast";
 const initialState = {
+  sCategories:[],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -13,6 +14,16 @@ export const allServiceCategory = createAsyncThunk(
   async (thunkAPI) => {
     try {
       return await sCategoryService.getServiceCategory();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const getAServiceCategory = createAsyncThunk(
+  "service/getAcategory",
+  async (id,thunkAPI) => {
+    try {
+      return await sCategoryService.getAServiceCategory(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -124,7 +135,24 @@ export const ServiceCategorySlice = createSlice({
           state.isLoading = false;
           state.isError = true;
           state.isSuccess = false;
-        });
+        })
+        .addCase(getAServiceCategory.pending, (state) => {
+          state.isLoading = true;
+        })
+        .addCase(getAServiceCategory.fulfilled, (state, action) => {
+          state.isLoading = false;
+          state.isSuccess = true;
+          state.isError = false;
+          
+          state.SingleData = action.payload?.data;
+        })
+        .addCase(getAServiceCategory.rejected, (state) => {
+          state.isLoading = false;
+          state.isError = true;
+          state.isSuccess = false;
+        })
+        .addCase(resetState, () => initialState);
+
   },
 });
 

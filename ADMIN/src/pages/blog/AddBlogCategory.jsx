@@ -1,43 +1,55 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 
 import CustomInput from "../../components/CustomInput.jsx";
 import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
-import { AddblogCategory, GetAllBlogCategory, UpdateBlogCategory, resetState } from "../../features/blogCategory/BlogCategorySlice.jsx";
+import { AddblogCategory, GetAllBlogCategory, SingleBlogCategory, UpdateBlogCategory, resetState } from "../../features/blogCategory/BlogCategorySlice.jsx";
 
 const AddBlogCategory = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const bCategory = useSelector((state) => state?.blogCategory?.BlogCategories);
+    const location = useLocation();
 
+  const navigate = useNavigate();
   const catId = location.pathname.split("/")[3];
+   useEffect(() => {
+     if (catId !== undefined) {
+       dispatch(SingleBlogCategory(catId));
+       dispatch(resetState());
+     } else {
+       dispatch(resetState());
+     }
+   }, [catId]);
+  const bCategory = useSelector((state) => state?.blogCategory);
+  const { SingleData } = bCategory; 
+ 
+
+
 
   useEffect(() => {
     dispatch(GetAllBlogCategory());
     dispatch(  resetState());
   }, []);
 
-  const updateData = bCategory?.filter((e) => {
-    return e._id === catId;
-  });
+
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: updateData ? updateData[0]?.name : "",
-      status: updateData ? updateData[0]?.status : "",
+      name:  SingleData?.name || "",
+      status: SingleData?.status || "",
     },
 
-    onSubmit:  (values) => {  
-
-
-
+    onSubmit: (values) => {
       if (catId === undefined || catId === "") {
         dispatch(AddblogCategory(values));
-      } 
-      else {
+          formik.resetForm();
+          setTimeout(() => {
+            dispatch(resetState());
+          }, 300);
+      } else {
         dispatch(UpdateBlogCategory({ id: catId, formData: values }));
       }
     },

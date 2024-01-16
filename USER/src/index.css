@@ -20,11 +20,7 @@
     transition: transform 0.3s ease; /* Add smooth transition effect */
   }
   
-  /* Adjust the position of items based on the currentIndex */
+  
   .specialities {
-    transform: translateX(50px) rotate(45deg scaleX(1.5);
+    transform: translateX(50px) rotate(45deg scaleX(1.5))
 }
-.img-fluid{
-    background-color: #1CA39C;
-}
-

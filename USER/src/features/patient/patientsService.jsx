@@ -5,6 +5,13 @@ const getPatient = async () => {
   const res = await axios.get(`${baseUrl}patient/allpatient`, config);
   return res.data;
 };
+const getAPatient = async (id) => {
+  const res = await axios.get(
+    `${baseUrl}patient/searchpatientbyid/${id}`,
+    config
+  );
+  return res.data;
+};
 
 const createPatient = async (patientData) => {
  const response = await axios.post(
@@ -40,6 +47,7 @@ const patientService = {
   deletePatient,
   createPatient,
   updatePatient,
+  getAPatient,
 };
 
 export default patientService;

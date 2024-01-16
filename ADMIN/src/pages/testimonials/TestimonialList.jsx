@@ -61,11 +61,11 @@ const hideModal = () => {
   useEffect(() => {
     if (search) {
       axios
-        .get(`http://localhost:3001/testimonial/searchtestimonial/${search}`)
+        .get(`${baseUrl}testimonial/searchtestimonial/${search}`)
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`http://localhost:3001/testimonial/alltestimonial`)
+        .get(`${baseUrl}testimonial/alltestimonial`)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search ,delId]);

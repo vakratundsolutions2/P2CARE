@@ -2,22 +2,13 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import hospitalService from "./hospitalService";
 const initialState = {
+  hospitals:[],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
 };
 
-export const AddHospital = createAsyncThunk(
-  "hospital/add",
-  async (hospital, thunkAPI) => {
-    try {
-      return await hospitalService.addHospital(hospital);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
 export const getAllHospitals = createAsyncThunk(
   "hospital/get-all",
   async ( thunkAPI) => {
@@ -28,21 +19,11 @@ export const getAllHospitals = createAsyncThunk(
     }
   }
 );
-export const deleteAHospital = createAsyncThunk(
-  "hospital/delete",
+export const getAHospital = createAsyncThunk(
+  "hospital/get",
   async (id, thunkAPI) => {
     try {
-      return await hospitalService.deleteHospital(id);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-export const updateAHospital = createAsyncThunk(
-  "hospital/update",
-  async (DATA, thunkAPI) => {
-    try {
-      return await hospitalService.uppdateHospital(DATA);
+      return await hospitalService.getAHospital(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -57,24 +38,6 @@ export const hospitalSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(AddHospital.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(AddHospital.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-
-        state.dCategory = action.payload?.data;
-        if (state.isSuccess === true) {
-          toast.success("New Hospital added successfully");
-        }
-      })
-      .addCase(AddHospital.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-      })
       .addCase(getAllHospitals.pending, (state) => {
         state.isLoading = true;
       })
@@ -83,49 +46,31 @@ export const hospitalSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
 
-        state.AllHospitals = action.payload?.data;
+        state.hospitals = action.payload?.data;
       })
       .addCase(getAllHospitals.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
       })
-      .addCase(deleteAHospital.pending, (state) => {
+      .addCase(getAHospital.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteAHospital.fulfilled, (state, action) => {
+      .addCase(getAHospital.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
 
-        state.DeletedHospital = action.payload?.data;
-        if (state.isSuccess === true) {
-          toast.success("Successfully deleted");
-        }
+        state.SingleData = action.payload?.data;
+        
       })
-      .addCase(deleteAHospital.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-      })
-      .addCase(updateAHospital.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateAHospital.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-
-        state.UpdatedHospital = action.payload?.data;
-        if (state.isSuccess === true) {
-          toast.success("Successfully Updated");
-        }
-      })
-      .addCase(updateAHospital.rejected, (state) => {
+      .addCase(getAHospital.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
       });
+      builder.addCase(resetState, () => initialState);
+
   },
 });
 export default hospitalSlice.reducer

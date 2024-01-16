@@ -20,4 +20,5 @@ router.delete('/delete/:id',userController.CHECKJWT, userController.DELETETUSER)
 // //Logout
 // router.get('/logout',userController.CHECKJWT,userController.logOut);
 
+
 module.exports = router;

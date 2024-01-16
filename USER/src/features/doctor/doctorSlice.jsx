@@ -1,14 +1,13 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
 
 import doctorService from "./doctorService";
 const initialState = {
+  doctors : [],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
 };
-
 
 
 export const getAllDoctors = createAsyncThunk(
@@ -21,37 +20,23 @@ export const getAllDoctors = createAsyncThunk(
     }
   }
 );
-
-
-export const updateDoctor = createAsyncThunk(
-  "doctor/update",
-  async (drData, thunkAPI) => {
+export const getADoctor = createAsyncThunk(
+  "doctor/getADoctor",
+  async (id,thunkAPI) => {
     try {
-      return await doctorService.updateDoctor(drData);
+      return await doctorService.getADoctor(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-export const GetAllAvailable = createAsyncThunk(
-  "doctor/available",
-  async (thunkAPI) => {
-    try {
-      return await doctorService.AllAvailable();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+
+export const BOOKNOW = createAsyncThunk(
+  "doctor/BOOK",
+  async (DATA, thunkAPI) => {
+    return DATA;
   }
 );
-export const BOOKNOW = createAsyncThunk("doctor/BOOK", async (DATA , thunkAPI) => {
-
-  return DATA
-  
-});
-
-
-
-
 
 export const resetState = createAction("Reset_all");
 
@@ -60,7 +45,7 @@ export const doctorSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-
+    
     builder.addCase(getAllDoctors.pending, (state) => {
       state.isLoading = true;
     }),
@@ -68,7 +53,7 @@ export const doctorSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
 
-        state.allDoctors = action.payload?.data;
+        state.doctors = action.payload?.data;
       }),
       builder.addCase(getAllDoctors.rejected, (state) => {
         state.isLoading = false;
@@ -76,56 +61,41 @@ export const doctorSlice = createSlice({
         state.isSuccess = false;
       });
 
-   
-    builder.addCase(updateDoctor.pending, (state) => {
+    builder.addCase(getADoctor.pending, (state) => {
       state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
     }),
-      builder.addCase(updateDoctor.fulfilled, (state, action) => {
+      builder.addCase(getADoctor.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-
-        state.updatedDoctor = action.payload?.data;
-        if (state.isSuccess === true) {
-          toast.success("Doctor Updated successfully");
-        }
-      }),
-      builder.addCase(updateDoctor.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-      });
-    builder.addCase(GetAllAvailable.pending, (state) => {
-      state.isLoading = true;
-    }),
-      builder.addCase(GetAllAvailable.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-
-        state.Available = action.payload?.data;
+        state.SingleData = action.payload?.data
         
       }),
-      builder.addCase(GetAllAvailable.rejected, (state) => {
+      builder.addCase(getADoctor.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
       });
-    builder.addCase(BOOKNOW.pending, (state) => {
-      state.isLoading = true;
-    }),
-      builder.addCase(BOOKNOW.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
+      
+        builder.addCase(BOOKNOW.pending, (state) => {
+          state.isLoading = true;
+        }),
+          builder.addCase(BOOKNOW.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
 
-        state.BOOKSTATE = action.payload;
-      }),
-      builder.addCase(BOOKNOW.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-      });
+            state.BOOKSTATE = action.payload;
+          }),
+          builder.addCase(BOOKNOW.rejected, (state) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+          });
+      builder.addCase(resetState, () => initialState);
+
   },
 });
 

@@ -38,6 +38,8 @@ const Login = () => {
     onSubmit: (values) => {
       console.log(values);
         dispatch(login(values));
+        dispatch(resetState());
+
     },
   });
    

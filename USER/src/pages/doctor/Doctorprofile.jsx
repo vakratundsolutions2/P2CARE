@@ -2,36 +2,33 @@ import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
+import { getADoctor, resetState } from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
 
 function Doctorprofile() {
   const ID = location.pathname.split("/")[2];
-  console.log(ID);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllDoctors());
-    dispatch(resetState());
-  }, []);
-  const DoctorState = useSelector((state) => state?.doctor?.allDoctors);
-  const DOC = DoctorState?.filter((e) => {
-    return e?._id === ID;
-  });
+    if (ID !== undefined) {
+      dispatch(getADoctor(ID));
+    } else {
+      dispatch(resetState());
+    }
+  }, [ID]);
 
-  console.log(DOC);
-  const DOCTOR = DOC[0];
+  const DoctorState = useSelector((state) => state?.doctor);
+  const {SingleData} = DoctorState
 
-  console.log(DOCTOR);
-
-
+const DOCTOR = SingleData
 
   
   return (
     <>
       <div className="main-wrapper">
         <BreadCrum
-          location={`${DOCTOR.doctorName}`}
+          location={`${DOCTOR?.doctorName}`}
           heading={"Doctor Profile"}
         />
 
@@ -151,7 +148,7 @@ function Doctorprofile() {
                       <Link className="btn btn-white fav-btn">
                         <i className="far fa-bookmark"></i>
                       </Link>
-                      <Link to="chat.html" className="btn btn-white msg-btn">
+                      <Link to="#" className="btn btn-white msg-btn">
                         <i className="far fa-comment-alt"></i>
                       </Link>
                       <Link
@@ -172,7 +169,7 @@ function Doctorprofile() {
                     <div className="clinic-booking">
                       <Link
                         className="apt-btn"
-                        to={`/bookappointment/${DOCTOR._id}`}
+                        to={`/bookappointment/${DOCTOR?._id}`}
                       >
                         Book Appointment
                       </Link>
@@ -267,7 +264,7 @@ function Doctorprofile() {
                           <h4 className="widget-title">Work & Experience</h4>
                           <div className="experience-box">
                             <ul className="experience-list">
-                              {DOCTOR.experienceInfo.map((e, i) => {
+                              {DOCTOR?.experienceInfo.map((e, i) => {
                                 return (
                                   <>
                                     <li key={i}>
@@ -279,9 +276,7 @@ function Doctorprofile() {
                                           <Link to="#/" className="name">
                                             {e}{" "}
                                           </Link>
-                                          {/* <span className="time">
-                                            2007 - 2010 (3 years)
-                                          </span> */}
+
                                         </div>
                                       </div>
                                     </li>
@@ -296,7 +291,7 @@ function Doctorprofile() {
                           <h4 className="widget-title">Awards</h4>
                           <div className="experience-box">
                             <ul className="experience-list">
-                              {DOCTOR.awardAndAchivementsInfo?.map((e, i) => {
+                              {DOCTOR?.awardAndAchivementsInfo?.map((e, i) => {
                                 return (
                                   <>
                                     <li key={i}>
@@ -327,7 +322,7 @@ function Doctorprofile() {
                         <div className="service-list">
                           <h4>Services</h4>
                           <ul className="clearfix">
-                            {DOCTOR.experties?.map((e, i) => {
+                            {DOCTOR?.experties?.map((e, i) => {
                               const l = JSON.parse(e);
 
                               return (
@@ -348,7 +343,7 @@ function Doctorprofile() {
                         <div className="service-list">
                           <h4>Specializations</h4>
                           <ul className="clearfix">
-                            <li>{DOCTOR.specialities}</li>
+                            <li>{DOCTOR?.specialities}</li>
                           </ul>
                         </div>
                       </div>
@@ -461,7 +456,7 @@ function Doctorprofile() {
 
                         <div className="col-md-2">
                           <div className="consult-price">
-                            &#x20B9; {DOCTOR.price}
+                            &#x20B9; {DOCTOR?.price}
                           </div>
                         </div>
                       </div>
@@ -570,7 +565,7 @@ function Doctorprofile() {
 
                         <div className="col-md-2">
                           <div className="consult-price">
-                            &#x20B9; {DOCTOR.price}
+                            &#x20B9; {DOCTOR?.price}
                           </div>
                         </div>
                       </div>

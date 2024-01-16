@@ -7,6 +7,15 @@ const getServiceCategory = async () => {
 
   return res.data;
 };
+
+const getAServiceCategory = async (id) => {
+  const res = await axios.get(
+    `${baseUrl}servicecategory/searchcategorybyid/${id}`,
+    config
+  );
+
+  return res.data;
+};
 const createServiceCategory = async (catdata) => {
   const res = await axios.post(
     `${baseUrl}servicecategory/addcategory`,
@@ -39,6 +48,7 @@ const sCategoryService = {
   createServiceCategory,
   deleteCategory,
   updateCategory,
+  getAServiceCategory,
 };
 
 export default sCategoryService;

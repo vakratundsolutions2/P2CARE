@@ -2,8 +2,9 @@ import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { createAPatient, updateAPatient } from "../../features/patient/patientSlice";
+import { createAPatient, getAPatient, resetState, updateAPatient } from "../../features/patient/patientSlice";
 import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 let schema = yup.object().shape({
   name: yup.string().required("Name is Required"),
@@ -23,38 +24,58 @@ let schema = yup.object().shape({
 });
 const AddPatient = () => {
 
+
+
+
   const location = useLocation()
-  const dispatch = useDispatch()
-  const USER = useSelector((state)=> state?.auth?.user?.data?.user?.Username)
-  
-  
   const patientId = location.pathname.split("/")[3];
-  const patientUpdateData = useSelector((state)=>state?.patient?.Patients)
-  const updateData = patientUpdateData?.filter((e)=>{
-    return e._id === patientId;
-  })  
+  const dispatch = useDispatch()
+useEffect(() => {
+  if (patientId !== undefined || "") {
+    dispatch(getAPatient(patientId));
+  } else {
+    dispatch(resetState());
+  }
+}, [patientId]);
+
+
+
+  const USER = useSelector(
+    (state) => state?.auth?.admin?.ADMIN?.user?.Username
+  );
+  
+  
+  const patientState = useSelector((state)=>state?.patient)
+    const { SingleData } = patientState;
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: updateData ? updateData[0]?.name : "",
+      name: SingleData?.name || "",
       username: USER,
-      email: updateData ? updateData[0]?.email : "",
-      phone: updateData ? updateData[0]?.phone : "",
-      country: updateData ? updateData[0]?.country : "",
-      state: updateData ? updateData[0]?.state : "",
-      city: updateData ? updateData[0]?.city : "",
-      zipcode: updateData ? updateData[0]?.zipcode : "",
-      address: updateData ? updateData[0]?.address : "",
-      // password: updateData ? updateData[0]?.password : "",
-      // passwordconfirm: updateData ? updateData[0]?.passwordconfirm : "",
+      email: SingleData?.email || "",
+      phone: SingleData?.phone|| "",
+      country: SingleData?.country || "",
+      state: SingleData?.state || "",
+      city: SingleData?.city || "",
+      zipcode: SingleData?.zipcode || "",
+      address: SingleData?.address || "",
+      // password: SingleData?.password : "",
+      // passwordconfirm: SingleData?.passwordconfirm : "",
     },
     validationSchema: schema,
     onSubmit: (values) => {
       if (patientId === undefined || "") {
         dispatch(createAPatient(values));
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       } else {
         dispatch(updateAPatient({ id: patientId, values: values }));
+          setTimeout(() => {
+            dispatch(resetState());
+          }, 300);
+
       }
     },
   });

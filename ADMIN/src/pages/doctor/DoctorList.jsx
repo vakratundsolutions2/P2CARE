@@ -80,6 +80,7 @@ const DoctorList = () => {
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search, delDoc]);
+  console.log('searchresult',searchResult);
 
   const showModal = (e) => {
     setOpen(true);
