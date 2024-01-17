@@ -1,24 +1,46 @@
-name: Deploy
+name: Deploy to Hostinger VPS
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v1
-        with:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
           node-version: '20.x'
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: "cd /root/P2CARE && ./.script/deploy.sh"
-          
+
+    - name: Install Dependencies
+      run: |
+        git pull origin main
+        cd USER
+        npm install
+        cd ..
+        cd BACKEND
+        npm install
+        cd ..
+        cd ADMIN
+        npm install
+        cd ..
+
+    - name: Build and Deploy
+      run: |
+        cd BACKEND
+        pm2 start npm --name \"test_server\" --start
+        cd ..
+        cd USER
+        npm run build
+        cd ..
+        cd ADMIN
+        npm run build
+        cd ..
+        
