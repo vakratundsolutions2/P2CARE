@@ -8,12 +8,22 @@ git pull origin main
 echo "New changes copied to server !"
 
 echo "Installing Dependencies..."
+cd USER
 npm install --yes
-
 npm run build
+cd ..
 
+cd ADMIN
+npm install --yes
+npm run build
+cd ..
 
-#pm2 start npm --name \"test_server\" --start
+cd BACKEND
+npm install --yes
 pm2 start 0
+cd ..
+
+
+
 
 echo "Deployment Finished!"
