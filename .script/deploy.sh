@@ -13,7 +13,7 @@ npm install --yes
 npm run build
 
 
-pm2 start npm --name \"test_server\" --start
-
+#pm2 start npm --name \"test_server\" --start
+pm2 start 0
 
 echo "Deployment Finished!"
