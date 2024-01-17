@@ -1,11 +1,11 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
 import toast from "react-hot-toast";
-const getUserLocalStorage = localStorage.getItem("user")
-  ? JSON.parse(localStorage.getItem("user"))
+const getUserLocalStorage = localStorage.getItem("ADMIN")
+  ? JSON.parse(localStorage.getItem("ADMIN"))
   : null;
 const initialState = {
-  user: getUserLocalStorage,
+  admin: getUserLocalStorage,
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -13,10 +13,10 @@ const initialState = {
 };
 
 export const login = createAsyncThunk(
-  "auth/user-login",
-  async (user, thunkAPI) => {
+  "auth/admin-login",
+  async (admin, thunkAPI) => {
     try {
-      return await authService.login(user);
+      return await authService.login(admin);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -38,16 +38,17 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         toast.success("Login successful");
-        state.user = action.payload;
+        state.admin = action.payload;
         state.isError = false;
       }),
       builder.addCase(login.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.user = null;
+        state.admin = null;
         toast.error("Invalid Access Request");
       });
+    builder.addCase(resetState, () => initialState);
   },
 });
 

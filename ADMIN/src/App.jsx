@@ -90,6 +90,7 @@ function App() {
             <Route path="blog-hospital" element={<HospitalBlog />} />
             <Route path="hospital/all-review" element={<HospitalReview />} />
             <Route path="assign-doctor" element={<AssignDoctor />} />
+            <Route path="assign-doctor/:id" element={<AssignDoctor />} />
             <Route path="faq" element={<Faq />} />
 
             {/* Service Routes */}

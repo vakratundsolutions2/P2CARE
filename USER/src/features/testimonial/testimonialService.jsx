@@ -19,6 +19,15 @@ const getAllTest = async () => {
 
   return res.data;
 };
+const getATest = async (id) => {
+  const res = await axios.get(
+    `${baseUrl}testimonial/searchtestimonialbyid/${id}`,
+
+    config
+  );
+
+  return res.data;
+};
 
 const delTest = async (DATA) => {
   const res = await axios.delete(
@@ -56,5 +65,6 @@ const testimonialService = {
   delAllTest,
   getAllTest,
   updTest,
+  getATest,
 };
 export default testimonialService

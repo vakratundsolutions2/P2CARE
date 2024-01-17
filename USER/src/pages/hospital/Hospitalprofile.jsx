@@ -1,7 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getAHospital, resetState } from "../../features/hospital/hospitalSlice";
+import { baseUrl } from "../../utils/baseUrl";
 
 function Hospitalprofile() {
+const hospitalId = location.pathname.split("/")[2];
+const dispatch = useDispatch();
+const navigate = useNavigate();
+
+useEffect(() => {
+  if (hospitalId !== undefined || "") {
+    // dispatch(resetState());
+    dispatch(getAHospital(hospitalId));
+  } else {
+    dispatch(resetState());
+  }
+}, [hospitalId]);
+
+  const hospitalState = useSelector((state) => state.hospital);
+  const { SingleData } = hospitalState;
+
+  
+
   return (
     <>
       <div className="main-wrapper">
@@ -16,13 +38,13 @@ function Hospitalprofile() {
                 <div className="doc-info-left">
                   <div className="doctor-img">
                     <img
-                      src="/src/assets/img/doctors/doctor-thumb-02.jpg"
+                      src={`${baseUrl}hospital/${SingleData?.hospitallogo}`}
                       className="img-fluid"
                       alt="User Image"
                     />
                   </div>
                   <div className="doc-info-cont">
-                    <h4 className="doc-name">Dr. Darren Elder</h4>
+                    <h4 className="doc-name">{SingleData?.hospitalname}</h4>
                     <p className="doc-speciality">
                       BDS, MDS - Oral & Maxillofacial Surgery
                     </p>

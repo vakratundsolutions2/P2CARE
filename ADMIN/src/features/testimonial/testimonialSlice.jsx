@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import testimonialService from "./testimonialService";
 const initialState = {
+  testimonials:[],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -28,6 +29,16 @@ export const GetAllTestimonial = createAsyncThunk(
   async (thunkAPI) => {
     try {
       return await testimonialService.getAllTest();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const GetATestimonial = createAsyncThunk(
+  "testimonial/get-single",
+  async (id,thunkAPI) => {
+    try {
+      return await testimonialService.getATest(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -103,7 +114,7 @@ export const testimonialSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
 
-        state.AllTestimonials = action.payload?.data;
+        state.testimonials = action.payload?.data;
       }),
       builder.addCase(GetAllTestimonial.rejected, (state) => {
         state.isLoading = false;
@@ -162,7 +173,26 @@ export const testimonialSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-      });
+      }),
+      builder.addCase(GetATestimonial.pending, (state) => {
+        state.isLoading = true;
+      }),
+      builder.addCase(GetATestimonial.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = action.payload?.message;
+        state.SingleData = action.payload?.data;
+
+        
+      }),
+      builder.addCase(GetATestimonial.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      }),
+      builder.addCase(resetState, () => initialState);
+
   },
 });
 

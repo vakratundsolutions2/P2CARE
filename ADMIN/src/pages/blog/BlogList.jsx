@@ -72,17 +72,16 @@ const BlogList = () => {
 useEffect(() => {
   if (search) {
     axios
-    .get(`http://localhost:3001/blog/searchblog/${search}`)
-    .then((e) => setSearchResult(e.data?.data));
+      .get(`${baseUrl}blog/searchblog/${search}`)
+      .then((e) => setSearchResult(e.data?.data));
      } else {
        axios
-         .get(`http://localhost:3001/blog/allblog`)
+         .get(`${baseUrl}blog/allblog`)
          .then((e) => setSearchResult(e.data?.data));
      }
   
      
     }, [search])
-    console.log(searchResult);
   
 
   const dBlog = (e) => {
@@ -90,7 +89,7 @@ useEffect(() => {
     setTimeout(() => {
       dispatch(GetAllBlogs());
       dispatch(resetState());
-    }, 600);
+    }, 500);
     setOpen(false);
   };
 const handeleDelete = () => {
@@ -98,7 +97,7 @@ const handeleDelete = () => {
   setTimeout(() => {
     dispatch(GetAllBlogs());
     dispatch(resetState());
-  }, 600);
+  }, 500);
   setOpen(false);
 };
   const showModal = (e) => {

@@ -10,6 +10,7 @@ import { getAllHospitals } from "../../features/hospital/hospitalSlice";
 import ReactQuill from "react-quill";
 import {
   createDoctor,
+  getADoctor,
   getAllDoctors,
   resetState,
   updateDoctor,
@@ -47,23 +48,31 @@ let schema = yup.object().shape({
 });
 
 const AddDoctor = () => {
-  const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
-  const allDoctors = useSelector((state) => state?.doctor?.allDoctors);
+    useEffect(() => {
+      dispatch(allDoctorCategory());
+      dispatch(getAllHospitals());
+      dispatch(getAllDoctors());
 
+      dispatch(resetState());
+    }, []);
   const doctorId = location.pathname.split("/")[3];
-  const updateData = allDoctors?.filter((e) => {
-    return e._id === doctorId;
-  });
-
-  const AllHospitals = useSelector((state) => state.hospital?.AllHospitals);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(allDoctorCategory());
-    dispatch(getAllHospitals());
-    dispatch(getAllDoctors());
+  const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
+  const AllHospitals = useSelector((state) => state.hospital?.hospitals);
+  
+   useEffect(() => {
+     if (doctorId !== undefined || "") {
+       dispatch(resetState());
+       dispatch(getADoctor(doctorId));
 
-    dispatch(resetState());
-  }, []);
+     } else {
+       dispatch(resetState());
+     }
+   }, [doctorId]);
+ const DoctorState = useSelector((state) => state?.doctor);
+ const { SingleData } = DoctorState;
+console.log(SingleData);
+
 
 
 
@@ -71,42 +80,41 @@ const AddDoctor = () => {
   return (
     <>
       <Formik
+      enableReinitialize={true}
+       
         initialValues={{
-          doctorName: updateData ? updateData[0]?.doctorName : "",
-          doctorCode: updateData ? updateData[0]?.doctorCode : "",
-          departmentName: updateData ? updateData[0]?.departmentName : "",
-          departmentCode: updateData ? updateData[0]?.departmentCode : "",
-          designation: updateData ? updateData[0]?.designation : "",
-          experties: updateData ? updateData[0]?.experties : [],
-          slug: updateData ? updateData[0]?.slug : "",
-          location: updateData ? updateData[0]?.location : "",
-          description: updateData ? updateData[0]?.description : "",
-          shortDescription: updateData ? updateData[0]?.shortDescription : "",
-          experienceInfo: updateData ? updateData[0]?.experienceInfo : [],
-          specialities: updateData ? updateData[0]?.specialities : "",
-          awardAndAchivementsInfo: updateData
-            ? updateData[0]?.awardAndAchivementsInfo
-            : [],
-          talkPublicationInfo: updateData
-            ? updateData[0]?.talkPublicationInfo
-            : [],
-          languageInfo: updateData ? updateData[0]?.languageInfo : [],
-          educationInfo: updateData ? updateData[0]?.educationInfo : [],
-          fellowShipInfo: updateData ? updateData[0]?.fellowShipInfo : [],
-          metaTitle: updateData ? updateData[0]?.metaTitle : "",
-          ogMetaTitle: updateData ? updateData[0]?.ogMetaTitle : "",
-          metaDescription: updateData ? updateData[0]?.metaDescription : "",
-          ogMetaDescription: updateData ? updateData[0]?.ogMetaDescription : "",
-          metaTags: updateData ? updateData[0]?.metaTags : "",
-          price: updateData ? updateData[0]?.price : "",
-          image: updateData ? updateData[0]?.image : "",
-          availabileforappointment: updateData
-            ? updateData[0]?.availabileforappointment
-            : false,
-          hospital: updateData ? updateData[0]?.hospital : "",
-          status: updateData ? updateData[0]?.status : "",
+          doctorName: SingleData?.doctorName || "",
+          doctorCode: SingleData?.doctorCode || "",
+          departmentName: SingleData?.departmentName || "",
+          departmentCode: SingleData?.departmentCode || "",
+          designation: SingleData?.designation || "",
+          experties: SingleData?.experties || [],
+          slug: SingleData?.slug || "",
+          location: SingleData?.location || "",
+          description: SingleData?.description || "",
+          shortDescription: SingleData?.shortDescription || "",
+          experienceInfo: SingleData?.experienceInfo || [],
+          specialities: SingleData?.specialities || "",
+          awardAndAchivementsInfo: SingleData?.awardAndAchivementsInfo || [],
+          talkPublicationInfo: SingleData?.talkPublicationInfo || [],
+          languageInfo: SingleData?.languageInfo || [],
+          educationInfo: SingleData?.educationInfo || [],
+          fellowShipInfo: SingleData?.fellowShipInfo || [],
+          metaTitle: SingleData?.metaTitle || "",
+          ogMetaTitle: SingleData?.ogMetaTitle || "",
+          metaDescription: SingleData?.metaDescription || "",
+          ogMetaDescription: SingleData?.ogMetaDescription || "",
+          metaTags: SingleData?.metaTags || "",
+          price: SingleData?.price || "",
+          image: SingleData?.image || "",
+          availabileforappointment:
+            SingleData?.availabileforappointment || false,
+          hospital: SingleData?.hospital || "",
+          status: SingleData?.status || "",
         }}
+        
         onSubmit={(values) => {
+          console.log(values);
           const {
             doctorName,
             doctorCode,
@@ -167,8 +175,15 @@ const AddDoctor = () => {
           formData.append("metaTitle", metaTitle);
           if (doctorId === undefined || "") {
             dispatch(createDoctor(formData));
+
+            setTimeout(() => {
+              dispatch(resetState());
+            }, 300);
           } else {
             dispatch(updateDoctor({ id: doctorId, formData: formData }));
+            setTimeout(() => {
+              dispatch(resetState());
+            }, 300);
           }
         }}
       >
@@ -277,7 +292,10 @@ const AddDoctor = () => {
                         onChange={(e) => formik.setFieldValue("experties", e)}
                         className="form-control rounded p-3 mb-3"
                         multi
-                        defaultValue={formik.values.experties}
+                        defaultValue={[
+                          formik.values.experties[0],
+                          formik.values.experties[1],
+                        ]}
                         options={DoctorCategory}
                       />
                       <div className="error">
@@ -934,29 +952,33 @@ const AddDoctor = () => {
                     </div>
 
                     <div className="col-6 m-4 d-flex">
-                      <div className="form-check  form-switch ">
-                        <input
-                          className="form-check-input  "
-                          type="checkbox"
-                          id="flexSwitchCheckChecked"
-                          name="availabileforappointment"
-                          value={formik.values.availabileforappointment}
-                          onChange={formik.handleChange(
-                            "availabileforappointment"
-                          )}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexSwitchCheckChecked"
-                        >
-                          Availabile For Appointment
+                      <div className="form-check-inline visits ">
+                        <label className="">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name="availabileforappointment"
+                            value={formik.values.availabileforappointment}
+                            onChange={formik.handleChange(
+                              "availabileforappointment"
+                            )}
+                          />
+                          <span
+                            className="visit-rsn"
+                            data-bs-toggle="tooltip"
+                            // title="02:40 PM"
+                          >
+                            Availabile For Appointment
+                          </span>
                         </label>
                       </div>
+
                       <div className="error">
                         {formik.touched.availabileforappointment &&
                           formik.errors.availabileforappointment}
                       </div>
                     </div>
+
                     <div className="p-3 w-full ">
                       <button type="submit" className="btn btn-primary ">
                         {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor

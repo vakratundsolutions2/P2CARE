@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 import doctorService from "./doctorService";
 const initialState = {
+  doctors : [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -26,6 +27,16 @@ export const getAllDoctors = createAsyncThunk(
   async (thunkAPI) => {
     try {
       return await doctorService.getDoctors();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const getADoctor = createAsyncThunk(
+  "doctor/getADoctor",
+  async (id,thunkAPI) => {
+    try {
+      return await doctorService.getADoctor(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -85,7 +96,7 @@ export const doctorSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
 
-        state.allDoctors = action.payload?.data;
+        state.doctors = action.payload?.data;
       }),
       builder.addCase(getAllDoctors.rejected, (state) => {
         state.isLoading = false;
@@ -131,6 +142,25 @@ export const doctorSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
       });
+    builder.addCase(getADoctor.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(getADoctor.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.SingleData = action.payload?.data
+        
+      }),
+      builder.addCase(getADoctor.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+      builder.addCase(resetState, () => initialState);
+
   },
 });
 

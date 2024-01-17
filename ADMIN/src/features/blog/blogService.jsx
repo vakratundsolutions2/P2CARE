@@ -12,6 +12,11 @@ const allblogs = async () => {
 
   return res.data;
 };
+const getAblog = async (id) => {
+  const res = await axios.get(`${baseUrl}blog/searchblogbyid/${id}`, config);
+
+  return res.data;
+};
 const delBlog = async (id) => {
   const res = await axios.delete(`${baseUrl}blog/deleteblog/${id}`, config);
 
@@ -35,5 +40,6 @@ const blogService = {
   delBlog,
   delAllBlog,
   updBlog,
+  getAblog,
 };
 export default blogService;

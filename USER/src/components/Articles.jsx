@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../utils/baseUrl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import { GetAllBlogs } from '../features/blog/blogSlice';
 
 
 const Articles = () => {
-    const blog = useSelector((state) => state.blog.AllBlogs);
+    const blog = useSelector((state) => state.blog.blogs);
     const dispatch = useDispatch()
     useEffect(() => {
           dispatch(GetAllBlogs());

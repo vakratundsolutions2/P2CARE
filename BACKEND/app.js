@@ -26,15 +26,13 @@ const {reviewHosptialRouter}=require("./routes/reviewHospital")
  const mongoose = require("mongoose");
 require("dotenv").config();
 // const PORT = process.env.PORT ;
-const uri=`${process.env.mongoUrl}`;
+const uri = `${process.env.mongoUrl}`;
 mongoose
-  .connect(uri
-  )
+  .connect(uri)
   .then(() => console.log("Connected!"))
   .catch((error) => {
     console.log(error.message);
   });
-
 
 // const generateSecretKey = () => {
 //   return crypto.randomBytes(32).toString("hex");
@@ -94,9 +92,6 @@ app.use(function (req, res, next) {
 //   console.log(`listening on port ${PORT}`);
 // });
 
-/*app.get('/ur',(req,res)=>{
-res.send(req.url);
-});*/
 
 
 // error handler

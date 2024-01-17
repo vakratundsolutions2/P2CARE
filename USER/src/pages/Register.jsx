@@ -42,6 +42,7 @@ function Register() {
       onSubmit: (values) => {
         console.log(values);
         dispatch(register(values));
+        dispatch(resetState());
       },
     });
     //  useEffect(() => {

@@ -7,7 +7,7 @@ import { baseUrl } from "../utils/baseUrl";
 const Testimonial = () => {
       const [testimonialSlide, setTestimonialSlide] = useState(0);
       const testimonial = useSelector(
-        (state) => state.testimonial?.AllTestimonials
+        (state) => state.testimonial?.testimonials
       );
       const testimonialState = testimonial?.slice(0, 4);
       const dispatch = useDispatch();

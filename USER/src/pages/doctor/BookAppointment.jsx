@@ -4,62 +4,63 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../../utils/baseUrl";
 import {
-  GetAllAvailable,
-  getAllDoctors,
+  getADoctor,
   resetState,
 } from "../../features/doctor/doctorSlice";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
+import { GetAavailablity, GetAllAavailablity } from "../../features/availablity/availablitySlice";
 
 const BookAppointment = () => {
   const ID = location.pathname.split("/")[2];
+  console.log(ID);
   const [TIME, setTIME] = useState("");
   const [NEWDATE, setNEWDATE] = useState("");
   const dispatch = useDispatch();
+
+
   useEffect(() => {
-    dispatch(getAllDoctors());
-    dispatch(resetState());
-    dispatch(GetAllAvailable());
-  }, []);
+    if (ID !== undefined) {
+      dispatch(getADoctor(ID));
+      dispatch(GetAavailablity(ID));
+    } else {
+      dispatch(resetState());
+    }
+  }, [ID]);
+
   const DoctorState = useSelector((state) => state.doctor);
-  const { allDoctors, Available } = DoctorState;
-  const user = useSelector((state) => state.auth?.user?.data?.user)
-  console.log( user);
-  const DOC = allDoctors?.filter((e) => {
-    return e._id === ID;
-  });
+  const { SingleData } = DoctorState;
+  const { AvailableByID } = useSelector((state) => state?.available);
+  const user = useSelector((state) => state.auth?.user?.user);
+  console.log(user);
+  console.log(AvailableByID);
 
-  const DRAvail = Available?.filter((e) => {
-    return e?.doctorid === ID;
-  });
 
-  const newData = DRAvail?.map((e) => {
-    return e?.bookingavailabilityInformation;
-  });
+  // const DRAvail = Available?.filter((e) => {
+  //   return e?.doctorid === ID;
+  // });
 
-  console.log(newData);
+  // const newData = DRAvail?.map((e) => {
+  //   return e?.bookingavailabilityInformation;
+  // });
 
-  console.log(TIME);
+  // console.log(newData);
 
- 
-
-  const DOCTOR = DOC[0];
+  // console.log(TIME);
 
   const formData = {
-    doctor: DOCTOR._id,
+    doctor: SingleData?._id,
     date: NEWDATE,
     time: TIME,
   };
   console.log(formData);
-
-
 
   return (
     <div className="main-wrapper">
       <BreadCrum location={"Book An Appoinment "} heading={"Book Appoinment"} />
 
       {/* <!-- Page Content --> */}
-      <form >
+      <form>
         <div className="content">
           <div className="container">
             <div className="row">
@@ -68,18 +69,18 @@ const BookAppointment = () => {
                   <div className="card-body">
                     <div className="booking-doc-info">
                       <Link
-                        to={`/doctor-profile/${DOCTOR._id}`}
+                        to={`/doctor-profile/${SingleData?._id}`}
                         className="booking-doc-img"
                       >
                         <img
-                          src={`${baseUrl}doctor/${DOCTOR.image}`}
-                          alt={DOCTOR.doctorName}
+                          src={`${baseUrl}doctor/${SingleData?.image}`}
+                          alt={SingleData?.doctorName}
                         />
                       </Link>
                       <div className="booking-info">
                         <h4>
-                          <Link to={`/doctor-profile/${DOCTOR._id}`}>
-                            {DOCTOR?.doctorName}
+                          <Link to={`/doctor-profile/${SingleData?._id}`}>
+                            {SingleData?.doctorName}
                           </Link>
                         </h4>
                         <div className="rating">
@@ -94,7 +95,7 @@ const BookAppointment = () => {
                         </div>
                         <p className="text-muted mb-0">
                           <i className="fas fa-map-marker-alt"></i>{" "}
-                          {DOCTOR?.location}
+                          {SingleData?.location}
                         </p>
                       </div>
                     </div>
@@ -148,17 +149,14 @@ const BookAppointment = () => {
                     <div className="row">
                       <div className="col-md-12">
                         {/* <!-- Day Slot --> */}
-                        {/* <ul className="d-flex flex-column">
-                        <li className="d-flex  gap-4">
-                          <div className="day">SUN</div>
-                          <div className="time">11 11</div>
-                          <div className="time">11 11</div>
-                        </li>
-                        <li className="d-flex">Mon</li>
-                        <li className="d-flex">Wed</li>
-                      </ul> */}
+
                         <div className="day-slot">
                           <ul>
+                            <li>
+                              <span>Sun</span>
+                            </li>
+                          </ul>
+                          {/* <ul>
                             {newData[0]?.map((day, index) => {
                               return (
                                 <>
@@ -168,7 +166,7 @@ const BookAppointment = () => {
                                 </>
                               );
                             })}
-                          </ul>
+                          </ul> */}
                         </div>
                       </div>
                     </div>
@@ -182,24 +180,53 @@ const BookAppointment = () => {
 
                         <div className="time-slot">
                           <ul className="clearfix">
+                            <li>
+                              <div
+                                className="form-check-inline visits me-0"
+                                
+                              >
+                                <label className="visit-btns">
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    value="18"
+                                  />
+                                  <span
+                                    className="visit-rsn"
+                                    data-bs-toggle="tooltip"
+                                  >
+                                    10:11 - 11:12
+                                  </span>
+                                </label>
+                              </div>
+                            </li>
+                          </ul>
+
+                          {/* <ul className="clearfix">
                             {newData &&
                               newData[0]?.map((time, i) => {
                                 return (
                                   <>
                                     <li key={i}>
                                       {time?.bookingtime?.map((e, i) => {
-                                        // NEWDATE.split(' ')
                                         return (
                                           <>
-                                            <Link
-                                              key={i}
-                                              className="timing "
-                                              onClick={(e) =>
-                                                setTIME(e.target.innerHTML)
-                                              }
-                                            >
-                                              {e}
-                                            </Link>
+                                            <div className="form-check-inline visits me-0" key={i}>
+                                              <label className="visit-btns">
+                                                <input
+                                                  type="checkbox"
+                                                  className="form-check-input"
+                                                  value="18"
+                                                />
+                                                <span
+                                                  className="visit-rsn"
+                                                  data-bs-toggle="tooltip"
+                                                >
+                                                  {e}
+                                                </span>
+                                              </label>
+                                            </div>
+                                            
                                           </>
                                         );
                                       })}
@@ -207,7 +234,7 @@ const BookAppointment = () => {
                                   </>
                                 );
                               })}
-                          </ul>
+                          </ul> */}
                         </div>
 
                         {/* <!-- /Time Slot --> */}
@@ -226,8 +253,11 @@ const BookAppointment = () => {
                   >
                     <Link
                       // to={`/checkout?doctor=${DOCTOR._id}&date=${NEWDATE}&time=${TIME}`}
-                      to={user ? `/checkout?doctor=${DOCTOR._id}&date=${NEWDATE}&time=${TIME}`:`/login`}
-                      
+                      to={
+                        user
+                          ? `/checkout?doctor=${SingleData?._id}&date=${NEWDATE}&time=${TIME}`
+                          : `/login`
+                      }
                       className="btn btn-primary submit-btn"
                     >
                       Proceed to Pay

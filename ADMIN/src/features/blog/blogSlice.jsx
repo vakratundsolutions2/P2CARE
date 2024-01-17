@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import blogService from "./blogService";
 const initialState = {
+  blogs :[],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -61,6 +62,17 @@ export const UpdateBlog = createAsyncThunk(
     }
   }
 );
+export const GetABlog = createAsyncThunk(
+  "blog/getABlog",
+  async (Data, thunkAPI) => {
+    //  console.log(catData);
+    try {
+      return await blogService.getAblog(Data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const resetState = createAction("Reset_all");
 
@@ -95,7 +107,7 @@ export const blogSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
 
-        state.AllBlogs = action.payload?.data;
+        state.blogs = action.payload?.data;
       }),
       builder.addCase(GetAllBlogs.rejected, (state) => {
         state.isLoading = false;
@@ -156,7 +168,24 @@ export const blogSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+      })
+    builder.addCase(GetABlog.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetABlog.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = action.payload?.message;
+        state.SingleBlog = action.payload?.data
+      }),
+      builder.addCase(GetABlog.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
       });
+      builder.addCase(resetState, () => initialState);
+
   },
 });
 

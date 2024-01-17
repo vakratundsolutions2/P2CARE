@@ -3,9 +3,9 @@ import { baseUrl } from "../../utils/baseUrl";
 const login = async (userData) => {
   const res = await axios.post(`${baseUrl}user/login`, userData);
   
+  
   if (res.data) {
-    const resData = { accessToken: res.data?.data, role: "client" };
-    localStorage.setItem("user", JSON.stringify(resData));
+    localStorage.setItem("USER", JSON.stringify(res.data?.data));
   }
   return res.data;
 };
@@ -14,9 +14,16 @@ const reg = async (userData) => {
   return res.data;
 };
 
+const out =  () => {
+       localStorage.removeItem("USER");
+ 
+};
+
+
 const authService = {
   login,
   reg,
+  out
 };
 
 export default authService;

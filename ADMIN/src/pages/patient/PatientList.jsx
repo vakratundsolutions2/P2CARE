@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAPatient, getPatients, resetState } from "../../features/patient/patientSlice";
 import axios from "axios";
 import { config } from "../../utils/axiosConfig";
+import { baseUrl } from "../../utils/baseUrl";
 
 const columns = [
   {
@@ -56,11 +57,11 @@ const PatientList = () => {
   useEffect(() => {
     if (search) {
       axios
-        .get(`http://localhost:3001/patient/searchpatient/${search}`)
+        .get(`${baseUrl}patient/searchpatient/${search}`)
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`http://localhost:3001/patient/allpatient`,config)
+        .get(`${baseUrl}patient/allpatient`, config)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search]);

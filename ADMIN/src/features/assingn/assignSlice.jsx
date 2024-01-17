@@ -22,6 +22,16 @@ export const addNewAssign = createAsyncThunk(
     }
   }
 );
+export const deleteAssign = createAsyncThunk(
+  "assign/delete-assign",
+  async (DATA,thunkAPI) => {
+    try {
+      return await assignService.delAsign(DATA);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
   //  patient:[],
@@ -69,8 +79,26 @@ export const assignSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.message = action.error;
+      })
+      .addCase(deleteAssign.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteAssign.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        if (state.isSuccess === true) {
+          toast.success(action.payload.message);
+        }
+      })
+      .addCase(deleteAssign.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(resetState, () => initialState);
 
-      });
   },
 });
 export default assignSlice.reducer;

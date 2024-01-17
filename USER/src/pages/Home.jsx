@@ -6,6 +6,8 @@ import img from "../assets/img/banner-img.png";
 import img1 from "../assets/img/banner-img1.png";
 import img2 from "../assets/img/banner-img2.png";
 import img3 from "../assets/img/banner-img3.png";
+import Specialities from '../pages/Specialities';
+
 
 // Specialities
 import specialities01 from "../assets/img/specialities/specialities-01.svg";
@@ -59,10 +61,9 @@ import client04 from "../assets/img/clients/client-04.jpg";
 
 
 
-import BestDoctor from "../components/BestDoctor";
+import BestDoctor from '../pages/BestDoctor';
 import Testimonial from "../components/Testimonial";
 import Articles from "../components/Articles";
-import Specialities from "../components/Specialities";
 
 // import { useRef } from "react";
 

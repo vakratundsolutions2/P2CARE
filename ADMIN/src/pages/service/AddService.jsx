@@ -10,6 +10,7 @@ import {
 } from "../../features/serviceCategory/sCategorySlice";
 import {
   createAService,
+  getAService,
   getAllServices,
   resetState,
   updateAService,
@@ -19,41 +20,47 @@ const AddService = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
     const ServiceId = location.pathname.split("/")[3];
+useEffect(() => {
+  if (ServiceId !== undefined || "") {
+    dispatch(getAService(ServiceId));
+  } else {
+    dispatch(resetState());
+  }
+}, [ServiceId]);
 
   useEffect(() => {
     dispatch(allServiceCategory());
-    dispatch(getAllServices());
+  
     dispatch(resetState());
   }, []);
   const cat = useSelector((state) => state.sCategory?.sCategories);
 
 
-    const ServiceData = useSelector((state) => state?.service?.Services);
-      const updateData = ServiceData?.filter((e) => {
-        return e._id === ServiceId;
-      });  
+    const ServiceState = useSelector((state) => state?.service);
+    const {SingleData} = ServiceState
 
 
 
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      title: updateData ? updateData[0]?.title : "",
-      description: updateData ? updateData[0]?.description : "",
-      expert: updateData ? updateData[0]?.expert : "",
-      slug: updateData ? updateData[0]?.slug : "",
-      metatitle: updateData ? updateData[0]?.metatitle : "",
-      ogmetadescription: updateData ? updateData[0]?.ogmetadescription : "",
-      ogmetatitle: updateData ? updateData[0]?.ogmetatitle : "",
-      metadescription: updateData ? updateData[0]?.metadescription : "",
-      metatag: updateData ? updateData[0]?.metatag : "",
-      ogmetaimage: updateData ? updateData[0]?.ogmetaimage : "",
-      category: updateData ? updateData[0]?.category : "",
-      icontype: updateData ? updateData[0]?.icontype : "",
-      order: updateData ? updateData[0]?.order : "",
-      image: updateData ? updateData[0]?.image : "",
-      status: updateData ? updateData[0]?.status : "",
-      iconimage: updateData ? updateData[0]?.iconimage : "",
+      title: SingleData?.title || "",
+      description: SingleData?.description || "",
+      expert: SingleData?.expert || "",
+      slug: SingleData?.slug || "",
+      metatitle: SingleData?.metatitle || "",
+      ogmetadescription: SingleData?.ogmetadescription || "",
+      ogmetatitle: SingleData?.ogmetatitle || "",
+      metadescription: SingleData?.metadescription || "",
+      metatag: SingleData?.metatag || "",
+      ogmetaimage: SingleData?.ogmetaimage || "",
+      category: SingleData?.category || "",
+      icontype: SingleData?.icontype || "",
+      order: SingleData?.order || "",
+      image: SingleData?.image || "",
+      status: SingleData?.status || "",
+      iconimage: SingleData?.iconimage || "",
     },
 
     onSubmit: async (values) => {
@@ -96,8 +103,14 @@ const AddService = () => {
       formData.append("ogmetadescription", ogmetadescription);
       if (ServiceId === undefined || "") {
         dispatch(createAService(formData));
+           setTimeout(() => {
+             dispatch(resetState());
+           }, 300);
       } else {
         dispatch(updateAService({ id: ServiceId, formData: formData }));
+           setTimeout(() => {
+             dispatch(resetState());
+           }, 300);
       }
     },
   });

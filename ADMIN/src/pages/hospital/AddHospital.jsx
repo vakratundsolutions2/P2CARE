@@ -6,68 +6,76 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { allDoctorCategory, resetState } from "../../features/dCategory/dCategorySlice";
+import {
+  allDoctorCategory,
+  resetState,
+} from "../../features/dCategory/dCategorySlice";
 import { getAllServices } from "../../features/service/serviceSlice";
 import Select from "react-dropdown-select";
 import {
   AddHospital,
+  getAHospital,
   updateAHospital,
 } from "../../features/hospital/hospitalSlice";
-import { getAllAssign } from "../../features/assingn/assignSlice";
+import { deleteAssign, getAllAssign } from "../../features/assingn/assignSlice";
 
 const AddDoctor = () => {
+  const hospitalId = location.pathname.split("/")[3];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+useEffect(() => {
+  if (hospitalId !== undefined || "") {
+    // dispatch(resetState());
+    dispatch(getAHospital(hospitalId));
+  } else {
+    dispatch(resetState());
+  }
+}, [hospitalId]);
   useEffect(() => {
     dispatch(allDoctorCategory());
     dispatch(getAllServices());
     dispatch(getAllAssign());
-    dispatch(resetState());
-
 
   }, []);
-
   const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
   const AllService = useSelector((state) => state.service?.Services);
   const AsignData = useSelector((state) => state.assign?.AllAsignDoctor);
 
+  const hospitalState = useSelector((state) => state.hospital);
+  const {SingleData } = hospitalState;
+
   
-
-
-
-
-  const hospitalId = location.pathname.split("/")[3];
-  const AllHospital = useSelector((state) => state.hospital.AllHospitals);
-
-  const updateData = AllHospital?.filter((e) => {
-    return e._id === hospitalId;
-  });
-
   const newAsignData = AsignData?.filter((el) => {
-    return el.hospital === updateData[0].hospitalname;
+    return el.hospital === SingleData?.hospitalname;
   });
 
-
-  const navigate = useNavigate();
-  // const formik = useFormik({
-
-  // });
+  const handleDelete = (data) => {
+    console.log(data);
+    dispatch(deleteAssign(data));
+    setTimeout(() => {
+      dispatch(getAllAssign());
+    }, 100);
+  };
+  console.log(SingleData);
   return (
     <>
       <Formik
+        enableReinitialize={true}
         initialValues={{
-          hospitalname: updateData ? updateData[0]?.hospitalname : "",
-          hospitaladdress: updateData ? updateData[0]?.hospitaladdress : "",
-          description: updateData ? updateData[0]?.description : "",
-          shortdescription: updateData ? updateData[0]?.shortdescription : "",
-          openingtime: updateData ? updateData[0]?.openingtime : "",
-          closingtime: updateData ? updateData[0]?.closingtime : "",
-          service: updateData ? updateData[0]?.service : "",
-          category: updateData ? updateData[0]?.category : "",
-          status: updateData ? updateData[0]?.status : "",
-          hospitallogo: updateData ? updateData[0]?.hospitallogo : "",
-          assignDRname: "",
-          assignHOSname: "",
-          assignAMT: "",
+          hospitalname: SingleData?.hospitalname||'',
+          hospitaladdress: SingleData?.hospitaladdress || "",
+          description: SingleData?.description || "",
+          shortdescription: SingleData?.shortdescription || "",
+          openingtime: SingleData?.openingtime || "",
+          closingtime: SingleData?.closingtime || "",
+          service: SingleData?.service || "",
+          category: SingleData?.category || "",
+          status: SingleData?.status || "",
+          hospitallogo: SingleData?.hospitallogo || "",
+          // assignDRname: "",
+          // assignHOSname: "",
+          // assignAMT: "",
         }}
         // validationSchema: schema,
         onSubmit={(values) => {
@@ -83,7 +91,7 @@ const AddDoctor = () => {
             status,
             hospitallogo,
           } = values;
-
+          console.log(values);
           const formData = new FormData();
           formData.append("hospitalname", hospitalname);
           formData.append("hospitaladdress", hospitaladdress);
@@ -92,6 +100,8 @@ const AddDoctor = () => {
           formData.append("openingtime", openingtime);
           formData.append("closingtime", closingtime);
           formData.append("service", JSON.stringify(service));
+          // formData.append("service", service);
+          // formData.append("category", category);
           formData.append("category", JSON.stringify(category));
           formData.append("status", status);
           formData.append("hospitallogo", hospitallogo);
@@ -298,97 +308,6 @@ const AddDoctor = () => {
                       // style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <h3 className="mb-3">Assign Doctor</h3>
-                      {/* <FieldArray
-                        name="experienceInfo"
-                        render={(arrayHelpers) => {
-                          return (
-                            <>
-                              <div className="">
-                                {formik.values.experienceInfo?.map((e, i) => {
-                                  return (
-                                    <>
-                                      <div key={i}>
-                                        {i > 0 && (
-                                          <div className="float-end" key={i}>
-                                            <button
-                                              type="button"
-                                              className="btn btn-info"
-                                              onClick={() =>
-                                                arrayHelpers.remove(i)
-                                              }
-                                            >
-                                              Delete
-                                            </button>
-                                          </div>
-                                        )}
-
-                                        <div className=" gap-2   d-flex">
-                                          <div className="form-group">
-                                            <select
-                                              placeholder=""
-                                              className="form-select   mb-2"
-                                              style={{ width: "18vw" }}
-                                              name={`assignDRname.${i}`}
-                                            >
-                                              <option value="">Select</option>
-                                            </select>
-                                          </div>
-                                          <div className="form-group">
-                                            <select
-                                              placeholder=""
-                                              className="form-select   mb-2"
-                                              style={{ width: "15vw" }}
-                                              name={`experienceInfo.${i}`}
-                                            >
-                                              <option value="">Select</option>
-                                            </select>
-                                          </div>
-
-                                          <div className="form-group">
-                                            <select
-                                              placeholder=""
-                                              className="form-select   mb-2"
-                                              style={{ width: "15vw" }}
-                                              name={`experienceInfo.${i}`}
-                                            >
-                                              <option value="">Select</option>
-                                            </select>
-                                          </div>
-
-                                          <div className="form-group">
-                                            <Field
-                                              type="text"
-                                              placeholder="Amount"
-                                              className="form-control   mb-2"
-                                              name={`Amount.${i}`}
-                                              style={{ width: "15vw" }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </>
-                                  );
-                                })}
-                                <div className="form-group  mt-2 ">
-                                  <button
-                                    type="button"
-                                    className="btn btn-info "
-                                    onClick={() =>
-                                      arrayHelpers.insert(
-                                        formik.values.experienceInfo?.length +
-                                          1,
-                                        []
-                                      )
-                                    }
-                                  >
-                                    Add More
-                                  </button>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        }}
-                      /> */}
 
                       {newAsignData?.map((e, i) => {
                         return (
@@ -397,17 +316,17 @@ const AddDoctor = () => {
                               <div className="form-group">
                                 <select
                                   disabled
-                                  className="form-select   mb-2"
-                                  style={{ width: "18vw" }}
+                                  className="form-select  p-2 mb-2"
+                                  style={{ width: "15vw" }}
                                 >
                                   <option value={e?.hodpital}>
                                     {e?.hospital}
                                   </option>
                                 </select>
                               </div>
-                              <div className="form-group">
+                              <div className="form-group ">
                                 <select
-                                  className="form-select   mb-2"
+                                  className="form-select p-2   mb-2"
                                   disabled
                                   style={{ width: "15vw" }}
                                 >
@@ -419,9 +338,9 @@ const AddDoctor = () => {
 
                               <div className="form-group">
                                 <select
-                                  className="form-select   mb-2"
+                                  className="form-select p-2  mb-2"
                                   disabled
-                                  style={{ width: "15vw" }}
+                                  style={{ width: "12vw" }}
                                 >
                                   <option value={e?.doctor}>{e?.doctor}</option>
                                 </select>
@@ -433,9 +352,30 @@ const AddDoctor = () => {
                                   disabled
                                   placeholder="Amount"
                                   value={e?.amount}
-                                  className="form-control   mb-2"
-                                  style={{ width: "15vw" }}
+                                  className="form-control   mb-2 "
+                                  style={{ width: "12vw" }}
                                 />
+                              </div>
+                              <div className="form-group d-flex align-items-center gap-2">
+                                <div className="text-danger">
+                                  <Link
+                                    type="button"
+                                    to={`/admin/assign-doctor/${e?._id}`}
+                                    className="btn  btn-outline-primary"
+                                    // onClick={() => handleDelete(e?._id)}
+                                  >
+                                    EDIT
+                                  </Link>
+                                </div>
+                                <div className="">
+                                  <button
+                                    type="button"
+                                    className="btn  btn-outline-danger"
+                                    onClick={() => handleDelete(e?._id)}
+                                  >
+                                    DELETE
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </>
