@@ -11,12 +11,9 @@ echo "Installing Dependencies..."
 npm install --yes
 
 npm run build
-<<<<<<< HEAD
-          
-pm2 start npm --name \"test_server\" -- start
-=======
+
 
 pm2 start npm --name \"test_server\" --start
->>>>>>> 79b946f3855055984fead38ab1152e412f8849e8
+
 
 echo "Deployment Finished!"
