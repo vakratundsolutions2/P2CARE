@@ -1,6 +1,8 @@
 const USER = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const twilio = require("twilio");
 
 
 //==================================checkToken===============
@@ -8,7 +10,7 @@ exports.CHECKJWT = async function (req, res, next) {
   try {
     // console.log(req.headers);
     const token = req.headers.authorization;
-   
+
     if (!token) {
       throw new Error("Token not found");
     }
@@ -27,6 +29,8 @@ exports.CHECKJWT = async function (req, res, next) {
   }
 };
 
+
+
 //=======================addUser====================
 
 exports.addUser = async function (req, res, next) {
@@ -35,19 +39,30 @@ exports.addUser = async function (req, res, next) {
       !req.body.Username ||
       !req.body.Name ||
       !req.body.Email ||
-      !req.body.Password
+      !req.body.Password ||
+      !req.body.phoneNumber
     ) {
-      throw new Error("Please Enter Valid Feild");
+      throw new Error("Please Enter Valid Field");
     }
     req.body.Password = await bcrypt.hash(req.body.Password, 10);
     console.log(req.body);
 
-    const data = await USER.create(req.body);
-    res.status(201).json({
-      status: "Successful",
-      message: "User SucessFully Added",
-      data,
-    });
+    //check if user already exists or not for same phoneNumber
+
+    const userExists = await USER.findOne({ phoneNumber: req.body.phoneNumber })
+
+    if (userExists == null) {
+
+      const data = await USER.create(req.body);
+      res.status(201).json({
+        status: "Successful",
+        message: "User SucessFully Added",
+        data,
+      });
+    } else {
+      throw new Error("phone Number already registered");
+    }
+
   } catch (error) {
     res.status(404).json({
       status: "Fail",
@@ -76,7 +91,7 @@ exports.logIn = async function (req, res, next) {
     var token = jwt.sign(
       { id: checkUser._id },
       process.env.JwtSign ||
-        `my-32-character-ultra-secure-and-ultra-long-secret`
+      `my-32-character-ultra-secure-and-ultra-long-secret`
     );
 
     res.status(200).json({
@@ -130,10 +145,10 @@ exports.DELETETUSER = async function (req, res, next) {
 //=======================EditUser====================
 
 exports.EDITUSER = async function (req, res, next) {
-  
+
   try {
     const getData = await USER.findById(req.params.id);
-    
+
     var data = { ...getData._doc, ...req.body };
     if (req.body.Password) {
       req.body.Password = await bcrypt.hash(req.body.Password, 10);
@@ -171,3 +186,88 @@ exports.EDITUSER = async function (req, res, next) {
 //     }
 
 //   };
+
+
+// Twilio credentials
+const accountSid = process.env.twilioAccountSid;
+const authToken = process.env.twilioAuthToken;
+const verifySid = process.env.twilioVerifySid;
+const client = twilio(accountSid, authToken);
+
+
+//=======================API endpoint to initiate verification====================
+exports.startVerification = async function (req, res) {
+
+  try {
+    const phoneNumber = req.body.phoneNumber;
+
+    //send verification code only if user is registered and isActive==false
+
+    unverifiedUser = await USER.findOne({ phoneNumber: phoneNumber, isActive: false });
+
+    if (unverifiedUser == null) {
+
+      throw new Error("No Such User Exists");
+
+    }
+    else if (unverifiedUser.isActive == true) {
+
+      throw new Error("User Already Verified");
+
+    }
+    else {
+
+      const verification = await client.verify.v2
+        .services(verifySid)
+        .verifications.create({ to: phoneNumber, channel: "sms" });
+      
+      res.json({ status: verification.status });
+
+    }
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+
+}
+
+//=======================API endpoint to check verification code====================
+
+exports.checkVerification = async function (req, res) {
+
+  try {
+    const phoneNumber = req.body.phoneNumber;
+    const otpCode = req.body.otpCode;
+
+    const verificationCheck = await client.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({ to: phoneNumber, code: otpCode });
+
+    //if status is approved make user Active
+    if (verificationCheck.status == "approved") {
+
+      unverifiedUser = await USER.findOneAndUpdate({ phoneNumber: phoneNumber }, { $set: { isActive: true } }, { new: true });
+
+      if (unverifiedUser == null) {
+
+        throw new Error("No Such User Exists");
+
+      } else {
+        res.json({ status: verificationCheck.status, isActive: unverifiedUser.isActive });
+      }
+
+    } else {
+
+      res.json({ status: verificationCheck.status })
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+
+
+}
+

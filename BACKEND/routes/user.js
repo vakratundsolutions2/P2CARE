@@ -20,5 +20,11 @@ router.delete('/delete/:id',userController.CHECKJWT, userController.DELETETUSER)
 // //Logout
 // router.get('/logout',userController.CHECKJWT,userController.logOut);
 
+//mobile verification
+
+router.post("/start-verification",userController.startVerification);
+
+router.post("/check-verification",userController.checkVerification);
+
 
 module.exports = router;

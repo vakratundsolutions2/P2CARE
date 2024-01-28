@@ -7,6 +7,11 @@ const userSchema = new Schema({
   Name: String,
   Email: String,
   Password: String,
+  phoneNumber:String,
+  isActive:{
+    type:Boolean,
+    default:false
+  },
   Role: {
     type: String,
     enum: ["ADMIN", "USER", "DOCTOR"],

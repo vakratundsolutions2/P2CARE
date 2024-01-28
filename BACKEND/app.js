@@ -27,6 +27,7 @@ const {reviewHosptialRouter}=require("./routes/reviewHospital")
 require("dotenv").config();
 // const PORT = process.env.PORT ;
 const uri = `${process.env.mongoUrl}`;
+
 mongoose
   .connect(uri)
   .then(() => console.log("Connected!"))
