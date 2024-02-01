@@ -3,19 +3,30 @@ const Schema = mongoose.Schema;
 
 
 const doctorSchema = new Schema({
+  userId: { type: mongoose.Schema.ObjectId, ref: "user", required: true },
+  patients: [{ type: mongoose.Schema.ObjectId, ref: "user", required: true }],
+
   doctorName: {
     type: String,
     required: true,
   },
+  
+  gender: {
+    type: String,
+    enum: ["Male", "Female"],
+    default: "Male",
+  },
+
   doctorCode: String,
   departmentName: String,
   departmentCode: String,
-  experties: [String], //category
-  // designation: [String],
+  experties: [String],
+
   designation: String,
   experienceInfo: [String],
-  slug: String,
+
   location: String,
+  zipcode: String,
   description: String,
   shortDescription: String,
   specialities: String,
@@ -25,23 +36,56 @@ const doctorSchema = new Schema({
   languageInfo: [String],
   educationInfo: [String],
   fellowShipInfo: [String],
+
   metaTitle: String,
   ogMetaTitle: String,
   metaDescription: String,
   ogMetaDescription: String,
   metaTags: String,
+  
   price: Number,
   image: String,
   availabileforappointment: {
     type: Boolean,
     default: false,
   },
-  hospital: [String],
+  yearofexperience: Number,
+
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
+
+  isVarified: {
+    type: Boolean,
+    default: false,
+  },
+  assign: [
+    {
+      hospitals: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "hospital",
+      },
+      amount: Number,
+      category: String,
+    },
+  ],
+
+  ratings: [
+    {
+      star: Number,
+      comment: String,
+      postedby: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+      date: Date,
+    },
+  ],
+  totalratings: { type: String, default: 0 },
   status: {
     type: String,
     enum: ["publish", "draft"],
     default: "draft",
   },
+  bookings:[ { type: mongoose.Schema.Types.ObjectId, ref: "bookappointment" }],
 });
 
 

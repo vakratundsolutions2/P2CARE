@@ -1,13 +1,34 @@
 import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getADoctor, resetState } from "../../features/doctor/doctorSlice";
+import { useEffect, useState } from "react";
+import {
+  getADoctor,
+  resetState,
+  reviewDoctor,
+} from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
+import { Rate, message } from "antd";
+import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import dayjs from "dayjs";
+import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
+import relativeTime from "dayjs/plugin/relativeTime";
+import * as yup from "yup";
+let schema = yup.object().shape({
+  // postedby: yup
+  //   .string()
+
+  //   .required("Login Required"),
+  // doctorID: yup.string().required("Doctor is Required"),
+  comment: yup.string().max(100),
+});
 
 function Doctorprofile() {
+  dayjs.extend(relativeTime);
   const ID = location.pathname.split("/")[2];
-  
+  const [activeTab, setActiveTab] = useState("doc_overview");
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,19 +39,44 @@ function Doctorprofile() {
     }
   }, [ID]);
 
+  const customIcons = {
+    1: <FrownOutlined />,
+    2: <FrownOutlined />,
+    3: <MehOutlined />,
+    4: <SmileOutlined />,
+    5: <SmileOutlined />,
+  };
+
   const DoctorState = useSelector((state) => state?.doctor);
-  const {SingleData} = DoctorState
+  const { SingleData, rating, isSuccess } = DoctorState;
+  const user = useSelector((state) => state.auth?.user);
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+  };
+  const DOCTOR = SingleData;
 
-const DOCTOR = SingleData
+  const formik = useFormik({
+    initialValues: {
+      star: 3,
+      comment: "",
+      postedby: user?._id,
+      doctorID: ID,
+    },
+    validationSchema: schema,
+    onSubmit: (values) => {
+      dispatch(reviewDoctor(values));
+      setTimeout(() => {
+        dispatch(getADoctor(ID));
+        dispatch(resetState());
+      }, 600);
+    },
+  });
 
-  
+  console.log("doctor", DOCTOR);
   return (
     <>
       <div className="main-wrapper">
-        <BreadCrum
-          location={`${DOCTOR?.doctorName}`}
-          heading={"Doctor Profile"}
-        />
+        <BreadCrum location={`Doctor Profile`} heading={"Doctor Profile"} />
 
         <div className="content">
           <div className="container">
@@ -46,34 +92,31 @@ const DOCTOR = SingleData
                       />
                     </div>
                     <div className="doc-info-cont">
-                      <h4 className="doc-name">{DOCTOR?.doctorName}</h4>
+                      <h4 className="doc-name">DR. {DOCTOR?.doctorName}</h4>
                       <p className="doc-speciality">
-                        BDS, MDS - Oral & Maxillofacial Surgery
+                        {DOCTOR?.educationInfo[0]}
                       </p>
-                      <p className="doc-department">
+                      <p className="doc-department ">
                         <img
                           src="/src/assets/img/specialities/specialities-05.png"
-                          className="img-fluid"
+                          className="img-fluid "
                           alt="Speciality"
                         />
-                        Dentist
+                        {DOCTOR?.specialities} Specialitist
                       </p>
-                      <div className="rating">
-                        <i className="fas fa-star filled"></i>
-                        <i className="fas fa-star filled"></i>
-                        <i className="fas fa-star filled"></i>
-                        <i className="fas fa-star filled"></i>
-                        <i className="fas fa-star"></i>
+                      <div className="rating gap-2 d-flex ">
+                        <Rate disabled value={DOCTOR?.totalratings} />
                         <span className="d-inline-block average-rating">
-                          (35)
+                          ({DOCTOR?.ratings?.length})
                         </span>
                       </div>
                       <div className="clinic-details">
                         <p className="doc-location">
-                          <i className="fas fa-map-marker-alt"></i> Newyork,
-                          USLink - <Link to="">Get Directions</Link>
+                          <i className="fas fa-map-marker-alt"></i>{" "}
+                          {DOCTOR?.location} - <Link to="">Get Directions</Link>
                         </p>
                         <ul className="clinic-gallery">
+                          {/* 
                           <li>
                             <Link
                               to="assets/img/features/feature-01.jpg"
@@ -117,34 +160,36 @@ const DOCTOR = SingleData
                                 alt="Feature"
                               />
                             </Link>
-                          </li>
+                          </li> */}
                         </ul>
                       </div>
-                      <div className="clinic-services">
+                      {/* <div className="clinic-services">
                         <span>Dental Fillings</span>
                         <span>Teeth Whitneing</span>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <div className="doc-info-right">
                     <div className="clini-infos">
                       <ul>
                         <li>
-                          <i className="far fa-thumbs-up"></i> 99%
+                          {/* <i className="far fa-thumbs-up"></i> 99% */}
                         </li>
                         <li>
-                          <i className="far fa-comment"></i> 35 Feedback
+                          <i className="far fa-comment"></i>{" "}
+                          {DOCTOR?.ratings?.length} Feedback
                         </li>
                         <li>
-                          <i className="fas fa-map-marker-alt"></i> Newyork, USA
+                          <i className="fas fa-map-marker-alt"></i>
+                          {DOCTOR?.location}
                         </li>
                         <li>
-                          <i className="far fa-money-bill-alt"></i> $100 per
-                          hour{" "}
+                          <i className="far fa-money-bill-alt"></i> &#x20B9;{" "}
+                          {DOCTOR?.price} hour{" "}
                         </li>
                       </ul>
                     </div>
-                    <div className="doctor-action">
+                    {/* <div className="doctor-action">
                       <Link className="btn btn-white fav-btn">
                         <i className="far fa-bookmark"></i>
                       </Link>
@@ -165,7 +210,7 @@ const DOCTOR = SingleData
                       >
                         <i className="fas fa-video"></i>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className="clinic-booking">
                       <Link
                         className="apt-btn"
@@ -185,38 +230,35 @@ const DOCTOR = SingleData
                   <ul className="nav nav-tabs nav-tabs-bottom nav-justified">
                     <li className="nav-item">
                       <Link
-                        className="nav-link active"
+                        className={`nav-link ${
+                          activeTab === "doc_overview" ? "active" : ""
+                        }`}
                         to="#doc_overview"
-                        data-bs-toggle="tab"
+                        onClick={() => handleTabClick("doc_overview")}
                       >
                         Overview
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link
-                        className="nav-link"
+                        className={`nav-link ${
+                          activeTab === "doc_locations" ? "active" : ""
+                        }`}
                         to="#doc_locations"
-                        data-bs-toggle="tab"
+                        onClick={() => handleTabClick("doc_locations")}
                       >
-                        Locations
+                        Hospitals ({DOCTOR?.assign?.length})
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link
-                        className="nav-link"
+                        className={`nav-link ${
+                          activeTab === "doc_reviews" ? "active" : ""
+                        }`}
                         to="#doc_reviews"
-                        data-bs-toggle="tab"
+                        onClick={() => handleTabClick("doc_reviews")}
                       >
                         Reviews
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link
-                        className="nav-link"
-                        to="#doc_business_hours"
-                        data-bs-toggle="tab"
-                      >
-                        Business Hours
                       </Link>
                     </li>
                   </ul>
@@ -226,13 +268,20 @@ const DOCTOR = SingleData
                   <div
                     role="tabpanel"
                     id="doc_overview"
-                    className="tab-pane fade show active"
+                    className={`tab-pane fade ${
+                      activeTab === "doc_overview" ? "show active" : ""
+                    }`}
                   >
                     <div className="row">
                       <div className="col-md-12 col-lg-9">
                         <div className="widget about-widget">
                           <h4 className="widget-title">About Me</h4>
-                          <p>{DOCTOR?.description}</p>
+                          <p
+                            className="px-4"
+                            dangerouslySetInnerHTML={{
+                              __html: DOCTOR?.description,
+                            }}
+                          ></p>
                         </div>
 
                         <div className="widget education-widget">
@@ -273,10 +322,7 @@ const DOCTOR = SingleData
                                       </div>
                                       <div className="experience-content">
                                         <div className="timeline-content">
-                                          <Link to="#/" className="name">
-                                            {e}{" "}
-                                          </Link>
-
+                                          <Link className="name">{e} </Link>
                                         </div>
                                       </div>
                                     </li>
@@ -323,17 +369,9 @@ const DOCTOR = SingleData
                           <h4>Services</h4>
                           <ul className="clearfix">
                             {DOCTOR?.experties?.map((e, i) => {
-                              const l = JSON.parse(e);
-
                               return (
                                 <>
-                                  {l?.map((e, i) => {
-                                    return (
-                                      <>
-                                        <li key={i}>{e.name} </li>
-                                      </>
-                                    );
-                                  })}
+                                  <li key={i}>{e}</li>
                                 </>
                               );
                             })}
@@ -353,582 +391,245 @@ const DOCTOR = SingleData
                   <div
                     role="tabpanel"
                     id="doc_locations"
-                    className="tab-pane fade"
+                    className={`tab-pane fade ${
+                      activeTab === "doc_locations" ? "show active" : ""
+                    }`}
                   >
-                    <div className="location-list">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="clinic-content">
-                            <h4 className="clinic-name">
-                              <Link to="#">Smile Cute Dental Care Center</Link>
-                            </h4>
-                            <p className="doc-speciality">
-                              MDS - Periodontology and Oral Implantology, BDS
-                            </p>
-                            <div className="rating">
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star"></i>
-                              <span className="d-inline-block average-rating">
-                                (4)
-                              </span>
-                            </div>
-                            <div className="clinic-details mb-0">
-                              <h5 className="clinic-direction">
-                                {" "}
-                                <i className="fas fa-map-marker-alt"></i> 2286
-                                Sundown Lane, Austin, Texas 78749, USLink <br />
-                                <Link to="">Get Directions</Link>
-                              </h5>
-                              <ul>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-01.jpg"
-                                    data-fancybox="gallery2"
-                                  >
+                    {DOCTOR?.assign?.map((e, i) => {
+                      return (
+                        <>
+                          <div className="location-list" key={i}>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="clinic-content">
+                                  <div className="doctor-img my-3">
                                     <img
-                                      src="/src/assets/img/features/feature-01.jpg"
-                                      alt="Feature Image"
+                                      src={`${baseUrl}hospital/${e?.hospitals?.hospitallogo}`}
+                                      className="img-fluid"
+                                      alt="User Image"
                                     />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-02.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-02.jpg"
-                                      alt="Feature Image"
+                                  </div>
+                                  <h4 className="clinic-name">
+                                    <Link
+                                      to={`/hospital-profile/${e?.hospitals?._id}`}
+                                    >
+                                      {e?.hospitals.hospitalname}
+                                    </Link>
+                                  </h4>
+                                  <p className="doc-speciality">
+                                    {e?.hospitals.service}
+                                  </p>
+                                  <div className="rating">
+                                    <Rate
+                                      style={{ color: "#f2b600" }}
+                                      disabled
+                                      value={e.hospitals.totalratings}
                                     />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-03.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-03.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-04.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-04.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+                                    <span className="d-inline-block average-rating">
+                                      ({e?.hospitals?.ratings?.length})
+                                    </span>
+                                  </div>
+                                  <div className="clinic-details mb-0">
+                                    <h5 className="clinic-direction">
+                                      {" "}
+                                      <i className="fas fa-map-marker-alt"></i>{" "}
+                                      {e?.hospitals?.hospitaladdress} <br />
+                                      <Link to="">Get Directions</Link>
+                                    </h5>
 
-                        <div className="col-md-4">
-                          <div className="clinic-timing">
-                            <div>
-                              <p className="timings-days">
-                                <span> Mon - Sat </span>
-                              </p>
-                              <p className="timings-times">
-                                <span>10:00 AM - 2:00 PM</span>
-                                <span>4:00 PM - 9:00 PM</span>
-                              </p>
-                            </div>
-                            <div>
-                              <p className="timings-days">
-                                <span>Sun</span>
-                              </p>
-                              <p className="timings-times">
-                                <span>10:00 AM - 2:00 PM</span>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
+                                    <ul>
+                                      {e?.hospitals?.category?.map((el, i) => (
+                                        <>
+                                          <li key={i}>
+                                            <button className="btn-sm btn btn-primary">
+                                              {el}
+                                            </button>
+                                          </li>
+                                        </>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
 
-                        <div className="col-md-2">
-                          <div className="consult-price">
-                            &#x20B9; {DOCTOR?.price}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                              <div className="col-md-4">
+                                <div className="clinic-timing">
+                                  <div>
+                                    <p className="timings-days">
+                                      <span> Mon - Sun </span>
+                                    </p>
+                                    <p className="timings-times">
+                                      <span>
+                                        {e.hospitals.openingtime} -{" "}
+                                        {e.hospitals.closingtime}
+                                      </span>
+                                      {/* <span>4:00 PM - 9:00 PM</span> */}
+                                    </p>
+                                  </div>
 
-                    <div className="location-list">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="clinic-content">
-                            <h4 className="clinic-name">
-                              <Link to="#">The Family Dentistry Clinic</Link>
-                            </h4>
-                            <p className="doc-speciality">
-                              MDS - Periodontology and Oral Implantology, BDS
-                            </p>
-                            <div className="rating">
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star"></i>
-                              <span className="d-inline-block average-rating">
-                                (4)
-                              </span>
-                            </div>
-                            <div className="clinic-details mb-0">
-                              <p className="clinic-direction">
-                                {" "}
-                                <i className="fas fa-map-marker-alt"></i> 2883
-                                University Street, Seattle, Texas Washington,
-                                98155 <br />
-                                <Link to="">Get Directions</Link>
-                              </p>
-                              <ul>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-01.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-01.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-02.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-02.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-03.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-03.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="assets/img/features/feature-04.jpg"
-                                    data-fancybox="gallery2"
-                                  >
-                                    <img
-                                      src="/src/assets/img/features/feature-04.jpg"
-                                      alt="Feature Image"
-                                    />
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+                                  {/* <div>
+                                    <p className="timings-days">
+                                      <span>Sun</span>
+                                    </p>
+                                    <p className="timings-times">
+                                      <span>10:00 AM - 2:00 PM</span>
+                                    </p>
+                                  </div>
+                                   */}
+                                </div>
+                              </div>
 
-                        <div className="col-md-4">
-                          <div className="clinic-timing">
-                            <div>
-                              <p className="timings-days">
-                                <span> Tue - Fri </span>
-                              </p>
-                              <p className="timings-times">
-                                <span>11:00 AM - 1:00 PM</span>
-                                <span>6:00 PM - 11:00 PM</span>
-                              </p>
-                            </div>
-                            <div>
-                              <p className="timings-days">
-                                <span>Sat - Sun</span>
-                              </p>
-                              <p className="timings-times">
-                                <span>8:00 AM - 10:00 AM</span>
-                                <span>3:00 PM - 7:00 PM</span>
-                              </p>
+                              <div className="col-md-2">
+                                <div className="consult-price">
+                                  &#x20B9; {e?.amount}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </>
+                      );
+                    })}
 
-                        <div className="col-md-2">
-                          <div className="consult-price">
-                            &#x20B9; {DOCTOR?.price}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  
                   </div>
 
                   <div
                     role="tabpanel"
                     id="doc_reviews"
-                    className="tab-pane fade"
+                    className={`tab-pane fade ${
+                      activeTab === "doc_reviews" ? "show active" : ""
+                    }`}
                   >
                     <div className="widget review-listing">
                       <ul className="comments-list">
                         <li>
-                          <div className="comment">
-                            <img
-                              className="avatar avatar-sm rounded-circle"
-                              alt="User Image"
-                              src="/src/assets/img/patients/patient.jpg"
-                            />
-                            <div className="comment-body">
-                              <div className="meta-data">
-                                <span className="comment-author">
-                                  Richard Wilson
-                                </span>
-                                <span className="comment-date">
-                                  Reviewed 2 Days ago
-                                </span>
-                                <div className="review-count rating">
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                              </div>
-                              <p className="recommended">
-                                <i className="far fa-thumbs-up"></i> I recommend
-                                the doctor
-                              </p>
-                              <p className="comment-content">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magnLink aliqua.
-                                Ut enim ad minim veniam, quis nostrud
-                                exercitation. Curabitur non nullLink sit amet
-                                nisl tempus
-                              </p>
-                              <div className="comment-reply">
-                                <Link className="comment-btn" to="#">
-                                  <i className="fas fa-reply"></i> Reply
-                                </Link>
-                                <p className="recommend-btn">
-                                  <span>Recommend?</span>
-                                  <Link to="#" className="like-btn">
-                                    <i className="far fa-thumbs-up"></i> Yes
-                                  </Link>
-                                  <Link to="#" className="dislike-btn">
-                                    <i className="far fa-thumbs-down"></i> No
-                                  </Link>
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                          {DOCTOR?.ratings?.map((e, i) => {
+                            const dt = e.date;
+                            const comentTime = dayjs(dt).fromNow();
 
-                          <ul className="comments-reply">
-                            <li>
-                              <div className="comment">
-                                <img
-                                  className="avatar avatar-sm rounded-circle"
-                                  alt="User Image"
-                                  src="/src/assets/img/patients/patient1.jpg"
-                                />
-                                <div className="comment-body">
-                                  <div className="meta-data">
-                                    <span className="comment-author">
-                                      Charlene Reed
+                            return (
+                              <>
+                                <div className="comment" key={i}>
+                                  <div className="d-flex w-25 flex-column">
+                                    <img
+                                      className="avatar avatar-sm rounded-circle"
+                                      alt="User Image"
+                                      src="/src/assets/img/patients/patient.jpg"
+                                    />
+                                    <span className="review-count rating">
+                                      <Rate
+                                        style={{ color: "#f2b600" }}
+                                        disabled
+                                        value={e.star}
+                                      />
                                     </span>
-                                    <span className="comment-date">
-                                      Reviewed 3 Days ago
-                                    </span>
-                                    <div className="review-count rating">
-                                      <i className="fas fa-star filled"></i>
-                                      <i className="fas fa-star filled"></i>
-                                      <i className="fas fa-star filled"></i>
-                                      <i className="fas fa-star filled"></i>
-                                      <i className="fas fa-star"></i>
+                                  </div>
+
+                                  <div className="comment-body">
+                                    <div className="meta-data">
+                                      <span className="comment-author">
+                                        {e?.postedby?.Username}
+                                      </span>
+                                      <span className="comment-date">
+                                        {comentTime}
+                                      </span>
+                                    </div>
+                                    {/* <p className="recommended">
+                                      <i className="far fa-thumbs-up"></i> I
+                                      recommend the doctor
+                                    </p> */}
+                                    <p className="comment-content">
+                                      {e?.comment}
+                                    </p>
+                                    <div className="comment-reply">
+                                      <Link className="comment-btn" to="#">
+                                        <i className="fas fa-reply"></i> Reply
+                                      </Link>
+                                      {/* <p className="recommend-btn">
+                                        <span>Recommend?</span>
+                                        <Link to="#" className="like-btn">
+                                          <i className="far fa-thumbs-up"></i>{" "}
+                                          Yes
+                                        </Link>
+                                        <Link to="#" className="dislike-btn">
+                                          <i className="far fa-thumbs-down"></i>{" "}
+                                          No
+                                        </Link>
+                                      </p> */}
                                     </div>
                                   </div>
-                                  <p className="comment-content">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magnLink
-                                    aliqua. Ut enim ad minim veniam. Curabitur
-                                    non nulla sit amet nisl tempus
-                                  </p>
-                                  <div className="comment-reply">
-                                    <Link className="comment-btn" to="#">
-                                      <i className="fas fa-reply"></i> Reply
-                                    </Link>
-                                    <p className="recommend-btn">
-                                      <span>Recommend?</span>
-                                      <Link to="#" className="like-btn">
-                                        <i className="far fa-thumbs-up"></i> Yes
-                                      </Link>
-                                      <Link to="#" className="dislike-btn">
-                                        <i className="far fa-thumbs-down"></i>{" "}
-                                        No
-                                      </Link>
-                                    </p>
-                                  </div>
                                 </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </li>
-
-                        <li>
-                          <div className="comment">
-                            <img
-                              className="avatar avatar-sm rounded-circle"
-                              alt="User Image"
-                              src="/src/assets/img/patients/patient2.jpg"
-                            />
-                            <div className="comment-body">
-                              <div className="meta-data">
-                                <span className="comment-author">
-                                  Travis Trimble
-                                </span>
-                                <span className="comment-date">
-                                  Reviewed 4 Days ago
-                                </span>
-                                <div className="review-count rating">
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star filled"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                              </div>
-                              <p className="comment-content">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magnLink aliqua.
-                                Ut enim ad minim veniam, quis nostrud
-                                exercitation. Curabitur non nullLink sit amet
-                                nisl tempus
-                              </p>
-                              <div className="comment-reply">
-                                <Link className="comment-btn" to="#">
-                                  <i className="fas fa-reply"></i> Reply
-                                </Link>
-                                <p className="recommend-btn">
-                                  <span>Recommend?</span>
-                                  <Link to="#" className="like-btn">
-                                    <i className="far fa-thumbs-up"></i> Yes
-                                  </Link>
-                                  <Link to="#" className="dislike-btn">
-                                    <i className="far fa-thumbs-down"></i> No
-                                  </Link>
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                              </>
+                            );
+                          })}
                         </li>
                       </ul>
 
                       <div className="all-feedback text-center">
                         <Link to="#" className="btn btn-primary btn-sm">
-                          Show all feedback <strong>(167)</strong>
+                          Show all feedback{" "}
+                          <strong>({DOCTOR?.ratings?.length})</strong>
                         </Link>
                       </div>
                     </div>
 
                     <div className="write-review">
                       <h4>
-                        Write Link review for <strong>Dr. Darren Elder</strong>
+                        Write Link review for{" "}
+                        <strong>Dr. {DOCTOR?.doctorName}</strong>
                       </h4>
 
-                      <form>
+                      <form onSubmit={formik.handleSubmit}>
                         <div className="mb-3">
-                          <label className="mb-2">Review</label>
-                          <div className="star-rating">
-                            <input
-                              id="star-5"
-                              type="radio"
-                              name="rating"
-                              value="star-5"
+                          <label className="mb-2">Rate</label>
+                          <div className="star-rating ">
+                            <Rate
+                              style={{ color: "#f2b600" }}
+                              character={({ index = 0 }) =>
+                                customIcons[index + 1]
+                              }
+                              disabled={user ? false : true}
+                              name="star"
+                              onChange={(e) => formik.setFieldValue("star", e)}
+                              defaultValue={formik.values.star}
                             />
-                            <label htmlFor="star-5" title="5 stars">
-                              <i className="active fLink fa-star"></i>
-                            </label>
-                            <input
-                              id="star-4"
-                              type="radio"
-                              name="rating"
-                              value="star-4"
-                            />
-                            <label htmlFor="star-4" title="4 stars">
-                              <i className="active fLink fa-star"></i>
-                            </label>
-                            <input
-                              id="star-3"
-                              type="radio"
-                              name="rating"
-                              value="star-3"
-                            />
-                            <label htmlFor="star-3" title="3 stars">
-                              <i className="active fLink fa-star"></i>
-                            </label>
-                            <input
-                              id="star-2"
-                              type="radio"
-                              name="rating"
-                              value="star-2"
-                            />
-                            <label htmlFor="star-2" title="2 stars">
-                              <i className="active fLink fa-star"></i>
-                            </label>
-                            <input
-                              id="star-1"
-                              type="radio"
-                              name="rating"
-                              value="star-1"
-                            />
-                            <label htmlFor="star-1" title="1 star">
-                              <i className="active fLink fa-star"></i>
-                            </label>
                           </div>
                         </div>
-                        <div className="mb-3">
-                          <label className="mb-2">Title of your review</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            placeholder="If you could say it in one sentence, what would you say?"
-                          />
-                        </div>
-                        <div className="mb-3">
-                          <label className="mb-2">Your review</label>
+                        <div className="mb-3 ">
+                          <label className="mb-2">Write Your review</label>
                           <textarea
                             id="review_desc"
                             maxLength="100"
                             className="form-control"
+                            type="text"
+                            label="review "
+                            name="comment"
+                            disabled={user ? false : true}
+                            onChange={formik.handleChange("comment")}
+                            value={formik.values.comment}
                           ></textarea>
-
-                          <div className="d-flex justify-content-between mt-3">
-                            <small className="text-muted">
-                              <span id="chars">100</span> characters remaining
-                            </small>
+                          <div className="text-danger">
+                            {formik.touched.comment && formik.errors.comment}
                           </div>
+                          <div className="d-flex justify-content-between mt-3"></div>
                         </div>
-                        {/* <hr> */}
                         <div className="mb-3">
                           <div className="terms-accept">
-                            <div className="custom-checkbox">
-                              <input type="checkbox" id="terms_accept" />
-                              <label htmlFor="terms_accept">
-                                I have read and accept{" "}
-                                <Link to="#">Terms &amp; Conditions</Link>
-                              </label>
-                            </div>
+                            <div className="custom-checkbox"></div>
                           </div>
                         </div>
                         <div className="submit-section">
                           <button
                             type="submit"
+                            // disabled={user ? false : true}
                             className="btn btn-primary submit-btn"
                           >
-                            Add Review
+                            <Link to={user ? "" : "/login"}>
+                              {user ? "Add Review" : "Login to Review"}
+                            </Link>
                           </button>
                         </div>
                       </form>
-                    </div>
-                  </div>
-
-                  <div
-                    role="tabpanel"
-                    id="doc_business_hours"
-                    className="tab-pane fade"
-                  >
-                    <div className="row">
-                      <div className="col-md-6 offset-md-3">
-                        <div className="widget business-widget">
-                          <div className="widget-content">
-                            <div className="listing-hours">
-                              <div className="listing-day current">
-                                <div className="day">
-                                  Today <span>5 Nov 2023</span>
-                                </div>
-                                <div className="time-items">
-                                  <span className="open-status">
-                                    <span className="badge bg-success-light">
-                                      Open Now
-                                    </span>
-                                  </span>
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Monday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Tuesday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Wednesday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Thursday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Friday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day">
-                                <div className="day">Saturday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    07:00 AM - 09:00 PM
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="listing-day closed">
-                                <div className="day">Sunday</div>
-                                <div className="time-items">
-                                  <span className="time">
-                                    <span className="badge bg-danger-light">
-                                      Closed
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>

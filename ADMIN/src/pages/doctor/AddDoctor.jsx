@@ -1,12 +1,10 @@
 import { Field, FieldArray, Formik } from "formik";
 import CustomInput from "../..//components/CustomInput";
 import * as yup from "yup";
-import Select from "react-dropdown-select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
-
-import { getAllHospitals } from "../../features/hospital/hospitalSlice";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import ReactQuill from "react-quill";
 import {
   createDoctor,
@@ -15,81 +13,82 @@ import {
   resetState,
   updateDoctor,
 } from "../../features/doctor/doctorSlice";
+import { Switch } from "antd";
+import Select from "react-dropdown-select";
 
 let schema = yup.object().shape({
-  doctorName: "",
-  doctorCode: "",
-  departmentName: "",
-  departmentCode: "",
-  designation: "",
+  doctorName: yup.string().required("Doctor Name is Required"),
+  gender: yup.string().required("Doctor's Gender is Required"),
+  doctorCode: yup.string().required("Doctor Code is Required"),
+  departmentName: yup.string().required("Department Name  is Required"),
+  departmentCode: yup.string().required("Department Code is Required"),
+  designation: yup.string().required("Designation is Required"),
 
-  experties: [],
-  slug: "",
-  location: "",
-  description: "",
-  shortDescription: "",
-  experienceInfo: [],
-  awardAndAchivementsInfo: [],
-  specialities: "",
-  talkPublicationInfo: [],
-  languageInfo: [],
-  educationInfo: [],
-  fellowShipInfo: [],
-  metaTitle: "",
-  ogMetaTitle: "",
-  metaDescription: "",
-  ogMetaDescription: "",
-  metaTags: "",
-  price: "",
-  image: "",
-  availabileforappointment: false,
-  hospital: "",
-  status: "",
+  experties: yup.array().required("Experties is Required"),
+  location: yup.string().required("Location is Required"),
+  description: yup.string().required("Description is Required"),
+  shortDescription: yup.string().required("Short Description is Required"),
+  // experienceInfo: [],
+  // awardAndAchivementsInfo: [],
+  specialities: yup.string().required("Specialities is Required"),
+  // talkPublicationInfo: [],
+  // languageInfo: [],
+  // educationInfo: [],
+  // fellowShipInfo: [],
+  metaTitle: yup.string().required("metaTitle is Required"),
+  ogMetaTitle: yup.string().required("ogMetaTitle is Required"),
+  metaDescription: yup.string().required("metaDescription is Required"),
+  ogMetaDescription: yup.string().required("ogMetaDescription is Required"),
+  metaTags: yup.string().required("metaTags is Required"),
+  price: yup.string().required("Doctor Price is Required"),
+  image: yup.string().required("Doctor image is Required"),
+  availabileforappointment: yup
+    .string()
+    .required("availabile for appointment Name is Required"),
+  yearofexperience: yup.number().required("year of experience is Required"),
+  status: yup.string().required("status is Required"),
 });
 
 const AddDoctor = () => {
-    useEffect(() => {
-      dispatch(allDoctorCategory());
-      dispatch(getAllHospitals());
-      dispatch(getAllDoctors());
-
-      dispatch(resetState());
-    }, []);
-  const doctorId = location.pathname.split("/")[3];
   const dispatch = useDispatch();
+  const doctorId = location.pathname.split("/")[3];
+  useEffect(() => {
+    dispatch(allDoctorCategory());
+    dispatch(getAllDoctors());
+
+    dispatch(resetState());
+  }, [dispatch]);
+
+
+
   const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
-  const AllHospitals = useSelector((state) => state.hospital?.hospitals);
-  
-   useEffect(() => {
-     if (doctorId !== undefined || "") {
-       dispatch(resetState());
-       dispatch(getADoctor(doctorId));
-
-     } else {
-       dispatch(resetState());
-     }
-   }, [doctorId]);
- const DoctorState = useSelector((state) => state?.doctor);
- const { SingleData } = DoctorState;
-console.log(SingleData);
 
 
+  useEffect(() => {
+    if (doctorId !== undefined || "") {
+      dispatch(resetState());
+      dispatch(getADoctor(doctorId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [dispatch, doctorId]);
 
-
+  const DoctorState = useSelector((state) => state?.doctor);
+  const { SingleData } = DoctorState;
 
   return (
     <>
       <Formik
-      enableReinitialize={true}
-       
+        enableReinitialize={true}
         initialValues={{
           doctorName: SingleData?.doctorName || "",
+          gender: SingleData?.gender || "",
           doctorCode: SingleData?.doctorCode || "",
           departmentName: SingleData?.departmentName || "",
           departmentCode: SingleData?.departmentCode || "",
           designation: SingleData?.designation || "",
           experties: SingleData?.experties || [],
-          slug: SingleData?.slug || "",
+
           location: SingleData?.location || "",
           description: SingleData?.description || "",
           shortDescription: SingleData?.shortDescription || "",
@@ -109,20 +108,21 @@ console.log(SingleData);
           image: SingleData?.image || "",
           availabileforappointment:
             SingleData?.availabileforappointment || false,
-          hospital: SingleData?.hospital || "",
+          yearofexperience: SingleData?.yearofexperience || "",
           status: SingleData?.status || "",
         }}
-        
+        validationSchema={schema}
         onSubmit={(values) => {
           console.log(values);
           const {
             doctorName,
+            gender,
             doctorCode,
             departmentName,
             departmentCode,
             designation,
             experties,
-            slug,
+
             location,
             description,
             shortDescription,
@@ -140,20 +140,28 @@ console.log(SingleData);
             metaTags,
             price,
             image,
+
             availabileforappointment,
-            hospital,
+            yearofexperience,
             status,
           } = values;
 
+          console.log(values);
+          const expertiesName = [];
+          for (let index = 0; index < experties.length; index++) {
+            expertiesName.push(experties[index]?.name);
+          }
+
           const formData = new FormData();
+
           formData.append("doctorName", doctorName);
           formData.append("doctorCode", doctorCode);
           formData.append("departmentName", departmentName);
           formData.append("departmentCode", departmentCode);
           formData.append("designation", designation);
-          formData.append("experties", JSON.stringify(experties));
+          formData.append("experties", JSON.stringify(expertiesName));
           formData.append("specialities", specialities);
-          formData.append("slug", slug);
+
           formData.append("location", location);
           formData.append("experienceInfo", experienceInfo);
           formData.append("description", description);
@@ -165,14 +173,16 @@ console.log(SingleData);
           formData.append("fellowShipInfo", fellowShipInfo);
           formData.append("image", image);
           formData.append("availabileforappointment", availabileforappointment);
-          formData.append("hospital", JSON.stringify(hospital));
+          formData.append("yearofexperience", yearofexperience);
           formData.append("status", status);
+          formData.append("gender", gender);
           formData.append("price", price);
           formData.append("metaTags", metaTags);
           formData.append("ogMetaDescription", ogMetaDescription);
           formData.append("metaDescription", metaDescription);
           formData.append("ogMetaTitle", ogMetaTitle);
           formData.append("metaTitle", metaTitle);
+
           if (doctorId === undefined || "") {
             dispatch(createDoctor(formData));
 
@@ -181,6 +191,7 @@ console.log(SingleData);
             }, 300);
           } else {
             dispatch(updateDoctor({ id: doctorId, formData: formData }));
+
             setTimeout(() => {
               dispatch(resetState());
             }, 300);
@@ -194,7 +205,11 @@ console.log(SingleData);
                 {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor
               </h3>
               <div>
-                <form onSubmit={formik.handleSubmit} className="mb-4 ">
+                <form
+                  onSubmit={formik.handleSubmit}
+                  className="mb-4 "
+                  encType="multipart/form-data"
+                >
                   <div className="row align-items-center ">
                     <div className="col-6">
                       <CustomInput
@@ -270,19 +285,6 @@ console.log(SingleData);
                       </div>
                     </div>
 
-                    <div className="col-6">
-                      <CustomInput
-                        type="text"
-                        label="Doctor slug "
-                        name="slug"
-                        onChng={formik.handleChange("slug")}
-                        onBlr={formik.handleBlur("slug")}
-                        val={formik.values.slug}
-                      />
-                      <div className="error">
-                        {formik.touched.slug && formik.errors.slug}
-                      </div>
-                    </div>
                     <div className="col-6 mt-3">
                       <Select
                         name="experties"
@@ -292,12 +294,34 @@ console.log(SingleData);
                         onChange={(e) => formik.setFieldValue("experties", e)}
                         className="form-control rounded p-3 mb-3"
                         multi
+                        value={[
+                          formik.values?.experties[0],
+                          formik.values?.experties[1],
+                        ]}
                         defaultValue={[
-                          formik.values.experties[0],
-                          formik.values.experties[1],
+                          formik.values?.experties[0],
+                          formik.values?.experties[1],
                         ]}
                         options={DoctorCategory}
                       />
+
+                      {/* <Select
+                        name="experties"
+                        mode="multiple"
+                        placeholder="Select Experties ..."
+                        allowClear
+                        style={{
+                          width: "100%",
+                        }}
+                        value={[
+                          formik.values?.experties[0],
+                          formik.values?.experties[1],
+                        ]}
+                        // defaultValue={["a10", "c12"]}
+                        onChange={(e) => formik.setFieldValue("experties", e)}
+                        options={nameCategory}
+                      /> */}
+
                       <div className="error">
                         {formik.touched.experties && formik.errors.experties}
                       </div>
@@ -313,6 +337,23 @@ console.log(SingleData);
                       />
                       <div className="error">
                         {formik.touched.location && formik.errors.location}
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <select
+                        name="gender"
+                        placeholder="Select Gender..."
+                        onChange={formik.handleChange("gender")}
+                        onBlur={formik.handleBlur("gender")}
+                        value={formik.values.gender}
+                        className="form-control form-select py-3 px-4 "
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                      <div className="error">
+                        {formik.touched.gender && formik.errors.gender}
                       </div>
                     </div>
 
@@ -386,24 +427,23 @@ console.log(SingleData);
                     </div>
 
                     <div className="col-6">
-                      <Select
-                        name="hospital"
-                        labelField="hospitalname"
-                        placeholder="Select hospital ..."
-                        valueField="_id"
-                        className="form-control rounded p-3 mb-3"
-                        options={AllHospitals}
-                        defaultValue={formik.values.hospital}
-                        onChange={(e) => formik.setFieldValue("hospital", e)}
-                        multi
+                      <CustomInput
+                        type="number"
+                        label="Year of experience "
+                        name="yearofexperience"
+                        onChng={formik.handleChange("yearofexperience")}
+                        onBlr={formik.handleBlur("yearofexperience")}
+                        val={formik.values.yearofexperience}
                       />
+
                       <div className="error">
-                        {formik.touched.hospital && formik.errors.hospital}
+                        {formik.touched.yearofexperience &&
+                          formik.errors.yearofexperience}
                       </div>
                     </div>
 
                     <div
-                      className="col-11  p-3 rounded mb-3 mb-3"
+                      className="col-12  p-3 rounded mb-3 mb-3"
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3">Add experienceInfo</div>
@@ -471,7 +511,7 @@ console.log(SingleData);
                       </div>
                     </div>
                     <div
-                      className="col-11 p-3 rounded mb-3 "
+                      className="col-12 p-3 rounded mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3">Add Award And AchivementsInfo</div>
@@ -543,7 +583,7 @@ console.log(SingleData);
                     </div>
 
                     <div
-                      className="col-11 rounded p-3 mb-3 "
+                      className="col-12 rounded p-3 mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3">Talk Publication Info</div>
@@ -614,7 +654,7 @@ console.log(SingleData);
                       </div>
                     </div>
                     <div
-                      className="col-11 rounded p-3 mb-3 "
+                      className="col-12 rounded p-3 mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3">Talk Language Info</div>
@@ -682,7 +722,7 @@ console.log(SingleData);
                       </div>
                     </div>
                     <div
-                      className="col-11 rounded p-3 mb-3 "
+                      className="col-12 rounded p-3 mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3"> Education Info</div>
@@ -750,7 +790,7 @@ console.log(SingleData);
                       </div>
                     </div>
                     <div
-                      className="col-11 rounded p-3 mb-3 "
+                      className="col-12 justify-content-center rounded p-3 mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
                     >
                       <div className="my-3"> FellowShip Info</div>
@@ -954,20 +994,21 @@ console.log(SingleData);
                     <div className="col-6 m-4 d-flex">
                       <div className="form-check-inline visits ">
                         <label className="">
-                          <input
+                          <Switch
                             type="checkbox"
-                            className="form-check-input"
+                            checkedChildren={<CheckOutlined />}
                             name="availabileforappointment"
+                            unCheckedChildren={<CloseOutlined />}
                             value={formik.values.availabileforappointment}
-                            onChange={formik.handleChange(
-                              "availabileforappointment"
-                            )}
+                            onChange={(e) =>
+                              formik.setFieldValue(
+                                "availabileforappointment",
+                                e
+                              )
+                            }
                           />
-                          <span
-                            className="visit-rsn"
-                            data-bs-toggle="tooltip"
-                            // title="02:40 PM"
-                          >
+
+                          <span className="px-3">
                             Availabile For Appointment
                           </span>
                         </label>

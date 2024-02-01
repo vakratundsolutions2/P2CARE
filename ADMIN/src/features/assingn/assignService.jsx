@@ -5,6 +5,10 @@ const getAssign = async () => {
   const res = await axios.get(`${baseUrl}asign/allasign`, config);
   return res.data;
 };
+const getsingleAssign = async (id) => {
+  const res = await axios.get(`${baseUrl}asign/getasign/${id}`, config);
+  return res.data;
+};
 const addAssign = async (DATA) => {
   const res = await axios.post(`${baseUrl}asign/add`, DATA, config);
   return res.data;
@@ -30,6 +34,7 @@ const assignService = {
   addAssign,
   editAsign,
   delAsign,
+  getsingleAssign,
 };
 
 export default assignService;

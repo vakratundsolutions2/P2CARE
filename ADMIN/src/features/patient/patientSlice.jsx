@@ -2,23 +2,26 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import patientService from "./patientsService";
 import toast from "react-hot-toast";
 
-
-
-
-export const getPatients = createAsyncThunk("patient/get-patients", async (thunkAPI) => {
-  try {
-    return await patientService.getPatient();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+export const getPatients = createAsyncThunk(
+  "patient/get-patients",
+  async (thunkAPI) => {
+    try {
+      return await patientService.getPatient();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
-export const getAPatient = createAsyncThunk("patient/get-patient", async (id,thunkAPI) => {
-  try {
-    return await patientService.getAPatient(id);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+);
+export const getAPatient = createAsyncThunk(
+  "patient/get-patient",
+  async (id, thunkAPI) => {
+    try {
+      return await patientService.getAPatient(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
 
 export const createAPatient = createAsyncThunk(
   "patient/create-patient",
@@ -30,7 +33,6 @@ export const createAPatient = createAsyncThunk(
     }
   }
 );
-
 
 export const updateAPatient = createAsyncThunk(
   "patient/update-patient",
@@ -52,10 +54,10 @@ export const deleteAPatient = createAsyncThunk(
       return thunkAPI.rejectWithValue(error);
     }
   }
-  );
-  
+);
+
 const initialState = {
- Patients:[],
+  Patients: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -153,9 +155,6 @@ export const patientSlice = createSlice({
         state.message = action.error;
       })
       .addCase(resetState, () => initialState);
-
-
-     
   },
 });
 

@@ -1,6 +1,6 @@
 /*
 Author       : Dreamguys
-Template Name: Doccure - Bootstrap Template
+Template Name: p2Care - Bootstrap Template
 Version      : 1.3
 */
 // import $ from 'jquery'
@@ -52,7 +52,7 @@ Version      : 1.3
 	}
 
 
-	
+
 	// JQuery counterUp
 
 	if ($('.counter').length > 0) {
@@ -102,17 +102,17 @@ Version      : 1.3
 		});
 	}
 
-	if($('.timepicker1').length > 0 ){
-        $('.timepicker1').datetimepicker({
-            format: 'HH:mm A',
-            icons: {
-                up: "fas fa-angle-up",
-                down: "fas fa-angle-down",
-                next: 'fas fa-angle-right',
-                previous: 'fas fa-angle-left'
-            }
-        });
-    }
+	if ($('.timepicker1').length > 0) {
+		$('.timepicker1').datetimepicker({
+			format: 'HH:mm A',
+			icons: {
+				up: "fas fa-angle-up",
+				down: "fas fa-angle-down",
+				next: 'fas fa-angle-right',
+				previous: 'fas fa-angle-left'
+			}
+		});
+	}
 
 	// AOS Animation
 
@@ -228,119 +228,119 @@ Version      : 1.3
 		}
 	});
 
-	
-	
+
+
 	//owl carousel
-		
-	if($('.owl-carousel.special').length > 0) {
+
+	if ($('.owl-carousel.special').length > 0) {
 		$('.owl-carousel.special').owlCarousel({
-			loop:true,
-			margin:15,
+			loop: true,
+			margin: 15,
 			dots: true,
-			nav:true,
+			nav: true,
 			smartSpeed: 2000,
-			navText: [ '<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>' ], 
-			responsive:{
-				0:{
-					items:1
+			navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+			responsive: {
+				0: {
+					items: 1
 				},
-				500:{
-					items:2
+				500: {
+					items: 2
 				},
-				768:{
-					items:3
+				768: {
+					items: 3
 				},
-				1000:{
-					items:4
+				1000: {
+					items: 4
 				},
-				1300:{
-					items:4
+				1300: {
+					items: 4
 				}
 			}
-		})	
+		})
 	}
-	
+
 	//Eye Clicnic carousel
-	
-	if($('.owl-carousel.eye-clinic').length > 0) {
+
+	if ($('.owl-carousel.eye-clinic').length > 0) {
 		$('.owl-carousel.eye-clinic').owlCarousel({
-			loop:true,
-			margin:15,
+			loop: true,
+			margin: 15,
 			dots: true,
-			nav:true,
+			nav: true,
 			smartSpeed: 2000,
-			navText: [ '<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>' ], 
-			responsive:{
-				0:{
-					items:1
+			navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+			responsive: {
+				0: {
+					items: 1
 				},
-				500:{
-					items:1
+				500: {
+					items: 1
 				},
-				768:{
-					items:2
+				768: {
+					items: 2
 				},
-				992:{
-					items:3
+				992: {
+					items: 3
 				},
-				1200:{
-					items:4
+				1200: {
+					items: 4
 				}
 			}
-		})	
+		})
 	}
-	
+
 	//Eye Blog carousel
-	
-	if($('.owl-carousel.eye-blogslider').length > 0) {
+
+	if ($('.owl-carousel.eye-blogslider').length > 0) {
 		$('.owl-carousel.eye-blogslider').owlCarousel({
-			loop:true,
-			margin:15,
+			loop: true,
+			margin: 15,
 			dots: true,
-			nav:true,
+			nav: true,
 			smartSpeed: 2000,
-			navText: [ '<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>' ], 
-			responsive:{
-				0:{
-					items:1
+			navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+			responsive: {
+				0: {
+					items: 1
 				},
-				500:{
-					items:1
+				500: {
+					items: 1
 				},
-				768:{
-					items:2
+				768: {
+					items: 2
 				},
-				1000:{
-					items:3
+				1000: {
+					items: 3
 				},
-				1300:{
-					items:4
+				1300: {
+					items: 4
 				}
 			}
-		})	
+		})
 	}
-	
-	
+
+
 	//Eye Testimonial carousel
-	
-	if($('.owl-carousel.eye-testislider').length > 0) {
+
+	if ($('.owl-carousel.eye-testislider').length > 0) {
 		$('.owl-carousel.eye-testislider').owlCarousel({
-			loop:true,
-			margin:15,
+			loop: true,
+			margin: 15,
 			dots: false,
-			nav:true,
+			nav: true,
 			smartSpeed: 2000,
 			navContainer: '.slide-11',
-			navText: [ '<i class="fa-solid fa-arrow-left"></i>', '<i class="fa-solid fa-arrow-right"></i>' ], 
-			responsive:{
-				0:{
-					items:1
+			navText: ['<i class="fa-solid fa-arrow-left"></i>', '<i class="fa-solid fa-arrow-right"></i>'],
+			responsive: {
+				0: {
+					items: 1
 				},
-				1300:{
-					items:1
+				1300: {
+					items: 1
 				}
 			}
-		})	
+		})
 	}
 
 	// Specialities Slider
@@ -942,41 +942,41 @@ Version      : 1.3
 	//Choose Slider
 	if ($('.about-us-section-fifteen .vertical-slider').length > 0) {
 		$('.about-us-section-fifteen .vertical-slider').slick({
-		dots: true,
-		arrows: true,
-        autoplay: false,
-        centerMode: true,
-        infinite: true,
-        rows: 0,
-        slidesToShow: 3,
-        vertical: true,
-        verticalSwiping: true
-	});
+			dots: true,
+			arrows: true,
+			autoplay: false,
+			centerMode: true,
+			infinite: true,
+			rows: 0,
+			slidesToShow: 3,
+			vertical: true,
+			verticalSwiping: true
+		});
 	}
 
 
 	//slider
 	if ($(' #slide-experts').length > 0) {
-	$('#slide-experts').owlCarousel({
-		margin: 0,
-		center: true,
-		loop: true,
-		nav: false,
-		dots: false,
-		responsive: {
-			0: {
-				items: 1
-			},
-			768: {
-				items: 1,
-				margin: 15,
-			},
-			1000: {
-				items: 3,
+		$('#slide-experts').owlCarousel({
+			margin: 0,
+			center: true,
+			loop: true,
+			nav: false,
+			dots: false,
+			responsive: {
+				0: {
+					items: 1
+				},
+				768: {
+					items: 1,
+					margin: 15,
+				},
+				1000: {
+					items: 3,
+				}
 			}
-		}
-	});
-};
+		});
+	};
 
 
 
@@ -1046,7 +1046,7 @@ Version      : 1.3
 					slidesToShow: 2
 				}
 			}
-		]
+			]
 		});
 	}
 
@@ -1789,18 +1789,18 @@ Version      : 1.3
 		})
 	}
 
-	if($('.header-trans.header-eleven').length > 0) {
-		$(document).ready(function(){
-		  $(window).scroll(function(){
-			var scroll = $(window).scrollTop();
-			  if (scroll > 95) {
-				$(".header-trans").css("background" , "#1e5d92");
-			  }
-	
-			  else{
-				  $(".header-trans").css("background" , "transparent");  	
-			  }
-		  })
+	if ($('.header-trans.header-eleven').length > 0) {
+		$(document).ready(function () {
+			$(window).scroll(function () {
+				var scroll = $(window).scrollTop();
+				if (scroll > 95) {
+					$(".header-trans").css("background", "#1e5d92");
+				}
+
+				else {
+					$(".header-trans").css("background", "transparent");
+				}
+			})
 		})
 	}
 
@@ -1867,32 +1867,32 @@ Version      : 1.3
 			})
 		})
 	}
-	if($('.header-fourteen.header-twelve').length > 0) {
-		$(document).ready(function(){
-		  $(window).scroll(function(){
-			var scroll = $(window).scrollTop();
-			if (scroll > 95) {
-				$(".header-fourteen").css("background" , "#fff");
-			  }
+	if ($('.header-fourteen.header-twelve').length > 0) {
+		$(document).ready(function () {
+			$(window).scroll(function () {
+				var scroll = $(window).scrollTop();
+				if (scroll > 95) {
+					$(".header-fourteen").css("background", "#fff");
+				}
 
-			  else{
-				  $(".header-fourteen").css("background" , "transparent");  	
-			  }
-		  })
+				else {
+					$(".header-fourteen").css("background", "transparent");
+				}
+			})
 		})
 	}
-	if($('.header-fourteen.header-thirteen').length > 0) {
-		$(document).ready(function(){
-		  $(window).scroll(function(){
-			var scroll = $(window).scrollTop();
-			if (scroll > 95) {
-				$(".header-fourteen").css("background" , "#fff");
-			  }
+	if ($('.header-fourteen.header-thirteen').length > 0) {
+		$(document).ready(function () {
+			$(window).scroll(function () {
+				var scroll = $(window).scrollTop();
+				if (scroll > 95) {
+					$(".header-fourteen").css("background", "#fff");
+				}
 
-			  else{
-				  $(".header-fourteen").css("background" , "#fff");  	
-			  }
-		  })
+				else {
+					$(".header-fourteen").css("background", "#fff");
+				}
+			})
 		})
 	}
 	//for slider
@@ -2383,7 +2383,7 @@ Version      : 1.3
 			utilsScript: "assets/plugins/intltelinput/js/utils.js",
 		});
 	}
-	
+
 	// Otp Verfication
 
 	$('.digit-group').find('input').each(function () {
@@ -2421,15 +2421,15 @@ Version      : 1.3
 	});
 
 	// Mute Audio
-	
-	if($('.mute-bt').length > 0) {
-		$(".mute-bt").on('click', function(){
-			if($(this).hasClass("stop")) {
+
+	if ($('.mute-bt').length > 0) {
+		$(".mute-bt").on('click', function () {
+			if ($(this).hasClass("stop")) {
 				$(this).removeClass("stop");
 				$(".mute-bt i").removeClass("feather-mic-off");
 				$(".mute-bt i").addClass("feather-mic");
 			}
-			else{
+			else {
 				$(this).addClass("stop");
 				$(".mute-bt i").removeClass("feather-mic");
 				$(".mute-bt i").addClass("feather-mic-off");
@@ -2438,15 +2438,15 @@ Version      : 1.3
 	}
 
 	// Mute Video
-	
-	if($('.mute-video').length > 0) {
-		$(".mute-video").on('click', function(){
-			if($(this).hasClass("stop")) {
+
+	if ($('.mute-video').length > 0) {
+		$(".mute-video").on('click', function () {
+			if ($(this).hasClass("stop")) {
 				$(this).removeClass("stop");
 				$(".mute-video i").removeClass("feather-video-off");
 				$(".mute-video i").addClass("feather-video");
 			}
-			else{
+			else {
 				$(this).addClass("stop");
 				$(".mute-video i").removeClass("feather-video");
 				$(".mute-video i").addClass("feather-video-off");
@@ -2454,8 +2454,8 @@ Version      : 1.3
 		});
 	}
 
-	if($('.win-maximize').length > 0) {
-		$('.win-maximize').on('click', function(e){
+	if ($('.win-maximize').length > 0) {
+		$('.win-maximize').on('click', function (e) {
 			if (!document.fullscreenElement) {
 				document.documentElement.requestFullscreen();
 			} else {
@@ -2466,10 +2466,10 @@ Version      : 1.3
 		})
 	}
 
-	$(document).on("click",".btn-icon",function () {
+	$(document).on("click", ".btn-icon", function () {
 		$(this).parent().hide();
 	});
-	$(document).on("click",".delete_schedule",function () {
+	$(document).on("click", ".delete_schedule", function () {
 		$(this).parent().hide();
 	});
 	// Doctor Signup Wizard
@@ -2504,78 +2504,78 @@ Version      : 1.3
 		$(this).toggleClass('selected');
 		//$(this).children().toggleClass("feather-heart fa-solid fa-heart");
 	});
-	$(".add-table-items").on('click','.remove-btn', function () {
+	$(".add-table-items").on('click', '.remove-btn', function () {
 		$(this).closest('.add-row').remove();
 		return false;
 	});
 
-		// Add More Items
+	// Add More Items
 
-		$(".add-table-items").on('click', '.trash', function () {
-			$(this).closest('.test').remove();
-			return false;
-		});
-	
-		$(".add-items").on('click', function () {
-				var itemscontent =
-				  '<tr class="test">' +
-				  "<td>" +
-				  '<input type="text" class="form-control">' +
-				  "</td>" +
-				  "<td>" +
-				  '<input type="text" class="form-control">' +
-				  "</td>" +
-				  "<td>" +
-				  '<a href="javascript:void(0)" class="btn bg-danger-light trash remove-btn"><i class="far fa-trash-alt"></i></a>' +
-				  "</td>" +
-				  "</tr>";
-				$(".add-table-items").append(itemscontent);
-				return false;
-		});
+	$(".add-table-items").on('click', '.trash', function () {
+		$(this).closest('.test').remove();
+		return false;
+	});
 
-		$(".add-table-prescription").on('click', '.trash', function () {
-			$(this).closest('.test').remove();
-			return false;
-		});
-		$(".add-prescription").on('click', function () {
-			var itemscontent =
+	$(".add-items").on('click', function () {
+		var itemscontent =
+			'<tr class="test">' +
+			"<td>" +
+			'<input type="text" class="form-control">' +
+			"</td>" +
+			"<td>" +
+			'<input type="text" class="form-control">' +
+			"</td>" +
+			"<td>" +
+			'<a href="javascript:void(0)" class="btn bg-danger-light trash remove-btn"><i class="far fa-trash-alt"></i></a>' +
+			"</td>" +
+			"</tr>";
+		$(".add-table-items").append(itemscontent);
+		return false;
+	});
+
+	$(".add-table-prescription").on('click', '.trash', function () {
+		$(this).closest('.test').remove();
+		return false;
+	});
+	$(".add-prescription").on('click', function () {
+		var itemscontent =
 			'<tr class="test">' +
 			'<td>' +
-				'<input class="form-control" type="text">' +
+			'<input class="form-control" type="text">' +
 			'</td>' +
 			'<td>' +
-				'<input class="form-control" type="text">' +
+			'<input class="form-control" type="text">' +
 			'</td>' +
 			'<td>' +
-				'<input class="form-control" type="text">' +
+			'<input class="form-control" type="text">' +
 			'</td>' +
 			'<td>' +
-				'<div class="form-check form-check-inline">' +
-					'<label class="form-check-label">' +
-						'<input class="form-check-input" type="checkbox"> Morning' +
-					'</label>' +
-				'</div>' +
-				'<div class="form-check form-check-inline">' +
-					'<label class="form-check-label">' +
-						'<input class="form-check-input" type="checkbox"> Afternoon' +
-					'</label>' +
-				'</div>' +
-				'<div class="form-check form-check-inline">' +
-					'<label class="form-check-label">' +
-						'<input class="form-check-input" type="checkbox"> Evening' +
-					'</label>' +
-				'</div>' +
-				'<div class="form-check form-check-inline">' +
-					'<label class="form-check-label">' +
-						'<input class="form-check-input" type="checkbox"> Night' +
-					'</label>' +
-				'</div>' +
+			'<div class="form-check form-check-inline">' +
+			'<label class="form-check-label">' +
+			'<input class="form-check-input" type="checkbox"> Morning' +
+			'</label>' +
+			'</div>' +
+			'<div class="form-check form-check-inline">' +
+			'<label class="form-check-label">' +
+			'<input class="form-check-input" type="checkbox"> Afternoon' +
+			'</label>' +
+			'</div>' +
+			'<div class="form-check form-check-inline">' +
+			'<label class="form-check-label">' +
+			'<input class="form-check-input" type="checkbox"> Evening' +
+			'</label>' +
+			'</div>' +
+			'<div class="form-check form-check-inline">' +
+			'<label class="form-check-label">' +
+			'<input class="form-check-input" type="checkbox"> Night' +
+			'</label>' +
+			'</div>' +
 			'</td>' +
 			'<td>' +
-				'<a href="#" class="btn bg-danger-light trash"><i class="far fa-trash-alt"></i></a>' +
+			'<a href="#" class="btn bg-danger-light trash"><i class="far fa-trash-alt"></i></a>' +
 			'</td>' +
-		'</tr>';
-			$(".add-table-prescription").append(itemscontent);
-			return false;
+			'</tr>';
+		$(".add-table-prescription").append(itemscontent);
+		return false;
 	});
 })(jQuery);

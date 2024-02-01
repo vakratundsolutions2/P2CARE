@@ -2,20 +2,22 @@ import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getADoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
+import { bookingDetails, getADoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
 import { getPatients } from "../../features/patient/patientSlice";
 import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-import LOGO from "../../assets/images/P2CARE.png";
+import LOGO from "../../assets/images/p2Care.png";
+import { Rate } from "antd";
 const CheckOut = () => {
-  const data = location.search.split("?")[1];
-  const date = data.split("&")[1].split("=")[1];
-  const time = data.split("&")[2].split("=")[1];
-  const doctorID = data.split("&")[0].split("=")[1];
-  // console.log(date);
+  const data = location.search?.split("?")[1];
+  const date = data?.split("&")[1]?.split("=")[1];
+  const time = data?.split("&")[2]?.split("=")[1];
+  const doctorID = data?.split("&")[0]?.split("=")[1];
+  const category = data?.split("&")[3]?.split("=")[1];
+  console.log(category);
   const dispatch = useDispatch();
   useEffect(() => {
     if (doctorID !== undefined) {
@@ -23,23 +25,14 @@ const CheckOut = () => {
     } else {
       dispatch(resetState());
     }
-  }, [doctorID]);
-  useEffect(() => {
-
-    dispatch(resetState());
-    dispatch(getPatients());
-  }, []);
-
+  }, [doctorID, dispatch]);
+ 
   const DoctorState = useSelector((state) => state?.doctor);
-  const  {SingleData} = DoctorState
-  const USERState = useSelector((state) => state.auth?.user?.user);
-  
-
-
-
-  console.log(USERState);
+  const { SingleData } = DoctorState
+  const USERState = useSelector((state) => state.auth?.user);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       doctor: SingleData?._id,
       date: date,
@@ -47,52 +40,52 @@ const CheckOut = () => {
       user: USERState?._id,
       name: USERState?.Name,
       email: USERState?.Email,
-      gender: "",
+      gender: USERState?.gender || "",
       transactionid: "",
-      // Amount: DOCTOR?.price,
+      category:category
     },
     // validationSchema: schema,
     onSubmit: (values) => {
-      console.log(values);
-      // dispatch(login(values));
+     
+      dispatch(bookingDetails(values));
     },
   });
 
 
 
 
-// razorpay
-    const checkoutHandler = async (amount) => {
-      const {
-        data: { order },
-      } = await axios.post(`${baseUrl}payment/checkout`, {
-        amount,
-      });
+  // razorpay
+  const checkoutHandler = async (amount) => {
+    const {
+      data: { order },
+    } = await axios.post(`${baseUrl}payment/checkout`, {
+      amount,
+    });
 
-      const options = {
-        key,
-        amount: order.amount,
-        currency: "INR",
-        name: "P2CARE",
-        description: "short description of p2care",
-        image: LOGO,
-        order_id: order.id,
-        callback_url: `${baseUrl}payment/paymentverification`,
-        prefill: {
-          name: USERState?.Name,
-          email: USERState?.Email,
-          contact: "9999999999",
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
-        },
-        theme: {
-          color: "#09e5ab",
-        },
-      };
-      const razor = new window.Razorpay(options);
-      razor.open();
+    const options = {
+      key,
+      amount: order.amount,
+      currency: "INR",
+      name: "p2Care",
+      description: "short description of p2Care",
+      image: LOGO,
+      order_id: order.id,
+      callback_url: `${baseUrl}payment/paymentverification`,
+      prefill: {
+        name: USERState?.Name,
+        email: USERState?.Email,
+        contact: USERState?.MobileNo,
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#09e5ab",
+      },
     };
+    const razor = new window.Razorpay(options);
+    razor.open();
+  };
 
 
 
@@ -190,7 +183,7 @@ const CheckOut = () => {
                         </div>
                         <div className="exist-customer">
                           Existing Customer?{" "}
-                          <Link to="login">Click here to login</Link>
+                          <Link to="/login">Click here to login</Link>
                         </div>
                       </div>
                       {/* <!-- /Personal Information --> */}
@@ -277,9 +270,9 @@ const CheckOut = () => {
                             <input type="checkbox" id="terms_accept" />
                             <label htmlFor="terms_accept">
                               I have read and accept{" "}
-                              <a href="terms-condition.html">
+                              <Link >
                                 Terms &amp; Conditions
-                              </a>
+                              </Link>
                             </label>
                           </div>
                         </div>
@@ -328,13 +321,15 @@ const CheckOut = () => {
                           </Link>
                         </h4>
                         <div className="rating">
-                          <i className="fas fa-star filled"></i>
-                          <i className="fas fa-star filled"></i>
-                          <i className="fas fa-star filled"></i>
-                          <i className="fas fa-star filled"></i>
-                          <i className="fas fa-star"></i>
-                          <span className="d-inline-block average-rating">
-                            35
+                          <span className="review-count rating">
+                            <Rate
+                              style={{ color: "#f2b600" }}
+                              disabled
+                              value={SingleData?.totalratings}
+                            />
+                          </span>{" "}
+                          <span className="d-inline-block px-3 bg-primary rounded-pill mx-3 average-rating">
+                            ({SingleData?.ratings.length})
                           </span>
                         </div>
                         <div className="clinic-details">

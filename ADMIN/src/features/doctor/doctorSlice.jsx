@@ -21,6 +21,17 @@ export const createDoctor = createAsyncThunk(
     }
   }
 );
+export const SearchDoctors = createAsyncThunk(
+  "doctor/search",
+  async (Data, thunkAPI) => {
+    
+    try {
+      return await doctorService.searchDoctors(Data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const getAllDoctors = createAsyncThunk(
   "doctor/getAllDoctors",
@@ -155,6 +166,22 @@ export const doctorSlice = createSlice({
         
       }),
       builder.addCase(getADoctor.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(SearchDoctors.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(SearchDoctors.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.doctors = action.payload?.data;
+      }),
+      builder.addCase(SearchDoctors.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

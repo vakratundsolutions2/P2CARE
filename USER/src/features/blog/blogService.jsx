@@ -16,12 +16,17 @@ const getAblog = async (id) => {
 
   return res.data;
 };
+const filterblog = async (data) => {
+  const res = await axios.get(`${baseUrl}blog/filterblog?category=${data?.category}&title=${data?.title}&page=${data?.page}&limit=${data?.limit}`,);
+
+  return res.data;
+};
 
 
 const blogService = {
   addblog,
   allblogs,
-  
+  filterblog,
   getAblog,
 };
 export default blogService;

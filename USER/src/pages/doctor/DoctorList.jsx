@@ -1,36 +1,54 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllDoctors } from "../../features/doctor/doctorSlice";
+import { FilterDoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
 import BreadCrum from "../../components/BreadCrum";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
-import { Pagination, Slider } from "antd";
+import { Pagination, Rate, Slider } from "antd";
 import { GetAllAavailablity } from "../../features/availablity/availablitySlice";
-import axios from "axios";
-import { useLocale } from "antd/es/locale";
-import Paginations from "../../components/Pagination";
+import dayjs from "dayjs";
+
 
 const DoctorList = () => {
+  
+  const nowdate = dayjs().format("YY-M-D");
+  const sevenday = dayjs().add(7, "day").format('YYYY-M-D');
+  const tomorrow = dayjs().add(1, "day").format("YYYY-M-D");
+  const thirty = dayjs().add(30, "day").format("YYYY-M-D");
+  console.log(nowdate);
+  console.log(sevenday);
+  console.log(tomorrow);
+  console.log(thirty);
   const dispatch = useDispatch();
+
   const [valuePrice, setvaluePrice] = useState([0, 2000]);
   const [category, setcategory] = useState("");
+  const [gender, setgender] = useState("");
+  const [avail,setavail] = useState([0,1]);
 
-  const [Sort, setSort] = useState('');
+  const [Sort, setSort] = useState("");
   const [name, setName] = useState("");
   const [page, setPage] = useState("");
   const [limit, setLimit] = useState("");
-  const [search, setSearch] = useState([]);
+  const [star, setStar] = useState("");
+  // const [Locaton, setLocaton] = useState("");
+
+  const query = location?.search?.split("&")[1];
+
+  console.log('avail',avail);
+
+  // const loc = query?.split('=')[1];
+  // setLocaton(loc);
+
   useEffect(() => {
     dispatch(getAllDoctors());
     dispatch(GetAllAavailablity());
     dispatch(allDoctorCategory());
-  }, []);
+  }, [dispatch]);
 
   const Category = useSelector((state) => state.dCategory?.dCategories);
-  // const DoctorState = useSelector((state) => state.doctor?.doctors);
-  const DoctorState = search?.data;
   useEffect(() => {
     if (
       name !== undefined ||
@@ -38,31 +56,82 @@ const DoctorList = () => {
       valuePrice !== undefined ||
       Sort !== undefined ||
       page !== undefined ||
-      limit !== undefined
+      limit !== undefined ||
+      star !== undefined ||
+      star !== "" ||
+      gender !== undefined ||
+      gender !== ""||
+      avail !== undefined   
+
     ) {
-      axios
-        .get(
-          `${baseUrl}doctor/searchDoctorByFiltets?specialities=${category}&name=${name}&sort=${Sort}&minAmount=${valuePrice[0]}&maxAmount=${valuePrice[1]}&page=${page}&limit=${limit}`
-        )
-        .then((response) => {
-          setSearch(response.data.data);
-        });
+      dispatch(
+        FilterDoctor({
+          name,
+          category,
+          valuePrice,
+          Sort,
+          page,
+          limit,
+          star,
+          gender,
+          avail,
+        })
+      );
     } else {
-      axios.get(`${baseUrl}doctor/alldoctors`).then((response) => {
-        setSearch(response.data.data);
-      });
+      dispatch(getAllDoctors());
     }
-  }, [name, category, Sort, valuePrice, page ,limit]);
+  }, [
+    dispatch,
+    name,
+    category,
+    Sort,
+    valuePrice,
+    page,
+    limit,
+    star,
+    gender,
+    avail,
+  ]);
 
-  console.log({ name, category, valuePrice ,Sort,limit, page });
-  console.log(search);
 
-  // const {valuePrice[0],valuePrice[1] , speciality , sort} = 0
-  const handlesubmit = (r) => {
-    // r.preventDefault();
-    console.log(r);
+
+  const { doctors, doctorsFilter } = useSelector((state) => state.doctor);
+
+  
+
+  const handleReset = () => {
+    setStar("");
+    setSort("");
+    setPage("");
+    setName("");
+    setcategory("");
+    setgender("");
+    setavail([0,1]);
+    setvaluePrice([]);
+    dispatch(resetState());
+    setTimeout(() => {
+      
+      dispatch(getAllDoctors());
+      dispatch(GetAllAavailablity());
+      dispatch(allDoctorCategory());
+    }, 400);
+
   };
 
+
+  console.log("filter", {
+    name,
+    category,
+    Sort,
+    valuePrice,
+    page,
+    limit,
+    star,
+    gender,
+    avail,
+  });
+
+  console.log("DoctorState", doctors);
   return (
     <>
       <div className="main-wrapper">
@@ -76,7 +145,7 @@ const DoctorList = () => {
             <div className="row">
               <div className="col-xl-12 col-lg-12 map-view">
                 <div className="row">
-                  <form onSubmit={handlesubmit} className="row">
+                  <form className="row">
                     <div className="col-lg-3  theiaStickySidebar">
                       <div className="filter-contents">
                         <div className="filter-header">
@@ -84,33 +153,43 @@ const DoctorList = () => {
                         </div>
                         <div className="filter-details">
                           {/* <!-- Filter Grid --> */}
-                          {/* <div className="filter-grid">
-                          <h4>
-                            <a href="#collapseone" data-bs-toggle="collapse">
-                              Gender
-                            </a>
-                          </h4>
-                          <div id="collapseone" className="collapse show">
-                            <div className="filter-collapse">
-                              <ul>
-                                <li>
-                                  <label className="custom_check d-inline-flex">
-                                    <input type="radio" name="gender" />
-                                    <span className="checkmark"></span>
-                                    Male Gender
-                                  </label>
-                                </li>
-                                <li>
-                                  <label className="custom_check d-inline-flex">
-                                    <input type="radio" name="gender" />
-                                    <span className="checkmark"></span>
-                                    Female Gender
-                                  </label>
-                                </li>
-                              </ul>
+                          <div className="filter-grid">
+                            <h4>
+                              <a href="#collapseone" data-bs-toggle="collapse">
+                                Gender
+                              </a>
+                            </h4>
+                            <div id="collapseone" className="collapse show">
+                              <div className="filter-collapse">
+                                <ul>
+                                  <li>
+                                    <label className="custom_check d-inline-flex">
+                                      <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Male"
+                                        onChange={() => setgender("Male")}
+                                      />
+                                      <span className="checkmark"></span>
+                                      Male Gender
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label className="custom_check d-inline-flex">
+                                      <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Female"
+                                        onChange={() => setgender("Female")}
+                                      />
+                                      <span className="checkmark"></span>
+                                      Female Gender
+                                    </label>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
-                        </div> */}
                           {/* <!-- /Filter Grid --> */}
 
                           {/* <!-- Filter Grid --> */}
@@ -126,8 +205,12 @@ const DoctorList = () => {
                                   <li>
                                     <label className="custom_check d-inline-flex">
                                       <input
-                                        type="checkbox"
+                                        type="radio"
                                         name="availability"
+                                        value={1}
+                                        onChange={(e) =>
+                                          setavail([nowdate, e.target.value])
+                                        }
                                       />
                                       <span className="checkmark"></span>
                                       Available Today
@@ -136,8 +219,12 @@ const DoctorList = () => {
                                   <li>
                                     <label className="custom_check d-inline-flex">
                                       <input
-                                        type="checkbox"
+                                        type="radio"
                                         name="availability"
+                                        value={1}
+                                        onChange={(e) =>
+                                          setavail([tomorrow, e.target.value])
+                                        }
                                       />
                                       <span className="checkmark"></span>
                                       Available Tomorrow
@@ -146,8 +233,12 @@ const DoctorList = () => {
                                   <li>
                                     <label className="custom_check d-inline-flex">
                                       <input
-                                        type="checkbox"
+                                        type="radio"
                                         name="availability"
+                                        value={7}
+                                        onChange={(e) =>
+                                          setavail([sevenday, e.target.value])
+                                        }
                                       />
                                       <span className="checkmark"></span>
                                       Available in Next 7 Days
@@ -156,8 +247,12 @@ const DoctorList = () => {
                                   <li>
                                     <label className="custom_check d-inline-flex">
                                       <input
-                                        type="checkbox"
+                                        type="radio"
                                         name="availability"
+                                        value={30}
+                                        onChange={(e) =>
+                                          setavail([thirty, e.target.value])
+                                        }
                                       />
                                       <span className="checkmark"></span>
                                       Available in Next 30 Days
@@ -334,7 +429,7 @@ const DoctorList = () => {
                                 </ul>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
 
                           <div className="filter-grid">
                             <h4>
@@ -349,89 +444,15 @@ const DoctorList = () => {
                               <div className="filter-collapse">
                                 <ul>
                                   <li>
-                                    <div className="custom_check rating_custom_check d-inline-flex">
-                                      <input type="checkbox" name="online" />
-                                      <span className="checkmark"></span>
-                                      <div className="rating">
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <span className="rating-count">
-                                          (40)
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div className="custom_check rating_custom_check d-inline-flex">
-                                      <input type="checkbox" name="online" />
-                                      <span className="checkmark"></span>
-                                      <div className="rating">
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star"></i>
-                                        <span className="rating-count">
-                                          (35)
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div className="custom_check rating_custom_check d-inline-flex">
-                                      <input type="checkbox" name="online" />
-                                      <span className="checkmark"></span>
-                                      <div className="rating">
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <span className="rating-count">
-                                          (20)
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div className="custom_check rating_custom_check d-inline-flex">
-                                      <input type="checkbox" name="online" />
-                                      <span className="checkmark"></span>
-                                      <div className="rating">
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <span className="rating-count">
-                                          (10)
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div className="custom_check rating_custom_check d-inline-flex">
-                                      <input type="checkbox" name="online" />
-                                      <span className="checkmark"></span>
-                                      <div className="rating">
-                                        <i className="fas fa-star filled"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <i className="fas fa-star"></i>
-                                        <span className="rating-count">
-                                          (05)
-                                        </span>
-                                      </div>
-                                    </div>
+                                    <Rate
+                                      value={star}
+                                      onChange={(e) => setStar(e)}
+                                    />
                                   </li>
                                 </ul>
                               </div>
                             </div>
-                          </div> */}
+                          </div>
 
                           {/* <div className="filter-grid">
                             <h4>
@@ -473,13 +494,15 @@ const DoctorList = () => {
                                 <button
                                   type="button"
                                   className="btn btn-primary"
+                                  onClick={() => handleReset()}
                                 >
-                                  Apply
+                                  Reset
                                 </button>
                               </div>
                               {/* <div className="col-6">
                                 <button
                                   type="button"
+                                  onClick={formik.resetForm}
                                   className="btn btn-outline-primary"
                                 >
                                   Reset
@@ -497,8 +520,10 @@ const DoctorList = () => {
                           <div>
                             <div className="doctors-found">
                               <p>
-                                <span>{search?.total} Doctors found for:</span>{" "}
-                                Dentist in San francisco, California
+                                <span>
+                                  {doctorsFilter?.total} Doctors found for:
+                                </span>{" "}
+                                {category} in San francisco, California
                               </p>
                             </div>
                             <div className="doctor-filter-availability">
@@ -547,11 +572,15 @@ const DoctorList = () => {
                           </div>
                         </div>
                       </div>
-                      {search?.total === 0 ? (
-                        <><div className="row justify-content-center py-5">no data available</div></>
+                      {doctorsFilter?.total === 0 ? (
+                        <>
+                          <div className="row justify-content-center py-5">
+                            no data available
+                          </div>
+                        </>
                       ) : (
                         <>
-                          {DoctorState?.map((e, i) => {
+                          {doctors?.map((e, i) => {
                             return (
                               <>
                                 <div className="card doctor-card" key={i}>
@@ -574,7 +603,6 @@ const DoctorList = () => {
                                             >
                                               {e?.doctorName}
                                             </Link>
-                                            {/* <i className="fas fa-circle-check"></i> */}
                                           </h4>
                                           <p className="doc-speciality">
                                             {e?.specialities}
@@ -585,19 +613,14 @@ const DoctorList = () => {
                                               {e.location}
                                               <a href="">Get Direction</a>
                                             </p>
-                                            <p className="doc-location">
-                                              <i className="feather-award"></i>{" "}
-                                              <span>20</span> Years of
-                                              Experience
-                                            </p>
                                           </div>
                                           <div className="reviews-ratings">
                                             <p>
                                               <span>
                                                 <i className="fas fa-star"></i>{" "}
-                                                5
+                                                {e?.totalratings}
                                               </span>{" "}
-                                              (35 Reviews)
+                                              ({e.ratings?.length} Reviews)
                                             </p>
                                           </div>
                                         </div>
@@ -649,11 +672,9 @@ const DoctorList = () => {
                               <Pagination
                                 current={page}
                                 onChange={(e) => setPage(e)}
-                                total={search.total}
-                                pageSize={search.limit}
+                                total={doctorsFilter?.total}
+                                pageSize={doctorsFilter?.limit}
                               />
-
-                              
                             </nav>
                           </div>
                         </div>

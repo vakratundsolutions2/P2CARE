@@ -1,15 +1,17 @@
 import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
 import { config } from "../../utils/axiosConfig";
+import { data } from "jquery";
 
 const allavailablity = async () => {
   const res = await axios.get(`${baseUrl}available/alltime`, config);
 
   return res.data;
 };
-const getavailablity = async (id) => {
+const getavailablity = async (DATA) => {
+  console.log('GetAavailablity',DATA);
   const res = await axios.get(
-    `${baseUrl}available/searchdoctortime/${id}`,
+    `${baseUrl}available/searchdoctortime/${DATA.id} ` ,DATA.date,
     config
   );
 

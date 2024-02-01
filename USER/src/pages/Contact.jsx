@@ -1,12 +1,19 @@
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import BreadCrum from "../components/BreadCrum";
+import { AddInquiry } from "../features/inquary/inquarySlice";
 
 function Contact() {
+  const dispatch = useDispatch();
+  const handleSubmit = (event) => {
+    dispatch(AddInquiry(new FormData(event.target)));
+    event.target.reset();
+    event.preventDefault();
+  };
+
   return (
     <>
       <div className="main-wrapper">
-        <BreadCrum location={"Contact  "} heading={"Contact Us "} />
-
+        <BreadCrum location={"Contact"} heading={"Contact Us"} />
         <section className="contact-section">
           <div className="container">
             <div className="row">
@@ -18,7 +25,7 @@ function Contact() {
                 <div className="card contact-card">
                   <div className="card-body">
                     <div className="contact-icon">
-                      <i className="feather-map-pin"></i>
+                      <i className="fa-solid fa-map-pin"></i>
                     </div>
                     <div className="contact-details">
                       <h4>Address</h4>
@@ -29,7 +36,7 @@ function Contact() {
                 <div className="card contact-card">
                   <div className="card-body">
                     <div className="contact-icon">
-                      <i className="feather-phone"></i>
+                      <i className="fa-solid fa-phone"></i>
                     </div>
                     <div className="contact-details">
                       <h4>Phone Number</h4>
@@ -40,7 +47,7 @@ function Contact() {
                 <div className="card contact-card">
                   <div className="card-body">
                     <div className="contact-icon">
-                      <i className="feather-mail"></i>
+                      <i className="fa-solid fa-envelope"></i>
                     </div>
                     <div className="contact-details">
                       <h4>Email Address</h4>
@@ -60,7 +67,7 @@ function Contact() {
               <div className="col-lg-7 col-md-12 d-flex">
                 <div className="card contact-form-card w-100">
                   <div className="card-body">
-                    <form action="#">
+                    <form action="#" onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-md-6">
                           <div className="mb-3">
@@ -69,6 +76,8 @@ function Contact() {
                               type="text"
                               className="form-control"
                               placeholder="Enter Your Name"
+                              name="name"
+                              required
                             />
                           </div>
                         </div>
@@ -76,9 +85,11 @@ function Contact() {
                           <div className="mb-3">
                             <label className="mb-2">Email Address</label>
                             <input
-                              type="text"
+                              type="email"
                               className="form-control"
                               placeholder="Enter Email Address"
+                              name="email"
+                              required
                             />
                           </div>
                         </div>
@@ -89,16 +100,8 @@ function Contact() {
                               type="text"
                               className="form-control"
                               placeholder="Enter Phone Number"
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="mb-3">
-                            <label className="mb-2">Services</label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter Services"
+                              name="mobileNo"
+                              required
                             />
                           </div>
                         </div>
@@ -108,6 +111,8 @@ function Contact() {
                             <textarea
                               className="form-control"
                               placeholder="Enter your comments"
+                              name="message"
+                              required
                             ></textarea>
                           </div>
                         </div>
@@ -143,4 +148,4 @@ function Contact() {
   );
 }
 
-export default Contact
+export default Contact;

@@ -6,16 +6,12 @@ import MainLayout from "./components/MainLayout";
 
 import Dashbord from "./pages/Dashbord";
 
-import PatientList from "./pages/patient/PatientList";
-import AddPatient from "./pages/patient/AddPatient";
 
 import DoctorList from "./pages/doctor/DoctorList";
 import AddDoctor from "./pages/doctor/AddDoctor";
-import SearchDoctor from "./pages/doctor/SearchDoctor";
 import DoctorCategory from "./pages/doctor/DoctorCategory";
 import AddDoctorCategory from "./pages/doctor/AddDoctorCategory";
 import BookDoctor from "./pages/doctor/BookDoctor";
-import ReviewDoctor from "./pages/ReviewDoctor";
 
 import BlogList from "./pages/blog/BlogList";
 
@@ -26,9 +22,8 @@ import AddBlogCategory from "./pages/blog/AddBlogCategory";
 import HospitalList from "./pages/hospital/HospitalList";
 import HospitalBlog from "./pages/hospital/HospitalBlog";
 import AddHospital from "./pages/hospital/AddHospital";
-import HospitalReview from "./pages/hospital/HospitalReview";
+// import HospitalReview from "./pages/hospital/HospitalReview";
 import AssignDoctor from "./pages/hospital/AssignDoctor";
-import Faq from "./pages/hospital/Faq";
 
 import ServiceList from "./pages/service/ServiceList";
 import AddService from "./pages/service/AddService";
@@ -42,36 +37,65 @@ import Testimonial from "./pages/testimonials/TestimonialList";
 import AddTestimonial from "./pages/testimonials/AddTestimonials";
 import BookDoctorList from "./pages/doctor/BookDoctorList";
 
+import InvoiceReport from "./pages/reports/InvoiceReport";
+
+import Register from "./pages/Register";
+import PrivateRoute from "./utils/PrivateRoute";
+import PublicRoute from "./utils/PublicRoute";
+import Appoinments from "./pages/reports/Appoinments";
+import Inquary from "./pages/reports/Inquary";
+import EditInquary from "./pages/reports/EditInquary";
+import Users from "./pages/users/Users";
+import AddUsers from "./pages/users/AddUsers";
+import RequesrDoctor from "./pages/doctor/RequesrDoctor";
+
 function App() {
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route
+            path="register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <Login />{" "}
+              </PublicRoute>
+            }
+          />
           {/* <Route path="/reset-password" element={<Resetpassword />} /> */}
           {/* <Route path="/forgot-password" element={<Forgotpassword />} /> */}
-          <Route path="/admin" element={<MainLayout />}>
+
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute>
+                <MainLayout />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<Dashbord />} />
-
-            {/* Patient Route */}
-
-            <Route path="all-patients" element={<PatientList />} />
-            <Route path="patient" element={<AddPatient />} />
-            <Route path="patient/:id" element={<AddPatient />} />
 
             {/* Doctor Routes */}
 
             <Route path="doctor" element={<AddDoctor />} />
             <Route path="doctor/:id" element={<AddDoctor />} />
             <Route path="all-doctors" element={<DoctorList />} />
-            <Route path="search-doctor" element={<SearchDoctor />} />
             <Route path="doctor-category-list" element={<DoctorCategory />} />
             <Route path="doctor-category" element={<AddDoctorCategory />} />
             <Route path="doctor-category/:id" element={<AddDoctorCategory />} />
             <Route path="doctor-booking" element={<BookDoctor />} />
             <Route path="doctor-booking/:id" element={<BookDoctor />} />
             <Route path="doctor-booking-list" element={<BookDoctorList />} />
-            <Route path="all-doctor-review" element={<ReviewDoctor />} />
+            <Route path="doctor-request" element={<RequesrDoctor />} />
 
             {/* Blog Routes */}
 
@@ -88,10 +112,8 @@ function App() {
             <Route path="hospital" element={<AddHospital />} />
             <Route path="hospital/:id" element={<AddHospital />} />
             <Route path="blog-hospital" element={<HospitalBlog />} />
-            <Route path="hospital/all-review" element={<HospitalReview />} />
-            <Route path="assign-doctor" element={<AssignDoctor />} />
+            {/* <Route path="hospital/all-review" element={<HospitalReview />} /> */}
             <Route path="assign-doctor/:id" element={<AssignDoctor />} />
-            <Route path="faq" element={<Faq />} />
 
             {/* Service Routes */}
 
@@ -116,9 +138,18 @@ function App() {
 
             {/* Profile Routes */}
 
-            <Route path="doctorProfile" element={<DoctorProfile />} />
+            <Route path="doctor-profile/:id" element={<DoctorProfile />} />
             <Route path="HospitalProfile" element={<HospitalProfile />} />
-            
+
+            {/* InvoiceReport Route */}
+
+            <Route path="invoice" element={<InvoiceReport />} />
+            <Route path="users-list" element={<Users />} />
+            <Route path="users/:id" element={<AddUsers />} />
+            <Route path="users" element={<AddUsers />} />
+            <Route path="appointment" element={<Appoinments />} />
+            <Route path="inquary-list" element={<Inquary />} />
+            <Route path="inquary/:id" element={<EditInquary />} />
           </Route>
         </Routes>
         <Toaster />

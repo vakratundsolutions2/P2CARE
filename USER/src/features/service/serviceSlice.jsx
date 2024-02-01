@@ -81,7 +81,7 @@ export const serviceSlice = createSlice({
         state.isSuccess = true;
         state.message = action.payload.message;
 
-        state.Services = action.payload.data;
+        state.Services = action.payload?.data;
       })
       .addCase(getAllServices.rejected, (state, action) => {
         state.isError = true;

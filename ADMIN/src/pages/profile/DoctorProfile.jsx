@@ -1,8 +1,25 @@
-import React from "react";
+import { useEffect } from "react";
+import { baseUrl } from "../../utils/baseUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { getADoctor } from "../../features/doctor/doctorSlice";
+import { getAAvailablity } from "../../features/availablity/availablitySlice";
 
 const DoctorProfile = () => {
+  const ID = location.pathname.split("/")[3]
+  console.log(ID);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getADoctor(ID));
+    dispatch(getAAvailablity(ID));
+
+  }, [])
+  const {SingleData} = useSelector((state)=> state.doctor)
+  const { DoctorAvailablity } = useSelector((state) => state.available);
+  console.log("SingleData", SingleData);
+
+  
   return (
-    <div>
+    <div className="container">
       <nav className="navbar navbar-expand-lg mb-3">
         <div className="container-fluid">
           <h5 className="navbar-brand">Doctor Profile</h5>
@@ -13,31 +30,48 @@ const DoctorProfile = () => {
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src="..."
+              src={`${baseUrl}doctor/${SingleData?.image}`}
               className="img-fluid rounded-start"
               alt="Dr Profile"
             />
           </div>
           <div className="col-md-8">
             <div className="card-body">
-              <h5 className="card-title">Dr. Prince Markana</h5>
+              <h5 className="card-title">Dr. {SingleData?.doctorName}</h5>
+              <p className="card-text">{SingleData?.shortDescription}</p>
               <p className="card-text">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
+                <button className="btn btn-sm btn-secondary" type="button">
+                  &#x20B9; {SingleData?.price}
+                </button>{" "}
               </p>
+
               <p className="card-text">
-                <b>Address: </b> vorakotda road, near Bapa sitaram madhuli,
-                Gondal
+                <b>Address: </b> {SingleData?.location}
               </p>
-              <p className="card-text">
-                <small className="text-body-secondary">
-                  Last updated 3 mins ago
-                </small>
+              <p className="card-text d-flex flex-wrap gap-2">
+                {SingleData?.experties.map((e, i) => {
+                  return (
+                    <>
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        type="button"
+                      >
+                        {e}
+                      </button>
+                    </>
+                  );
+                })}
               </p>
             </div>
           </div>
         </div>
+      </div>
+      <div className="card">
+        <div className="card-title fs-5 m-auto">
+          Personal Booking Availablity Information
+        </div>
+        <hr />
+        
       </div>
     </div>
   );

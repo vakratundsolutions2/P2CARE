@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const doctorController = require("../controller/doctor")
 const userController = require('../controller/user')
-const multer  = require('multer')
+const multer  = require('multer');
+const { isAdmin } = require('../middleware/authMidleware');
 
 /* GET users listing. */
 
@@ -22,24 +23,61 @@ const upload = multer({ storage: storage })
 
 
 //addDoctor
-router.post('/adddoctor',upload.single('image'),userController.CHECKJWT,doctorController.addDoctor);
+router.post(
+  "/adddoctor",
+  upload.single("image"),
+  userController.CHECKJWT,
+
+  doctorController.addDoctor
+);
 
 //allDoctor
 router.get('/alldoctor',doctorController.allDoctor);
 
 //updateDoctor
-router.put('/updatedoctor/:id',upload.single('image'),userController.CHECKJWT,doctorController.updateDoctor);
+router.put(
+  "/updatedoctor/:id",
+  upload.single("image"),
+  userController.CHECKJWT,
+  
+  doctorController.updateDoctor
+);
+
+//BlockDoctor
+router.put(
+  "/blockdoctor/:id",
+  userController.CHECKJWT,
+  isAdmin,
+  doctorController.updateDoctor
+);
+
+// UnblockeDoctor
+router.put('/unblockdoctor/:id',userController.CHECKJWT,isAdmin,doctorController.updateDoctor);
+// UnblockeDoctor
+router.put(
+  "/accept/:id",
+  userController.CHECKJWT,
+  isAdmin,
+  doctorController.acceptdoctor
+);
 
 //deleteDoctor
-router.delete('/deletedoctor/:id',userController.CHECKJWT,doctorController.deleteDoctor);
+router.delete(
+  "/deletedoctor/:id",
+  userController.CHECKJWT,
+  isAdmin,
+  doctorController.deleteDoctor
+);
 
 //searchDoctor
 router.get('/searchdoctor/:name',doctorController.searchDoctor);
+//ratingsDoctor
+router.put("/rating", userController.CHECKJWT,doctorController.rating);
 
 //searchDoctorbyId
 router.get("/searchdoctorbyid/:id", doctorController.searchDoctorById);
 router.get(
-  "/searchDoctorByFiltets",
+  "/searchDoctorByFilters",
   doctorController.searchDoctorByFiltets
 );
 

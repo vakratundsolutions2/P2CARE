@@ -1,117 +1,128 @@
-import React, { useEffect, useState } from 'react'
-import { allDoctorCategory } from '../features/dCategory/dCategorySlice';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Carousel } from 'react-responsive-carousel';
-// import { Carousel } from "antd";
+import { allDoctorCategory } from '../features/dCategory/dCategorySlice';
 import { baseUrl } from '../utils/baseUrl';
 import { Link } from 'react-router-dom';
 
+
 const Specialities = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [specilities, setSpecilities] = useState(0);
+  const sliderRef = useRef(null);
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 350,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 4,
+        },
+      },
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 3,
+          
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+        
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+         
+        },
+      },
+    ],
+  };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(allDoctorCategory());
+  }, []);
 
-    const dispatch = useDispatch();
+  const category = useSelector((state) => state.dCategory.dCategories);
 
-    useEffect(() => {
-      dispatch(allDoctorCategory());
+  const handleSpecialitiesPrevClick = () => {
+    setSpecilities(specilities - 1);
+    sliderRef.current.slickPrev();
+  };
 
-    }, []);
-  const Category = useSelector((state) => state.dCategory?.dCategories);
-//   const speciality = Category?.splice(0, 5)  
-
-  console.log(Category);
-
-
-  const handleSlideChange = (index) => {
-    const totalSlides = 5; // Update this based on the actual number of slides
-
-    if (index === 0 && currentSlide === totalSlides - 1) {
-      // If going from the last slide to the first, don't pull from the next-to-last slide
-      setCurrentSlide(index);
-    } else {
-      // Update the current slide normally
-      setCurrentSlide(index);
-    }
-    console.log("currentSlide", currentSlide);
+  const handleSpecialitiesNextClick = () => {
+    setSpecilities(specilities + 1);
+    sliderRef.current.slickNext();
   };
 
   return (
-    <>
-      <section className="specialities-section-one">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 aos" data-aos="fade-up">
-              <div className="section-header-one section-header-slider">
-                <h2 className="section-title">Specialities</h2>
-              </div>
-            </div>
-
-            <div className="col-md-6 aos" data-aos="fade-up">
-              <div className="owl-nav slide-nav-1 text-end nav-control">
-                <button
-                  className="owl-prev"
-                  onClick={() => handleSlideChange(currentSlide - 1)}
-                >
-                  <i className="fas fa-chevron-left custom-arrow"></i>
-                </button>
-                <button
-                  className="owl-next"
-                  onClick={() => handleSlideChange(currentSlide + 1)}
-                >
-                  <i className="fas fa-chevron-right custom-arrow"></i>
-                </button>
-              </div>
-
-              <div className="owl-nav slide-nav-1 text-end nav-control"></div>
+    <section className="specialities-section-one">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6 aos" data-aos="fade-up">
+            <div className="section-header-one section-header-slider">
+              <h2 className="section-title">Specialities</h2>
             </div>
           </div>
-          <Carousel 
-            showArrows={false}
-            showStatus={false}
-            showThumbs={false}
-            emulateTouch={false}
-            infiniteLoop={true}
-            centerMode={true}
-            centerSlidePercentage={100 / 4}
-            selectedItem={currentSlide}
-            onChange={handleSlideChange}
-            wrapAround={true}
-            interval={1000}
-            showIndicators={false}
-            className="specialities-slider-one"
-          >
-            {
-                Category?.map((e,i)=>{
-                    return (
-                      <>
-                        <div className="item" key={i}>
-                          <div className="specialities-item">
-                            <div className="specialities-img">
-                              <span>
-                                <img
-                                  src={`${baseUrl}doctorcategory/${e.image}`}
-                                  alt="heart-image"
-                                />
-                              </span>
-                            </div>
-                            <p> {e.name}</p>
-                          </div>
-                        </div>
-                      </>
-                    );
-                })
-            }
 
-          </Carousel>
-          <div className="specialities-btn aos" data-aos="fade-up">
-            <Link to={'#'} className="btn">
-              See All Specialities
-            </Link>
+          <div className="col-md-6 aos">
+            <div className="owl-nav slide-nav-1 text-end nav-control">
+              <button
+                className="owl-prev"
+                onClick={handleSpecialitiesPrevClick}
+              >
+                <i className="fas fa-chevron-left custom-arrow"></i>
+              </button>
+              <button
+                className="owl-next"
+                onClick={handleSpecialitiesNextClick}
+              >
+                <i className="fas fa-chevron-right custom-arrow"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </section>
-    </>
-  );
-}
 
-export default Specialities
+        <div className="specialities-carousel-wrapper aos img-set" data-aos="fade-up">
+          <Slider ref={sliderRef} {...settings}>
+            {category.map((e, index) => (
+              <div className="specialities-item" key={index}>
+
+                <div
+                  className="specialities-img "
+                >
+                  <img
+                    src={`${baseUrl}doctorcategory/${e.image}`}
+                    alt={e.name}
+                    className="img-fluid"
+                    style={{ width: "fit-content" }}
+                  />
+                </div>
+                <p>{e.name}</p>
+              </div>
+            ))}
+          </Slider>
+        </div>
+
+        <div className="specialities-btn aos">
+          <Link to={`/doctor-list`} className="btn">
+            See All Specialities
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Specialities;

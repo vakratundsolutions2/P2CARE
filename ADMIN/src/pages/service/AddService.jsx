@@ -4,54 +4,69 @@ import { IoArrowBack } from "react-icons/io5";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import {
-  allServiceCategory,
-  
-} from "../../features/serviceCategory/sCategorySlice";
+import { allServiceCategory } from "../../features/serviceCategory/sCategorySlice";
+import * as yup from "yup";
 import {
   createAService,
   getAService,
-  getAllServices,
+
   resetState,
   updateAService,
 } from "../../features/service/serviceSlice";
 
+let schema = yup.object().shape({
+  title: yup.string().required("Title is Required"),
+  description: yup.string().required("Description is Required"),
+  expert: yup.string().required("Expert is Required"),
+  slug: yup.string().required("Slug is Requied"),
+  metatitle: yup.string().required("MetaTitle is Required"),
+  ogmetatitle: yup.string().required("OgMetaTitle is Required"),
+  metadescription: yup.string().required("MetaDescription is Required"),
+  ogmetadescription: yup.string().required("OgMetaDescription is Required"),
+  metatag: yup.string().required("MetaTag is Requird"),
+  ogmetaimage: yup.string().required("OgMetaImage is Required"),
+  category: yup.string().required("Category is Required"),
+  icontype: yup.string().required("IconType is Required"),
+  order: yup.string().required("Order is Required"),
+  image: yup.string().required("Image is Required"),
+  iconimage: yup.string().required("IconImage is Required"),
+  status: yup.string().required("Status is Required"),
+});
+
 const AddService = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-    const ServiceId = location.pathname.split("/")[3];
-useEffect(() => {
-  if (ServiceId !== undefined || "") {
-    dispatch(getAService(ServiceId));
-  } else {
-    dispatch(resetState());
-  }
-}, [ServiceId]);
+  const ServiceId = location.pathname.split("/")[3];
+
+  useEffect(() => {
+    if (ServiceId !== undefined || "") {
+      dispatch(getAService(ServiceId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [ServiceId]);
 
   useEffect(() => {
     dispatch(allServiceCategory());
-  
     dispatch(resetState());
   }, []);
+
   const cat = useSelector((state) => state.sCategory?.sCategories);
 
-
-    const ServiceState = useSelector((state) => state?.service);
-    const {SingleData} = ServiceState
-
-
-
+  const ServiceState = useSelector((state) => state?.service);
+  const { SingleData } = ServiceState;
 
   const formik = useFormik({
     enableReinitialize: true,
+
     initialValues: {
       title: SingleData?.title || "",
       description: SingleData?.description || "",
       expert: SingleData?.expert || "",
       slug: SingleData?.slug || "",
       metatitle: SingleData?.metatitle || "",
-      ogmetadescription: SingleData?.ogmetadescription || "",
       ogmetatitle: SingleData?.ogmetatitle || "",
+      ogmetadescription: SingleData?.ogmetadescription || "",
       metadescription: SingleData?.metadescription || "",
       metatag: SingleData?.metatag || "",
       ogmetaimage: SingleData?.ogmetaimage || "",
@@ -62,6 +77,7 @@ useEffect(() => {
       status: SingleData?.status || "",
       iconimage: SingleData?.iconimage || "",
     },
+    validationSchema: schema,
 
     onSubmit: async (values) => {
       // console.log(values);
@@ -83,6 +99,7 @@ useEffect(() => {
         status,
         iconimage,
       } = values;
+
       const formData = new FormData();
 
       formData.append("title", title);
@@ -101,16 +118,17 @@ useEffect(() => {
       formData.append("status", status);
       formData.append("iconimage", iconimage);
       formData.append("ogmetadescription", ogmetadescription);
+
       if (ServiceId === undefined || "") {
         dispatch(createAService(formData));
-           setTimeout(() => {
-             dispatch(resetState());
-           }, 300);
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       } else {
         dispatch(updateAService({ id: ServiceId, formData: formData }));
-           setTimeout(() => {
-             dispatch(resetState());
-           }, 300);
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       }
     },
   });
@@ -139,7 +157,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Title "
+                  label="Enter Title "
                   name="title"
                   onChng={formik.handleChange("title")}
                   onBlr={formik.handleBlur("title")}
@@ -152,7 +170,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Description "
+                  label="Enter Description "
                   name="description"
                   onChng={formik.handleChange("description")}
                   onBlr={formik.handleBlur("description")}
@@ -165,7 +183,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Expert "
+                  label="Enter Expert "
                   name="expert"
                   onChng={formik.handleChange("expert")}
                   onBlr={formik.handleBlur("expert")}
@@ -179,7 +197,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Slug "
+                  label="Enter Slug "
                   name="slug"
                   onChng={formik.handleChange("slug")}
                   onBlr={formik.handleBlur("slug")}
@@ -193,7 +211,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Metatitle "
+                  label="Enter Metatitle "
                   name="metatitle"
                   onChng={formik.handleChange("metatitle")}
                   onBlr={formik.handleBlur("metatitle")}
@@ -206,7 +224,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Ogmetatitle "
+                  label="Enter Ogmetatitle "
                   name="ogmetatitle"
                   onChng={formik.handleChange("ogmetatitle")}
                   onBlr={formik.handleBlur("ogmetatitle")}
@@ -219,7 +237,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater ogmetadescription "
+                  label="Enter ogmetadescription "
                   name="ogmetadescription"
                   onChng={formik.handleChange("ogmetadescription")}
                   onBlr={formik.handleBlur("ogmetadescription")}
@@ -233,7 +251,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater Metadescription "
+                  label="Enter Metadescription "
                   name="metadescription"
                   onChng={formik.handleChange("metadescription")}
                   onBlr={formik.handleBlur("metadescription")}
@@ -248,7 +266,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="text"
-                  label="Enater metatag "
+                  label="Enter metatag "
                   name="metatag"
                   onChng={formik.handleChange("metatag")}
                   onBlr={formik.handleBlur("metatag")}
@@ -261,7 +279,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="number"
-                  label="Enater Order "
+                  label="Enter Order "
                   name="order"
                   onChng={formik.handleChange("order")}
                   onBlr={formik.handleBlur("order")}
@@ -280,7 +298,7 @@ useEffect(() => {
                   onBlur={formik.handleBlur("category")}
                   value={formik.values.category}
                 >
-                  <option value={''}>Select Category</option>
+                  <option value={""}>Select Category</option>
                   {cat?.map((e, i) => {
                     return (
                       <>
@@ -334,7 +352,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="file"
-                  label="Enater image "
+                  label="Enter image "
                   name="image"
                   accept="image/*"
                   id="formFile"
@@ -349,7 +367,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="file"
-                  label="Enater iconimage "
+                  label="Enter iconimage "
                   name="iconimage"
                   accept="image/*"
                   id="formFile"
@@ -364,7 +382,7 @@ useEffect(() => {
               <div className="col-4 mb-3">
                 <CustomInput
                   type="file"
-                  label="Enater Ogmetaimage "
+                  label="Enter Ogmetaimage "
                   name="ogmetaimage"
                   accept="image/*"
                   id="formFile"

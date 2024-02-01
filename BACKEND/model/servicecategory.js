@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const serviceCategorySchema = new Schema({
   Name: {
     type: String,
-    unique : true
   },
   ForService: {
     type : String,

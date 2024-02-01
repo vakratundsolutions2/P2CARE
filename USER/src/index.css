@@ -1,26 +1,6 @@
 .doctor-aos{
     display: flex;
 }
-.specialities-img{
-    margin-right: 20px;
 
-}
 
-.doctor-profile-widget{
-    margin-right: 20px;
-}
 
-.specialities {
-    display: flex;
-    overflow: hidden; /* Hide overflowing content */
-  }
-  
-  .item {
-    min-width: 28%; /* Each item takes up the full width of the container */
-    transition: transform 0.3s ease; /* Add smooth transition effect */
-  }
-  
-  
-  .specialities {
-    transform: translateX(50px) rotate(45deg scaleX(1.5))
-}

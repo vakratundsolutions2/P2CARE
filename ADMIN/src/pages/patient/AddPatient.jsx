@@ -2,13 +2,17 @@ import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { createAPatient, getAPatient, resetState, updateAPatient } from "../../features/patient/patientSlice";
+import {
+  createAPatient,
+  getAPatient,
+  resetState,
+  updateAPatient,
+} from "../../features/patient/patientSlice";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 let schema = yup.object().shape({
   name: yup.string().required("Name is Required"),
-  username: yup.string().required("Username is Required"),
   phone: yup.number().required("Phone Number is Required"),
   zipcode: yup.number().required("Zipcode is Required"),
   city: yup.string().required("City is Required"),
@@ -19,51 +23,45 @@ let schema = yup.object().shape({
     .string()
     .email("Email should be valid")
     .required("Email is Required"),
-  password: yup.string().required("Password is Required"),
-  passwordconfirm: yup.string().required("Confirm Password is Required"),
+  
 });
+
 const AddPatient = () => {
-
-
-
-
-  const location = useLocation()
+  const location = useLocation();
   const patientId = location.pathname.split("/")[3];
-  const dispatch = useDispatch()
-useEffect(() => {
-  if (patientId !== undefined || "") {
-    dispatch(getAPatient(patientId));
-  } else {
-    dispatch(resetState());
-  }
-}, [patientId]);
+  const dispatch = useDispatch();
 
-
+  useEffect(() => {
+    if (patientId !== undefined || "") {
+      dispatch(getAPatient(patientId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [patientId]);
 
   const USER = useSelector(
-    (state) => state?.auth?.admin?.ADMIN?.user?.Username
+    (state) => state?.auth?.admin?.Username
   );
-  
-  
-  const patientState = useSelector((state)=>state?.patient)
-    const { SingleData } = patientState;
+
+  const patientState = useSelector((state) => state?.patient);
+  const { SingleData } = patientState;
 
   const formik = useFormik({
     enableReinitialize: true,
+
     initialValues: {
       name: SingleData?.name || "",
       username: USER,
       email: SingleData?.email || "",
-      phone: SingleData?.phone|| "",
+      phone: SingleData?.phone || "",
       country: SingleData?.country || "",
       state: SingleData?.state || "",
       city: SingleData?.city || "",
       zipcode: SingleData?.zipcode || "",
       address: SingleData?.address || "",
-      // password: SingleData?.password : "",
-      // passwordconfirm: SingleData?.passwordconfirm : "",
     },
     validationSchema: schema,
+    
     onSubmit: (values) => {
       if (patientId === undefined || "") {
         dispatch(createAPatient(values));
@@ -72,16 +70,13 @@ useEffect(() => {
         }, 300);
       } else {
         dispatch(updateAPatient({ id: patientId, values: values }));
-          setTimeout(() => {
-            dispatch(resetState());
-          }, 300);
-
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       }
     },
   });
 
-
-   
   return (
     <>
       <div>
@@ -96,7 +91,7 @@ useEffect(() => {
           >
             <CustomInput
               type="text"
-              label="Enater Name "
+              label="Enter Name "
               name="name"
               onChng={formik.handleChange("name")}
               onBlr={formik.handleBlur("name")}
@@ -201,28 +196,7 @@ useEffect(() => {
             <div className="error">
               {formik.touched.address && formik.errors.address}
             </div>
-            {/* <CustomInput
-              type="password"
-              label="Enter password"
-              name="password"
-              onChng={formik.handleChange("password")}
-              onBlr={formik.handleBlur("password")}
-              val={formik.values.password}
-            />
-            <div className="error">
-              {formik.touched.password && formik.errors.password}
-            </div> */}
-            {/* <CustomInput
-              type="password"
-              label="Enter Confirm password"
-              name="passwordconfirm"
-              onChng={formik.handleChange("passwordconfirm")}
-              onBlr={formik.handleBlur("passwordconfirm")}
-              val={formik.values.passwordconfirm}
-            />
-            <div className="error">
-              {formik.touched.passwordconfirm && formik.errors.passwordconfirm}
-            </div> */}
+            
             <div className="p-3 w-full">
               <button type="submit" className="btn btn-primary ">
                 {patientId !== undefined ? "Edit" : "Add"} Patient

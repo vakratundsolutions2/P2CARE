@@ -1,12 +1,21 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import * as yup from "yup";
 
 
 import CustomInput from "../../components/CustomInput.jsx";
 import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
 import { AddblogCategory, GetAllBlogCategory, SingleBlogCategory, UpdateBlogCategory, resetState } from "../../features/blogCategory/BlogCategorySlice.jsx";
+
+
+
+let schema = yup.object().shape({
+  
+  name: yup.string().required("Name is Required"),
+  status: yup.string().required("Status is Required"),
+});
 
 const AddBlogCategory = () => {
   const dispatch = useDispatch();
@@ -41,6 +50,7 @@ const AddBlogCategory = () => {
       name:  SingleData?.name || "",
       status: SingleData?.status || "",
     },
+    validationSchema:schema,
 
     onSubmit: (values) => {
       if (catId === undefined || catId === "") {

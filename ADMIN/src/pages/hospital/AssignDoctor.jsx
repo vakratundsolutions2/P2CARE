@@ -2,45 +2,72 @@ import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllHospitals,
+  AssignDoctors,
+  getAHospital,
   resetState,
 } from "../../features/hospital/hospitalSlice";
 import { useEffect } from "react";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
 import { getAllDoctors } from "../../features/doctor/doctorSlice";
-import axios from "axios";
-import { config } from "../../utils/axiosConfig";
-import toast from "react-hot-toast";
-import { addNewAssign, getAllAssign } from "../../features/assingn/assignSlice";
-import { Link } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import * as yup from "yup";
+let schema = yup.object().shape({
+  hospital: yup.string().required("Hospital Name is Required"),
+  doctor: yup.string().required("Doctor is Required"),
+  category: yup.string().required("Category is Required"),
+  amount: yup.number().required("Amount is Required"),
+});
 
 const AssignDoctor = () => {
+  const hospitalId = location.pathname.split("/")[3];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    dispatch(getAllHospitals());
     dispatch(allDoctorCategory());
     dispatch(getAllDoctors());
-    // dispatch(getAllAssign());
-
+    dispatch(getAHospital(hospitalId));
 
     dispatch(resetState());
-  }, []);
-  const HospitalState = useSelector((state) => state.hospital.hospitals);
-  const dCategory = useSelector((state) => state?.dCategory?.dCategories);
+  }, [hospitalId, dispatch]);
   const allDoctors = useSelector((state) => state?.doctor?.doctors);
+
+
+  const hospitalState = useSelector((state) => state.hospital);
+  const { SingleData , isSuccess ,assign } = hospitalState;
+
+
+if(isSuccess ===true && assign){
+  
+  setTimeout(() => {
+
+    
+    navigate("/admin/all-hospital");
+  }, 300);
+}
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      hospital: "",
-      doctor: "",
-      category: "",
-      amount: "",
+      hospital: SingleData?.hospitalname || "",
+      doctor: SingleData?.assign[0]?.doctor?.doctorName || "",
+      category: SingleData?.assign[0]?.category || "",
+      amount: SingleData?.assign[0]?.amount || "",
     },
-    onSubmit:async (values) => {
-      dispatch(addNewAssign(values));
+    validationSchema: schema,
+    onSubmit: (values) => {
+      dispatch(AssignDoctors(values));
+      
     },
   });
+  console.log("SingleData", SingleData);
+
+  
+
+
+
   return (
     <>
       <div className="container-xxl">
@@ -64,18 +91,11 @@ const AssignDoctor = () => {
                 onBlur={formik.handleBlur("hospital")}
                 value={formik.values.hospital}
                 className="form-control form-select py-3 px-4 "
-                // style={{fontSize:'small',fontWeight:'light'}}
               >
                 <option value="">Select Hospital</option>
-                {HospitalState?.map((e, i) => {
-                  return (
-                    <>
-                      <option key={i} value={e?.hospitalname}>
-                        {e?.hospitalname}
-                      </option>
-                    </>
-                  );
-                })}
+                <option value={SingleData?._id}>
+                  {SingleData?.hospitalname}
+                </option>
               </select>
               <div className="error">
                 {formik.touched.hospital && formik.errors.hospital}
@@ -89,14 +109,14 @@ const AssignDoctor = () => {
                 onBlur={formik.handleBlur("category")}
                 value={formik.values.category}
                 className="form-control form-select py-3 px-4 "
-                // style={{fontSize:'small',fontWeight:'light'}}
               >
-                <option value="">Select category</option>
-                {dCategory?.map((e, i) => {
+                <option value="">Select Category</option>
+                {SingleData?.category?.map((e, i) => {
+                  console.log(e);
                   return (
                     <>
-                      <option key={i} value={e?.name}>
-                        {e?.name}
+                      <option key={i} value={e}>
+                        {e}
                       </option>
                     </>
                   );
@@ -116,11 +136,11 @@ const AssignDoctor = () => {
                 className="form-control form-select py-3 px-4 "
                 // style={{fontSize:'small',fontWeight:'light'}}
               >
-                <option value="">Select doctor</option>
+                <option value="">Select Doctor</option>
                 {allDoctors?.map((e, i) => {
                   return (
                     <>
-                      <option key={i} value={e?.doctorName}>
+                      <option key={i} value={e?._id}>
                         {e?.doctorName}
                       </option>
                     </>

@@ -31,12 +31,16 @@ const columns = [
   },
 ];
 
+
 const BookDoctorList = () => {
   useEffect(() => {
     dispatch(alltime());
     dispatch(resetState());
   }, []);
   const timeState = useSelector((state) => state.time.AllTimes);
+
+
+
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);

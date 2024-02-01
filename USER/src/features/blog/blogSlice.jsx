@@ -73,6 +73,17 @@ export const GetABlog = createAsyncThunk(
     }
   }
 );
+export const FilterData = createAsyncThunk(
+  "blog/filter",
+  async (Data, thunkAPI) => {
+    //  console.log(catData);
+    try {
+      return await blogService.filterblog(Data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const resetState = createAction("Reset_all");
 
@@ -180,6 +191,23 @@ export const blogSlice = createSlice({
         state.SingleBlog = action.payload?.data
       }),
       builder.addCase(GetABlog.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(FilterData.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(FilterData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = action.payload?.message;
+        state.blogs = action.payload?.data?.data;
+        state.blogFilter = action.payload?.data;
+
+      }),
+      builder.addCase(FilterData.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

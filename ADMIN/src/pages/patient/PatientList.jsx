@@ -61,13 +61,12 @@ const PatientList = () => {
         .then((e) => setSearchResult(e.data?.data));
     } else {
       axios
-        .get(`${baseUrl}patient/allpatient`, config)
+        .get(`${baseUrl}patient/allpatient`)
         .then((e) => setSearchResult(e.data?.data));
     }
   }, [search]);
 
-  console.log(searchResult);
-  console.log(patientState);
+  
   
 
   const showModal = (e) => {

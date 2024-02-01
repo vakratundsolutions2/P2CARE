@@ -19,11 +19,21 @@ const out =  () => {
  
 };
 
+const login3 = async(DATA)=>{
+ const res = await axios.post(`${baseUrl}user/check-verification`, DATA);
+ if (res.data) {
+   localStorage.setItem("USER", JSON.stringify(res.data?.unverifiedUser));
+ }
+ return res.data
+ 
+}
+
 
 const authService = {
   login,
   reg,
-  out
+  out,
+  login3
 };
 
 export default authService;

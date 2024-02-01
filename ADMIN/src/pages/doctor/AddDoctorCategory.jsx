@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-
   createDoctorCategory,
   getADoctorCategory,
   resetState,
@@ -13,26 +12,29 @@ import CustomInput from "../../components/CustomInput.jsx";
 import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
 import Loding from "../../components/Loding.jsx";
+import * as yup from "yup";
+let schema = yup.object().shape({
+  name: yup.string().required("Category Name is Required"),
+  image: yup.string().required("Image is Required"),
+  status: yup.string().required("Status is Required"),
+});
 
 const AddDoctorCategory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const catId = location.pathname.split("/")[3];
-   useEffect(() => {
-     if (catId !== undefined || "") {
-       dispatch(getADoctorCategory(catId));
-       dispatch(resetState());
-     } else {
-       dispatch(resetState());
-     }
-   }, [catId]);
-  
+  useEffect(() => {
+    if (catId !== undefined || "") {
+      dispatch(getADoctorCategory(catId));
+      dispatch(resetState());
+    } else {
+      dispatch(resetState());
+    }
+  }, [catId]);
+
   const dCategory = useSelector((state) => state?.dCategory);
-   const {SingleData  , isLoading} = dCategory
-   
+  const { SingleData, isLoading } = dCategory;
 
-
-  
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -40,7 +42,7 @@ const AddDoctorCategory = () => {
       image: SingleData?.image || "",
       status: SingleData?.status || "",
     },
-
+    validationSchema: schema,
     onSubmit: async (values) => {
       const { image, status, name } = values;
       const formData = new FormData();

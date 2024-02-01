@@ -22,6 +22,16 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const LoginOTP = createAsyncThunk(
+  "auth/user-login/OTP",
+  async (user, thunkAPI) => {
+    try {
+      return await authService.login3(user);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 export const register = createAsyncThunk(
   "auth/user-register",
   async (user, thunkAPI) => {
@@ -57,7 +67,9 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      toast.success("Login successful");
+      if (state.isSuccess === true) {
+        toast.success('Login successful');
+      }
       state.user = action.payload;
       state.isError = false;
     }),
@@ -67,8 +79,7 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.user = null;
          if (state.isError === true) {
-           toast.error("Invalid credentials ");
-
+           toast.error(action?.payload?.response?.data?.message);
          }
       })
     builder.addCase(register.pending, (state) => {
@@ -76,19 +87,23 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
     }),
-      builder.addCase(register.fulfilled, (state) => {
+      builder.addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        toast.success("Account created successful");
+        if (state.isSuccess === true) {
+          toast.success(action?.payload?.message);
+        }
+        state.registerUser = action.payload?.data;
         state.isError = false;
       }),
-      builder.addCase(register.rejected, (state) => {
+      builder.addCase(register.rejected, (state,action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.user = null;
-        if(state.isError === true) {
-        toast.error('Unexpected error');}
+        if (state.isError === true) {
+          toast.error(action?.payload?.response?.data?.message);
+        }
       });
     builder.addCase(logout.pending, (state) => {
       state.isLoading = true;
@@ -100,13 +115,33 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
       }),
-      builder.addCase(logout.rejected, (state) => {
+      builder.addCase(logout.rejected, (state,action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.user = null;
         if (state.isError === true) {
-          toast.error("Unexpected error");
+          toast.error(action?.payload?.response?.data?.message);
+        }
+      });
+    builder.addCase(LoginOTP.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(LoginOTP.fulfilled, (state,action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.user = action.payload?.unverifiedUser;
+      }),
+      builder.addCase(LoginOTP.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.user = null;
+        if (state.isError === true) {
+          toast.error(action?.payload?.response?.data?.message);
         }
       });
           builder.addCase(resetState, () => initialState);

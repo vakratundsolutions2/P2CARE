@@ -1,6 +1,8 @@
-const  crypto= require("crypto");
-const  Payment =require("../model/payment")
+const crypto = require("crypto");
+const Payment = require("../model/payment")
 const Razorpay = require("razorpay");
+const bookappointmentController = require("../controller/bookappointment")
+
 // import Razorpay from "razorpay";
 
 const instance = new Razorpay({
@@ -23,7 +25,7 @@ exports.checkout = async (req, res) => {
 };
 
 exports.paymentVerification = async (req, res) => {
-  
+
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
     req.body;
 
@@ -40,16 +42,13 @@ exports.paymentVerification = async (req, res) => {
     // Database comes here
 
     await Payment.create({
-      razorpay_order_id,    
+      razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
     });
 
-    // res.status(400).json({
-    //   paymentID: razorpay_payment_id,
-    // });
     res.redirect(
-      `${process.env.P2CARE_USER}/  ?reference=${razorpay_payment_id}`
+      `http://localhost:3000/booking-complete?reference=${razorpay_payment_id}`
     );
   } else {
     res.status(400).json({

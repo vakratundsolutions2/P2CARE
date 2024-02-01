@@ -6,7 +6,7 @@ const doctorAvailabilitySchema = new Schema({
     type: mongoose.Schema.ObjectId,
     ref: "doctors",
     required: true,
-    unique: true,
+
   },
   bookingavailabilityInformation: [
     {

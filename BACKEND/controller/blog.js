@@ -178,3 +178,44 @@ exports.deleteAllBlog = async function (req, res, next) {
 
 
   
+
+
+//=====================searchBlog Filters=====================
+exports.searchBlogByFiltets = async function (req, res, next) {
+  try {
+    const currentpage = parseInt(req.query.page) - 1 || 0;
+    const limit = parseInt(req.query.limit) || 5;
+    const category = req.query.category || "";
+    const title = req.query.title || "";
+    // const sort = req.query.sort || 1;
+    // const star = req.query.rating || "";
+    // const service = req.query.service || "";
+
+    // var method = { hospitalname: Number(sort) };
+
+    const data = await BLOG?.find({
+      title: { $regex: title, $options: "i" },
+      category: { $regex: category },
+    })
+
+      .skip(currentpage * limit)
+      .limit(limit);
+
+    const total = await BLOG.countDocuments({
+      title: { $regex: title, $options: "i" },
+      category: { $regex: category },
+    });
+    const totalPages = Math.ceil(total / limit);
+
+   res.status(200).json({
+      status: "Successfull",
+      message: "Data is found",
+      data: { data, total, currentpage: currentpage + 1, limit, totalPages },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};

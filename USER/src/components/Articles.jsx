@@ -1,4 +1,4 @@
-import  { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../utils/baseUrl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,13 +6,13 @@ import { GetAllBlogs } from '../features/blog/blogSlice';
 
 
 const Articles = () => {
-    const blog = useSelector((state) => state.blog.blogs);
-    const dispatch = useDispatch()
-    useEffect(() => {
-          dispatch(GetAllBlogs());
+  const blog = useSelector((state) => state.blog.blogs);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetAllBlogs());
 
-    }, [])
-    const blogState = blog?.slice(0, 4);
+  }, [])
+  const blogState = blog?.slice(0, 4);
 
   return (
     <>
@@ -32,7 +32,7 @@ const Articles = () => {
                   <div
                     className="col-lg-6 col-md-6 d-flex aos"
                     key={i}
-                    data-aos="fade-up"
+                    data-aos="fade-up" 
                   >
                     <div className="articles-grid w-100">
                       <div className="articles-info">

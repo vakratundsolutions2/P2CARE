@@ -1,4 +1,5 @@
-import LIGO from "../assets/images/P2CARE.png";
+import { Link } from "react-router-dom";
+import LIGO from "../assets/images/p2Care.png";
 
 const Footer = () => {
   return (
@@ -10,9 +11,9 @@ const Footer = () => {
               <div className="col-lg-3 col-md-4">
                 <div className="footer-widget footer-about">
                   <div className="footer-logo">
-                    <a to="index.html">
+                    <Link to="index.html">
                       <img src={LIGO} className="w-50" alt="logo" />
-                    </a>
+                    </Link>
                   </div>
                   <div className="footer-about-content">
                     <p>
@@ -29,13 +30,13 @@ const Footer = () => {
                       <h2 className="footer-title">For Patients</h2>
                       <ul>
                         <li>
-                          <a to="search.html">Search for Doctors</a>
+                          <Link to="doctor-list">Search for Doctors</Link>
                         </li>
                         <li>
-                          <a to="login.html">Login</a>
+                          <Link to="login">Login</Link>
                         </li>
                         <li>
-                          <a to="register.html">Register</a>
+                          <Link to="register">Register</Link>
                         </li>
                       </ul>
                     </div>
@@ -45,13 +46,13 @@ const Footer = () => {
                       <h2 className="footer-title">For Doctors</h2>
                       <ul>
                         <li>
-                          <a to="appointments.html">Appointments</a>
+                          <Link to="appointments">Appointments</Link>
                         </li>
                         <li>
-                          <a to="chat.html">Chat</a>
+                          <Link to="blogs">Blog</Link>
                         </li>
                         <li>
-                          <a to="login.html">Login</a>
+                          <Link to="login">Login</Link>
                         </li>
                       </ul>
                     </div>
@@ -62,26 +63,26 @@ const Footer = () => {
                       <div className="footer-contact-info">
                         <div className="footer-address">
                           <p>
-                            <i className="feather-map-pin"></i> 3556 Beech
+                          <i className="fa-solid fa-map-pin"></i> 3556 Beech
                             Street, USA
                           </p>
                         </div>
                         <div className="footer-address">
                           <p>
-                            <i className="feather-phone-call"></i> +1 315 369
+                          <i className="fa-solid fa-phone"></i> +1 315 369
                             5943
                           </p>
                         </div>
                         <div className="footer-address mb-0">
                           <p>
-                            <i className="feather-mail"></i>{" "}
-                            <a
+                            <i className="fa-solid fa-envelope"></i>{" "}
+                            <Link
                               to="/cdn-cgi/l/email-protection"
                               className="__cf_email__"
                               data-cfemail="294d464a4a5c5b4c694c51484459454c074a4644"
                             >
                               [email&#160;protected]
-                            </a>
+                            </Link>
                           </p>
                         </div>
                       </div>
@@ -96,24 +97,24 @@ const Footer = () => {
                   <div className="social-icon">
                     <ul>
                       <li>
-                        <a to="javascript:void(0);">
+                        <Link to="#">
                           <i className="fab fa-facebook"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a to="javascript:void(0);">
+                        <Link to="#">
                           <i className="fab fa-instagram"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a to="javascript:void(0);">
+                        <Link to="#">
                           <i className="fab fa-twitter"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a to="javascript:void(0);">
+                        <Link to="#">
                           <i className="fab fa-linkedin-in"></i>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -138,10 +139,10 @@ const Footer = () => {
                   <div className="copyright-menu">
                     <ul className="policy-menu">
                       <li>
-                        <a to="privacy-policy.html">Privacy Policy</a>
+                        <Link to="privacy-policy">Privacy Policy</Link>
                       </li>
                       <li>
-                        <a to="terms-condition.html">Terms and Conditions</a>
+                        <Link to="terms-condition.html">Terms and Conditions</Link>
                       </li>
                     </ul>
                   </div>

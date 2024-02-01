@@ -29,6 +29,15 @@ const getAHospital = async (id) => {
 
   return res.data;
 };
+const getAHospitalByname = async (name) => {
+  const res = await axios.get(
+    `${baseUrl}hospital/searchhospital/${name}`,
+
+    config
+  );
+
+  return res.data;
+};
 const deleteHospital = async (id) => {
   const res = await axios.delete(
     `${baseUrl}hospital/deletehospital/${id}`,
@@ -47,6 +56,25 @@ const uppdateHospital = async (DATA) => {
 
   return res.data;
 };
+const assignDoctor = async (DATA) => {
+  const res = await axios.put(
+    `${baseUrl}hospital/assign`,
+    DATA,
+    config
+  );
+
+  return res.data;
+};
+const deleteAssign = async (DATA) => {
+  
+  const res = await axios.delete(
+    `${baseUrl}hospital/removeassign/${DATA?.data}?hospital=${DATA?.HospitalID}`,
+
+    config
+  );
+
+  return res.data;
+};
 
 
 const hospitalService = {
@@ -55,5 +83,8 @@ const hospitalService = {
   uppdateHospital,
   deleteHospital,
   getAHospital,
+  getAHospitalByname,
+  assignDoctor,
+  deleteAssign,
 };
 export default hospitalService;

@@ -1,7 +1,8 @@
-import img2 from '../assets/img/about-img2.jpg'
-import img1 from '../assets/img/about-img1.jpg'
-import BreadCrum from '../components/BreadCrum';
-import { Link } from 'react-router-dom';
+import img2 from "../assets/img/about-img2.jpg";
+import img1 from "../assets/img/about-img1.jpg";
+import BreadCrum from "../components/BreadCrum";
+import { Link } from "react-router-dom";
+import BestDoctor from "../components/BestDoctor";
 const About = () => {
   return (
     <>
@@ -206,7 +207,7 @@ const About = () => {
               <div className="row align-items-end">
                 <div className="col-lg-7 col-md-12">
                   <div className="section-inner-header way-inner-header mb-0">
-                    <h2>Be on Your Way to Feeling Better with the Doccure</h2>
+                    <h2>Be on Your Way to Feeling Better with the p2Care</h2>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -230,175 +231,9 @@ const About = () => {
             </div>
           </div>
         </section>
-        <section className="doctors-section professional-section">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="section-inner-header text-center">
-                  <h2>Best Doctors</h2>
-                </div>
-              </div>
-            </div>
 
-            <div className="row">
-              <div className="col-lg-3 col-md-6 d-flex">
-                <div className="doctor-profile-widget w-100">
-                  <div className="doc-pro-img">
-<Link to="/doctor-profile">                      <div className="doctor-profile-img">
-                        <img
-                          src="/src/assets/img/doctors/doctor-03.jpg"
-                          className="img-fluid"
-                          alt="Ruby Perrin"
-                        />
-                      </div>
-                    </Link>
-                    <div className="doctor-amount">
-                      <span>$ 200</span>
-                    </div>
-                  </div>
-                  <div className="doc-content">
-                    <div className="doc-pro-info">
-                      <div className="doc-pro-name">
-<Link to="/doctor-profile">                          Dr. Ruby Perrin</Link>
-                        <p>Cardiology</p>
-                      </div>
-                      <div className="reviews-ratings">
-                        <p>
-                          <span>
-                            <i className="fas fa-star"></i> 4.5
-                          </span>{" "}
-                          (35)
-                        </p>
-                      </div>
-                    </div>
-                    <div className="doc-pro-location">
-                      <p>
-                        <i className="feather-map-pin"></i> Newyork, USA
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <BestDoctor />
 
-              <div className="col-lg-3 col-md-6 d-flex">
-                <div className="doctor-profile-widget w-100">
-                  <div className="doc-pro-img">
-<Link to="/doctor-profile">                      <div className="doctor-profile-img">
-                        <img
-                          src="/src/assets/img/doctors/doctor-04.jpg"
-                          className="img-fluid"
-                          alt="Darren Elder"
-                        />
-                      </div>
-                    </Link>
-                    <div className="doctor-amount">
-                      <span>$ 360</span>
-                    </div>
-                  </div>
-                  <div className="doc-content">
-                    <div className="doc-pro-info">
-                      <div className="doc-pro-name">
-<Link to="/doctor-profile">                          Dr. Darren Elder</Link>
-                        <p>Neurology</p>
-                      </div>
-                      <div className="reviews-ratings">
-                        <p>
-                          <span>
-                            <i className="fas fa-star"></i> 4.0
-                          </span>{" "}
-                          (20)
-                        </p>
-                      </div>
-                    </div>
-                    <div className="doc-pro-location">
-                      <p>
-                        <i className="feather-map-pin"></i> Florida, USA
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-3 col-md-6 d-flex">
-                <div className="doctor-profile-widget w-100">
-                  <div className="doc-pro-img">
-<Link to="/doctor-profile">                      <div className="doctor-profile-img">
-                        <img
-                          src="/src/assets/img/doctors/doctor-05.jpg"
-                          className="img-fluid"
-                          alt="Sofia Brient"
-                        />
-                      </div>
-                    </Link>
-                    <div className="doctor-amount">
-                      <span>$ 450</span>
-                    </div>
-                  </div>
-                  <div className="doc-content">
-                    <div className="doc-pro-info">
-                      <div className="doc-pro-name">
-                        <Link to="/doctor-profile">Dr. Sofia Brient</Link>
-                        <p>Urology</p>
-                      </div>
-                      <div className="reviews-ratings">
-                        <p>
-                          <span>
-                            <i className="fas fa-star"></i> 4.5
-                          </span>{" "}
-                          (30)
-                        </p>
-                      </div>
-                    </div>
-                    <div className="doc-pro-location">
-                      <p>
-                        <i className="feather-map-pin"></i> Georgia, USA
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-3 col-md-6 d-flex">
-                <div className="doctor-profile-widget w-100">
-                  <div className="doc-pro-img">
-<Link to="/doctor-profile">                      <div className="doctor-profile-img">
-                        <img
-                          src="/src/assets/img/doctors/doctor-02.jpg"
-                          className="img-fluid"
-                          alt="Paul Richard"
-                        />
-                      </div>
-                    </Link>
-                    <div className="doctor-amount">
-                      <span>$ 570</span>
-                    </div>
-                  </div>
-                  <div className="doc-content">
-                    <div className="doc-pro-info">
-                      <div className="doc-pro-name">
-                        <Link to="/doctor-profile">Dr. Paul Richard</Link>
-                        <p>Orthopedic</p>
-                      </div>
-                      <div className="reviews-ratings">
-                        <p>
-                          <span>
-                            <i className="fas fa-star"></i> 4.3
-                          </span>{" "}
-                          (45)
-                        </p>
-                      </div>
-                    </div>
-                    <div className="doc-pro-location">
-                      <p>
-                        <i className="feather-map-pin"></i> Michigan, USA
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
         <section className="testimonial-section">
           <div className="testimonial-shape-img">
             <div className="testimonial-shape-left">
@@ -612,7 +447,7 @@ const About = () => {
                     <div className="accordion-item">
                       <h2 className="accordion-header" id="headingOne">
                         <a
-                          to="javascript:void(0)"
+                          to="#"
                           className="accordion-button"
                           data-bs-toggle="collapse"
                           data-bs-target="#collapseOne"
@@ -644,7 +479,7 @@ const About = () => {
                     <div className="accordion-item">
                       <h2 className="accordion-header" id="headingTwo">
                         <a
-                          to="javascript:void(0)"
+                          to="#"
                           className="accordion-button collapsed"
                           data-bs-toggle="collapse"
                           data-bs-target="#collapseTwo"
@@ -676,7 +511,7 @@ const About = () => {
                     <div className="accordion-item">
                       <h2 className="accordion-header" id="headingThree">
                         <a
-                          to="javascript:void(0)"
+                          to="#"
                           className="accordion-button collapsed"
                           data-bs-toggle="collapse"
                           data-bs-target="#collapseThree"
@@ -708,7 +543,7 @@ const About = () => {
                     <div className="accordion-item">
                       <h2 className="accordion-header" id="headingFour">
                         <a
-                          to="javascript:void(0)"
+                          to="#"
                           className="accordion-button collapsed"
                           data-bs-toggle="collapse"
                           data-bs-target="#collapseFour"
@@ -742,7 +577,7 @@ const About = () => {
                     <div className="accordion-item">
                       <h2 className="accordion-header" id="headingFive">
                         <a
-                          to="javascript:void(0)"
+                          to="#"
                           className="accordion-button collapsed"
                           data-bs-toggle="collapse"
                           data-bs-target="#collapseFive"
@@ -779,6 +614,6 @@ const About = () => {
       </div>
     </>
   );
-}
+};
 
-export default About
+export default About;

@@ -1,23 +1,37 @@
-import { Field, FieldArray, Formik, useFormik } from "formik";
+import {  Formik  } from "formik";
 import CustomInput from "../../components/CustomInput";
-import * as yup from "yup";
 import { IoArrowBack } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
   allDoctorCategory,
-  resetState,
+  
 } from "../../features/dCategory/dCategorySlice";
 import { getAllServices } from "../../features/service/serviceSlice";
 import Select from "react-dropdown-select";
 import {
   AddHospital,
   getAHospital,
+  resetState,
   updateAHospital,
 } from "../../features/hospital/hospitalSlice";
-import { deleteAssign, getAllAssign } from "../../features/assingn/assignSlice";
+
+import * as yup from "yup";
+let schema = yup.object().shape({
+  hospitalname: yup.string().required("Hospital Name is Required"),
+  hospitaladdress: yup.string().required("Hospital Address is Required"),
+  description: yup.string().required("Description Address is Required"),
+  shortdescription: yup.string().required("Short Description is Required"),
+  openingtime: yup.string().required("Opening time is Required"),
+  closingtime: yup.string().required("Closing time is Required"),
+  service: yup.array().required("service is Required"),
+  category: yup.array().required("Category is Required"),
+  hospitallogo: yup.string().required("Hospital logo is Required"),
+  status: yup.string().required("Status is Required"),
+  yearofexperience: yup.number().required("year of experience is Required"),
+});
 
 const AddDoctor = () => {
   const hospitalId = location.pathname.split("/")[3];
@@ -31,39 +45,30 @@ useEffect(() => {
   } else {
     dispatch(resetState());
   }
-}, [hospitalId]);
+}, [hospitalId,dispatch]);
   useEffect(() => {
     dispatch(allDoctorCategory());
     dispatch(getAllServices());
-    dispatch(getAllAssign());
 
-  }, []);
+  }, [dispatch]);
+
+
+
   const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
   const AllService = useSelector((state) => state.service?.Services);
-  const AsignData = useSelector((state) => state.assign?.AllAsignDoctor);
 
   const hospitalState = useSelector((state) => state.hospital);
   const {SingleData } = hospitalState;
 
-  
-  const newAsignData = AsignData?.filter((el) => {
-    return el.hospital === SingleData?.hospitalname;
-  });
 
-  const handleDelete = (data) => {
-    console.log(data);
-    dispatch(deleteAssign(data));
-    setTimeout(() => {
-      dispatch(getAllAssign());
-    }, 100);
-  };
-  console.log(SingleData);
+  
+
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={{
-          hospitalname: SingleData?.hospitalname||'',
+          hospitalname: SingleData?.hospitalname || "",
           hospitaladdress: SingleData?.hospitaladdress || "",
           description: SingleData?.description || "",
           shortdescription: SingleData?.shortdescription || "",
@@ -73,11 +78,9 @@ useEffect(() => {
           category: SingleData?.category || "",
           status: SingleData?.status || "",
           hospitallogo: SingleData?.hospitallogo || "",
-          // assignDRname: "",
-          // assignHOSname: "",
-          // assignAMT: "",
+          yearofexperience: SingleData?.yearofexperience || "",
         }}
-        // validationSchema: schema,
+        validationSchema={schema}
         onSubmit={(values) => {
           const {
             hospitalname,
@@ -89,9 +92,24 @@ useEffect(() => {
             service,
             category,
             status,
+            yearofexperience,
+
             hospitallogo,
           } = values;
           console.log(values);
+
+          const categoryName = [];
+          for (let index = 0; index < category.length; index++) {
+            categoryName.push(category[index]?.name);
+          }
+          const serviceName = [];
+          for (let index = 0; index < service.length; index++) {
+            serviceName.push(service[index]?.title);
+          }
+
+                    console.log("serviceName", serviceName);
+                    console.log("categoryName", categoryName);
+
           const formData = new FormData();
           formData.append("hospitalname", hospitalname);
           formData.append("hospitaladdress", hospitaladdress);
@@ -99,10 +117,12 @@ useEffect(() => {
           formData.append("shortdescription", shortdescription);
           formData.append("openingtime", openingtime);
           formData.append("closingtime", closingtime);
-          formData.append("service", JSON.stringify(service));
+          formData.append("service", JSON.stringify(serviceName));
+          formData.append("yearofexperience", yearofexperience);
+
           // formData.append("service", service);
           // formData.append("category", category);
-          formData.append("category", JSON.stringify(category));
+          formData.append("category", JSON.stringify(categoryName));
           formData.append("status", status);
           formData.append("hospitallogo", hospitallogo);
           if (hospitalId === undefined || "") {
@@ -136,7 +156,7 @@ useEffect(() => {
                 className=" my-4"
                 encType="multipart/form-data"
               >
-                <div className="row align-items-center justify-content-center">
+                <div className="row align-items-center ">
                   <div className="col-12">
                     <CustomInput
                       type="text"
@@ -266,6 +286,21 @@ useEffect(() => {
                     </div>
                   </div>{" "}
                   <div className="col-6">
+                    <CustomInput
+                      type="number"
+                      label="Year of experience "
+                      name="yearofexperience"
+                      onChng={formik.handleChange("yearofexperience")}
+                      onBlr={formik.handleBlur("yearofexperience")}
+                      val={formik.values.yearofexperience}
+                    />
+
+                    <div className="error">
+                      {formik.touched.yearofexperience &&
+                        formik.errors.yearofexperience}
+                    </div>
+                  </div>
+                  <div className="col-6">
                     <select
                       name="status"
                       placeholder="Select Status..."
@@ -299,102 +334,7 @@ useEffect(() => {
                     </div>
                   </div>
                 </div>
-                {hospitalId !== undefined || "" ? (
-                  <>
-                    <hr />
 
-                    <div
-                      className="col-12 py-5 px-4 rounded   mb-3"
-                      // style={{ background: " rgba(0, 0, 0, 0.1)" }}
-                    >
-                      <h3 className="mb-3">Assign Doctor</h3>
-
-                      {newAsignData?.map((e, i) => {
-                        return (
-                          <>
-                            <div className=" gap-4 mb-2   d-flex" key={i}>
-                              <div className="form-group">
-                                <select
-                                  disabled
-                                  className="form-select  p-2 mb-2"
-                                  style={{ width: "15vw" }}
-                                >
-                                  <option value={e?.hodpital}>
-                                    {e?.hospital}
-                                  </option>
-                                </select>
-                              </div>
-                              <div className="form-group ">
-                                <select
-                                  className="form-select p-2   mb-2"
-                                  disabled
-                                  style={{ width: "15vw" }}
-                                >
-                                  <option value={e?.category}>
-                                    {e?.category}
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div className="form-group">
-                                <select
-                                  className="form-select p-2  mb-2"
-                                  disabled
-                                  style={{ width: "12vw" }}
-                                >
-                                  <option value={e?.doctor}>{e?.doctor}</option>
-                                </select>
-                              </div>
-
-                              <div className="form-group">
-                                <input
-                                  type="text"
-                                  disabled
-                                  placeholder="Amount"
-                                  value={e?.amount}
-                                  className="form-control   mb-2 "
-                                  style={{ width: "12vw" }}
-                                />
-                              </div>
-                              <div className="form-group d-flex align-items-center gap-2">
-                                <div className="text-danger">
-                                  <Link
-                                    type="button"
-                                    to={`/admin/assign-doctor/${e?._id}`}
-                                    className="btn  btn-outline-primary"
-                                    // onClick={() => handleDelete(e?._id)}
-                                  >
-                                    EDIT
-                                  </Link>
-                                </div>
-                                <div className="">
-                                  <button
-                                    type="button"
-                                    className="btn  btn-outline-danger"
-                                    onClick={() => handleDelete(e?._id)}
-                                  >
-                                    DELETE
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        );
-                      })}
-
-                      <div className="float-end mx-4 px-5">
-                        <Link
-                          to={"/admin/assign-doctor"}
-                          className="btn btn-info"
-                        >
-                          Assign Doctor{" "}
-                        </Link>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  ""
-                )}
                 <button className="btn btn-primary m-4" type="submit">
                   {hospitalId !== undefined || "" ? "Edit" : "Add"} Hospital
                 </button>

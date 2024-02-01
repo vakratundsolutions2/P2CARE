@@ -1,9 +1,26 @@
+import { useDispatch, useSelector } from "react-redux";
 import BreadCrum from "../../components/BreadCrum";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { BookingDetails } from "../../features/doctor/doctorSlice";
 
 const BookingComplete = () => {
+
+  const [paymentId, setPaymentId] = useSearchParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(BookingDetails(paymentId.get("reference")));
+  })
+  const bookingDetails = useSelector(state => state?.doctor?.BookingDetails);
+  const doctorsDetails = useSelector(state => state?.doctor?.DoctorsDetails);
+
+  var date = new Date(bookingDetails.date);
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
   return (
     <div className="main-wrapper">
-      <BreadCrum location={"Booking"}  heading = {'Booking'}/>
+      <BreadCrum location={"Booking"} heading={'Booking'} />
 
       {/* <!-- Page Content --> */}
       <div className="content success-page-cont">
@@ -17,15 +34,14 @@ const BookingComplete = () => {
                     <i className="fas fa-check"></i>
                     <h3>Appointment booked Successfully!</h3>
                     <p>
-                      Appointment booked with <strong>Dr. Darren Elder</strong>
-                      <br /> on <strong>12 Nov 2023 5:00PM to 6:00PM</strong>
+                      Appointment booked with <strong>Dr. {doctorsDetails.doctorName}</strong>
+                      <br /> on <strong>{date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear()} {bookingDetails.time}</strong>
                     </p>
-                    <a
-                      href="invoice-view.html"
+                    <button
                       className="btn btn-primary view-inv-btn"
                     >
                       View Invoice
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

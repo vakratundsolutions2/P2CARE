@@ -6,9 +6,12 @@ import patientReducer from "../features/patient/patientSlice";
 import authReducer from "../features/auth/authSlice";
 import testimonialReducer from "../features/testimonial/testimonialSlice";
 import availableReducer from "../features/availablity/availablitySlice";
+import serviceReducer from "../features/service/serviceSlice";
+import blogcategoryReducer from "../features/blogCategory/BlogCategorySlice";
 
 
 import hospitalReducer from "../features/hospital/hospitalSlice";
+import inquarySlice from "../features/inquary/inquarySlice";
 
 
 const reduxStore = configureStore({
@@ -19,9 +22,12 @@ const reduxStore = configureStore({
 
     patient: patientReducer,
     blog: blogReducer,
+    blogcategory: blogcategoryReducer,
     hospital: hospitalReducer,
     dCategory: dCategoryReducer,
     testimonial: testimonialReducer,
+    service: serviceReducer,
+    inquary: inquarySlice
   },
 });
 export default reduxStore;

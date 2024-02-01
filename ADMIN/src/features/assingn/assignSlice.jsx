@@ -12,6 +12,16 @@ export const getAllAssign = createAsyncThunk(
     }
   }
 );
+export const getAssign = createAsyncThunk(
+  "assing/get-Aassign",
+  async (id,thunkAPI) => {
+    try {
+      return await assignService.getsingleAssign(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 export const addNewAssign = createAsyncThunk(
   "assign/add-assign",
   async (DATA,thunkAPI) => {
@@ -32,9 +42,20 @@ export const deleteAssign = createAsyncThunk(
     }
   }
 );
+export const UpdateAssign = createAsyncThunk(
+  "assign/update-assign",
+  async (DATA,thunkAPI) => {
+    try {
+      return await assignService.editAsign(DATA);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 
 const initialState = {
-  //  patient:[],
+   assign:[],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -55,7 +76,7 @@ export const assignSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.AllAsignDoctor = action?.payload?.data;
+        state.assign = action?.payload?.data;
       })
       .addCase(getAllAssign.rejected, (state, action) => {
         state.isError = true;
@@ -71,7 +92,7 @@ export const assignSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         if (state.isSuccess === true) {
-          toast.success(action.payload.message);
+          toast.success("Assign Success");
         }
       })
       .addCase(addNewAssign.rejected, (state, action) => {
@@ -92,6 +113,39 @@ export const assignSlice = createSlice({
         }
       })
       .addCase(deleteAssign.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(getAssign.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAssign.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.assign = action.payload.data;
+      })
+      .addCase(getAssign.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(UpdateAssign.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(UpdateAssign.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+         if (state.isSuccess === true) {
+           toast.success(action.payload.message);
+         }
+        state.update = action.payload.data;
+      })
+      .addCase(UpdateAssign.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.isSuccess = false;

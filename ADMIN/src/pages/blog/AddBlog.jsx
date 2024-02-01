@@ -13,13 +13,20 @@ import {
 import { useLocation } from "react-router-dom";
 
 let schema = yup.object().shape({
-  title: "",
-  blogcontent: "",
-  author: "",
-  slug: "",
-  blogtags: "",
-  metatag: "",
-  metatitle: "",
+  title: yup.string().required("Title is Required"),
+  blogcontent: yup.string().required("blogcontent is Required"),
+  author: yup.string().required("author is Required"),
+  slug: yup.string().required("slug is Required"),
+  blogtags: yup.string().required("blogtags is Required"),
+  metatag: yup.string().required("metatag is Required"),
+  metatitle: yup.string().required("metatitle is Required"),
+  ogmetatitle: yup.string().required("ogmetatitle is Required"),
+  metadescription: yup.string().required("metadescription is Required"),
+  ogmetadescription: yup.string().required("ogmetadescription is Required"),
+  blogimage: yup.string().required("blogimage is Required"),
+  ogmetaimage: yup.string().required("ogmetaimage is Required"),
+  category: yup.string().required("category is Required"),
+  status: yup.string().required("status is Required"),
 });
 const AddBlog = () => {
   const location = useLocation();
@@ -170,7 +177,7 @@ const AddBlog = () => {
               <div className="col-6">
                 <CustomInput
                   type="text"
-                  label="Doctor slug "
+                  label="Slug "
                   name="slug"
                   onChng={formik.handleChange("slug")}
                   onBlr={formik.handleBlur("slug")}

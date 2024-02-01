@@ -60,7 +60,7 @@ export const availablitySlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.AvailableByID = action.payload?.data[0];
+        state.AvailableByID = action.payload?.data;
 
       }),
       builder.addCase(GetAavailablity.rejected, (state) => {

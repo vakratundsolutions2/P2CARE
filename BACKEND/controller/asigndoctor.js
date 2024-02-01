@@ -6,6 +6,7 @@ const DOCTOR = require('../model/doctor')
 //===============================AsignDoctor=======================
 
 exports.asignDoctor =  async function (req, res, next) {
+  
     try {
         if(!req.body.hospital || !req.body.category || !req.body.doctor || !req.body.amount){
             throw new Error ('please enter feild')
@@ -16,13 +17,12 @@ exports.asignDoctor =  async function (req, res, next) {
         }
         let category = req.body.category
         // console.log(category);
-        const checkCat = JSON.parse(checkHospital.category)
-        const newCat = checkCat.map((el)=>el.name)
+        const checkCat = checkHospital.category
+        const newCat = checkCat.map((el)=>el)
         
         const checkCategory = newCat.includes(category);
-        console.log(checkCategory);
         if(checkCategory === false){
-          throw new Error ('Category is not available')
+          throw new Error ('Hospital Category is not available')
         }
     
         const checkDoctor = await DOCTOR.findOne({ doctorName : req.body.doctor })
@@ -30,6 +30,15 @@ exports.asignDoctor =  async function (req, res, next) {
             throw new Error('invalid choise')
         }
 
+        const checkCatDoc = JSON.parse(checkDoctor.experties);
+        const newCatDoc = checkCatDoc.map((el) => el);
+        console.log("newCatDoc", newCatDoc);
+
+        const checkCategoryDoc = newCatDoc.includes(category);
+        console.log(checkCategoryDoc);
+        if (checkCategoryDoc === false) {
+          throw new Error("Doctor Category is not available");
+        }
         // console.log(req.body);
         const data = await ASIGNDOCTOR.create(req.body)
         res.status(201).json({
@@ -51,6 +60,25 @@ exports.asignDoctor =  async function (req, res, next) {
 exports.allAsign = async function (req, res, next) {
     try {
       const data = await ASIGNDOCTOR.find()
+      res.status(200).json({
+        status: "Success",
+        message: "Data is found",
+        data
+      })
+    } catch (error) {
+      res.status(404).json({
+        status: "fail",
+        message: error.message
+      })
+    }
+  };
+
+//=======================Getr ID Asign====================
+
+exports.getAsign = async function (req, res, next) {
+  
+    try {
+      const data = await ASIGNDOCTOR.findById(req.params.id)
       res.status(200).json({
         status: "Success",
         message: "Data is found",

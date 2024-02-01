@@ -17,6 +17,11 @@ import {
 import { TimePicker } from "antd";
 import moment from "moment";
 import dayjs from "dayjs";
+import * as yup from "yup";
+let schema = yup.object().shape({
+  Time: yup.string().required("Time is Required"),
+  status: yup.string().required("Status is Required"),
+});
 
 const BookDoctor = () => {
   const TimeId = location.pathname.split("/")[3];
@@ -44,6 +49,7 @@ const BookDoctor = () => {
 
       status: SingleData?.status || "",
     },
+    validationSchema:schema,
 
     onSubmit: (values) => {
       console.log(values);

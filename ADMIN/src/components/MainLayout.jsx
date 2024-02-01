@@ -9,7 +9,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
-  const USER = useSelector((state)=>state?.auth?.admin?.ADMIN?.user) 
+  const USER = useSelector((state)=>state?.auth?.admin) 
   
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -17,8 +17,12 @@ const MainLayout = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname;
+  
+  const handleLogout = () => {
+    localStorage.removeItem("ADMIN");
+    navigate("/");
+    window.location.reload();
+  };
   const items = [
     {
       key: "1",
@@ -30,7 +34,7 @@ const MainLayout = () => {
     },
     {
       key: "2",
-      label: <div className="nav-link px-3">Logout</div>,
+      label: <button onClick={handleLogout} className="nav-link px-3">Logout</button>,
     },
   ];
   return (
@@ -65,18 +69,18 @@ const MainLayout = () => {
               },
 
               {
-                key: "patients",
+                key: "user",
                 icon: <AiOutlineUser className="fs-4" />,
-                label: "Patients Manage",
+                label: "User Manage",
                 children: [
                   {
-                    key: "all-patients",
-                    label: "All Patients",
+                    key: "users-list",
+                    label: "All Users",
                   },
-                  {
-                    key: "patient",
-                    label: "Add New Patient",
-                  },
+                  // {
+                  //   key: "users",
+                  //   label: "Add New User",
+                  // },
                 ],
               },
 
@@ -106,8 +110,8 @@ const MainLayout = () => {
                     label: "Booking Time",
                   },
                   {
-                    key: "all-doctor-review",
-                    label: "All Review",
+                    key: "doctor-request",
+                    label: "New Doctor Request",
                   },
                 ],
               },
@@ -121,22 +125,18 @@ const MainLayout = () => {
                     key: "all-hospital",
                     label: "All Hospitals",
                   },
-                  {
-                    key: "assign-doctor",
-                    label: "Assign Doctor",
-                  },
+                  // {
+                  //   key: "assign-doctor",
+                  //   label: "Assign Doctor",
+                  // },
                   {
                     key: "blog-hospital",
                     label: "Blog Of Hospital",
                   },
-                  {
-                    key: "hospital/all-review",
-                    label: "All Reviews",
-                  },
-                  {
-                    key: "faq",
-                    label: "Faq",
-                  },
+                  // {
+                  //   key: "hospital/all-review",
+                  //   label: "All Reviews",
+                  // },
                 ],
               },
               {
@@ -180,6 +180,26 @@ const MainLayout = () => {
               },
 
               {
+                key: "report-list",
+                icon: <FaClipboardList className="fs-4" />,
+                label: "Reports",
+                children: [
+                  // {
+                  //   key: "invoice",
+                  //   label: "Invoice Report",
+                  // },
+                  {
+                    key: "appointment",
+                    label: "All Appointments ",
+                  },
+
+                  {
+                    key: "inquary-list",
+                    label: "Inquaries ",
+                  },
+                ],
+              },
+              {
                 key: "testimonial-list",
                 icon: <FaClipboardList className="fs-4" />,
                 label: "Testimonials",
@@ -206,7 +226,6 @@ const MainLayout = () => {
               onClick={() => setCollapsed(!collapsed)}
             />
             <Dropdown
-              // style={{padding:'0 2rem'}}
               menu={{
                 items,
               }}

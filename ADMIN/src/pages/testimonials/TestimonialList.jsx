@@ -28,11 +28,11 @@ const columns = [
     dataIndex: "designation",
     sorter: (a, b) => a.name.length - b.name.length,
   },
-  {
-    title: "Description",
-    dataIndex: "description",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
+  // {
+  //   title: "Description",
+  //   dataIndex: "description",
+  //   sorter: (a, b) => a.name.length - b.name.length,
+  // },
   {
     title: "Action",
     dataIndex: "action",
@@ -92,7 +92,6 @@ const hideModal = () => {
       key: i + 1,
       name: searchResult[i]?.name,
       designation: searchResult[i]?.designation,
-      description: searchResult[i]?.description,
       
       image: (
         <>
@@ -124,6 +123,7 @@ const hideModal = () => {
 
 
   return (
+    
     <div className="mt-3">
       <div className="header d-flex mb-3 justify-content-between px-4">
         <h2 className="text-header">Testimonial Items</h2>

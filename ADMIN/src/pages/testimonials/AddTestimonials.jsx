@@ -1,53 +1,65 @@
 import { useEffect } from "react";
+import * as yup from "yup";
 import { IoArrowBack } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AddTestimonial, GetATestimonial, GetAllTestimonial, UpdateTestimonial, resetState } from "../../features/testimonial/testimonialSlice";
+import {
+  AddTestimonial,
+  GetATestimonial,
+  GetAllTestimonial,
+  UpdateTestimonial,
+  resetState,
+} from "../../features/testimonial/testimonialSlice";
 import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
+
+let schema = yup.object().shape({
+  name: yup.string().required("Name is Required"),
+  designation: yup.string().required("Designation is Required"),
+  description: yup.string().required("Description is Required"),
+  image: yup.string().required("Image is Required"),
+});
 
 const AddTestimonials = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const testimonialId = location.pathname.split("/")[3];
 
-useEffect(() => {
-  if (testimonialId !== undefined || "") {
-    dispatch(GetATestimonial(testimonialId));
-  } else {
-    dispatch(resetState());
-  }
-}, [testimonialId]);
+  useEffect(() => {
+    if (testimonialId !== undefined || "") {
+      dispatch(GetATestimonial(testimonialId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [testimonialId]);
 
   const testimonialState = useSelector((state) => state?.testimonial);
-  const { SingleData} = testimonialState
-
-
-
+  const { SingleData } = testimonialState;
 
   const formik = useFormik({
     enableReinitialize: true,
+
     initialValues: {
       name: SingleData?.name || "",
-      designation:SingleData?.designation || "",
+      designation: SingleData?.designation || "",
       description: SingleData?.description || "",
       image: SingleData?.image || "",
     },
+    validationSchema: schema,
 
     onSubmit: (values) => {
-
       const { name, designation, description, image } = values;
+
       const formData = new FormData();
-      formData.append('name', name);
+
+      formData.append("name", name);
       formData.append("designation", designation);
       formData.append("description", description);
       formData.append("image", image);
 
-
       if (testimonialId === undefined || testimonialId === "") {
         dispatch(AddTestimonial(formData));
-      }
-       else {
+      } else {
         dispatch(UpdateTestimonial({ id: testimonialId, formData: formData }));
       }
     },
@@ -103,6 +115,7 @@ useEffect(() => {
                   label="description"
                   name="description"
                   className="form-control"
+                  rows="3"
                   onChange={formik.handleChange("description")}
                   value={formik.values.description}
                   placeholder=""
@@ -133,7 +146,6 @@ useEffect(() => {
               </div>
               <button className="btn btn-primary" type="submit">
                 {testimonialId !== undefined ? "Edit" : "Add"} Testimonial
-                
               </button>
             </form>
           </div>
@@ -141,6 +153,6 @@ useEffect(() => {
       </div>
     </>
   );
-}
+};
 
-export default AddTestimonials
+export default AddTestimonials;

@@ -7,15 +7,23 @@ const userSchema = new Schema({
   Name: String,
   Email: String,
   Password: String,
-  phoneNumber:String,
-  isActive:{
-    type:Boolean,
-    default:false
+  ProfilePic: {
+    type: String,
+  },
+  phoneNumber: String,
+  isActive: {
+    type: Boolean,
+    default: false,
   },
   Role: {
     type: String,
     enum: ["ADMIN", "USER", "DOCTOR"],
     default: "USER",
+  },
+
+  isBlocked: {
+    type: Boolean,
+    default: false,
   },
 });
 

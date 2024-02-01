@@ -4,10 +4,14 @@ const patientController = require("../controller/patient")
 const userController =  require('../controller/user')
 
 //addPatient
-router.post('/addpatient',patientController.addPatient);
+router.post(
+  "/addpatient",
+  userController.CHECKJWT,
+  patientController.addPatient
+);
 
 //allPatient
-router.get('/allpatient',userController.CHECKJWT,patientController.allPatient);
+router.get('/allpatient',patientController.allPatient);
 // router.get('/allpatient',patientController.allPatient);
 
 // updatePatient

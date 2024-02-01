@@ -1,16 +1,28 @@
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/CustomInput";
 import { IoArrowBack } from "react-icons/io5";
+import * as yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addServiceCategory, getAServiceCategory, resetState, updateServiceCategory } from "../../features/serviceCategory/sCategorySlice";
+import {
+  addServiceCategory,
+  getAServiceCategory,
+  resetState,
+  updateServiceCategory,
+} from "../../features/serviceCategory/sCategorySlice";
+
+let schema = yup.object().shape({
+  Name: yup.string().required("Name is Required"),
+  ForService: yup.string().required("Service is Required"),
+  Icon: yup.string().required("Icon is Required"),
+  status: yup.string().required("Status is Required"),
+});
 
 const AddServiceCategory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const catId = location.pathname.split("/")[3];
-
 
   useEffect(() => {
     if (catId !== undefined || "") {
@@ -21,40 +33,42 @@ const AddServiceCategory = () => {
   }, [catId]);
 
   const sCategory = useSelector((state) => state?.sCategory);
-  const {SingleData} = sCategory
-
-
-  
+  const { SingleData } = sCategory;
 
   const formik = useFormik({
     enableReinitialize: true,
+
     initialValues: {
-      Name: SingleData?.Name ||"",
+      Name: SingleData?.Name || "",
       ForService: SingleData?.ForService || "",
       Icon: SingleData?.Icon || "",
       status: SingleData?.status || "",
     },
+    validationSchema: schema,
 
     onSubmit: async (values) => {
       const { Icon, ForService, status, Name } = values;
+
       const formData = new FormData();
       formData.append("Icon", Icon);
       formData.append("status", status);
       formData.append("Name", Name);
       formData.append("ForService", ForService);
+
       if (catId === undefined || "") {
         dispatch(addServiceCategory(formData));
-           setTimeout(() => {
-             dispatch(resetState());
-           }, 300);
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       } else {
         dispatch(updateServiceCategory({ id: catId, formData: formData }));
-           setTimeout(() => {
-             dispatch(resetState());
-           }, 300);
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
       }
     },
   });
+
   return (
     <>
       <div className="">

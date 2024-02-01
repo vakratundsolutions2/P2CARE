@@ -4,9 +4,8 @@ const HOSPITAL = require("../model/hospital");
 
 //==========================addDoctor=========================
 exports.addDoctor = async function (req, res, next) {
+  
   try {
-    // console.log('Controller',req.file);
-    console.log(req.body.experties);
     req.body.image = req?.file?.filename;
     if (
       !req.body.doctorName ||
@@ -16,7 +15,6 @@ exports.addDoctor = async function (req, res, next) {
       !req.body.designation ||
       !req.body.experties ||
       !req.body.specialities ||
-      !req.body.slug ||
       !req.body.location ||
       !req.body.description ||
       !req.body.shortDescription ||
@@ -40,13 +38,14 @@ exports.addDoctor = async function (req, res, next) {
     }
 
     const experties = JSON.parse(req.body.experties);
-
+    console.log(experties);
     const cate = experties.map((el) => el);
 
     const checkCategory = async (el) => {
-      const cat = await DOCTORCATEGORY.find({ name: el.name });
+      const cat = await DOCTORCATEGORY.find({ name: el });
       return cat.length > 0;
     };
+
 
     const isValidName = await Promise.all(
       cate.flat().map(async (el) => await checkCategory(el))
@@ -61,26 +60,11 @@ exports.addDoctor = async function (req, res, next) {
     if (chekspecialist === false) {
       throw new Error("Invalid add value");
     }
-    if (req.body.hospital) {
-      const hospital = JSON.parse(req.body.hospital);
-      const checkHos = hospital.map((el) => el);
-      const checkHospital = async (el) => {
-        const cat = await HOSPITAL.find({ hospitalname: el.hospitalname });
-        return cat.length > 0;
-      };
-      const isValidhospital = await Promise.all(
-        checkHos.flat().map(async (el) => await checkHospital(el))
-      );
-      if (!isValidhospital.every(Boolean)) {
-        throw new Error("Hospital is not added");
-      }
-    }
+    
 
-    // req.body.hospital = JSON.parse(req.body.hospital)
-    // req.body.experties = JSON.parse(req.body.experties);
-
-    // console.log(req.body);
-
+    console.log(req.body);
+    req.body.experties = JSON.parse(req.body.experties);
+    
     const data = await DOCTOR.create(req.body);
     res.status(201).json({
       status: "Successful",
@@ -98,7 +82,14 @@ exports.addDoctor = async function (req, res, next) {
 //=============================allDoctor===========================
 exports.allDoctor = async function (req, res, next) {
   try {
-    const data = await DOCTOR.find();
+    const data = await DOCTOR.find(
+    //   {
+    //   isVarified: true,
+    // }
+    )
+      .populate("ratings.postedby")
+      .populate("assign.hospitals");
+
     res.status(200).json({
       status: "Success",
       message: "Data is found",
@@ -111,6 +102,9 @@ exports.allDoctor = async function (req, res, next) {
     });
   }
 };
+
+
+
 
 //===========================update doctor=========================
 
@@ -129,7 +123,7 @@ exports.updateDoctor = async function (req, res, next) {
       const cate = experties?.map((el) => el);
       // console.log('category', cate);
       const checkCategory = async (el) => {
-        const cat = await DOCTORCATEGORY.find({ name: el.name });
+        const cat = await DOCTORCATEGORY.find({ name: el });
         return cat.length > 0;
       };
       const isValidName = await Promise.all(
@@ -148,30 +142,14 @@ exports.updateDoctor = async function (req, res, next) {
         throw new Error("Invalid add value");
       }
     }
-    if (data.hospital) {
-      const hospital = JSON.parse(data.hospital);
-
-      const checkHos = hospital.map((el) => el);
-      const checkHospital = async (el) => {
-        const cat = await HOSPITAL.find({ hospitalname: el.hospitalname });
-        return cat.length > 0;
-      };
-      const isValidhospital = await Promise.all(
-        checkHos.flat().map(async (el) => await checkHospital(el))
-      );
-
-      if (!isValidhospital.every(Boolean)) {
-        throw new Error("Hospital is not added");
-      }
-    }
+    
     if (data.status) {
       if (data.status && !["publish", "draft"].includes(data.status)) {
         throw new Error("Invalid status value");
       }
     }
-    console.log('data',data);
-    console.log(req.body);
 
+    data.experties = JSON.parse(data.experties); 
     const udata = await DOCTOR.findByIdAndUpdate(req.params.id, data);
     res.status(200).json({
       status: "Sucessfull",
@@ -207,7 +185,9 @@ exports.searchDoctor = async function (req, res, next) {
   try {
     const data = await DOCTOR.find({
       doctorName: { $regex: req.params.name, $options: "i" },
-    });
+    })
+      .populate("ratings.postedby")
+      .populate("assign.hospitals");
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
@@ -224,8 +204,11 @@ exports.searchDoctor = async function (req, res, next) {
 //=====================searchDoctorbyId=====================
 exports.searchDoctorById = async function (req, res, next) {
   try {
-    const data = await DOCTOR.findById(req.params.id);
-    console.log(data);
+    const data = await DOCTOR.findById(req.params.id)
+      .populate("ratings.postedby")
+      .populate("assign.hospitals");
+
+      console.log(data);
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
@@ -239,6 +222,67 @@ exports.searchDoctorById = async function (req, res, next) {
   }
 };
 
+// Creating a new reting session
+exports.rating = async (req, res) => {
+  const { _id } = req.user;
+  const { star, doctorID, comment } = req.body;
+  try {
+    const doctor = await DOCTOR.findById(doctorID);
+    let alreadyrated = doctor.ratings.find(
+      (userId) => userId.postedby.toString() === _id.toString()
+    );
+
+    if (alreadyrated) {
+      const updateRatings = await DOCTOR.updateOne(
+        {
+          ratings: { $elemMatch: alreadyrated },
+        },
+        {
+          $set: { "ratings.$.star": star, "ratings.$.comment": comment },
+        },
+        { new: true }
+      );
+      // res.json(updateRatings)
+    } else {
+      const rateProduct = await DOCTOR.findByIdAndUpdate(
+        doctorID,
+        {
+          $push: {
+            ratings: {
+              star: star,
+              comment: comment,
+              postedby: req.user,
+              date: Date.now(),
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      // res.json(rateProduct);
+    }
+
+    const getallrating = await DOCTOR.findById(doctorID);
+    let totalratings = getallrating.ratings.length;
+    let ratingsum = getallrating.ratings
+      .map((iten) => iten.star)
+      .reduce((prev, curr) => prev + curr, 0);
+    let orignalrating = Math.round(ratingsum / totalratings);
+    let finaldoctor = await DOCTOR.findByIdAndUpdate(
+      doctorID,
+      {
+        totalratings: orignalrating,
+      },
+      { new: true }
+    );
+
+    res.json(finaldoctor);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 //=====================searchDoctorFilters=====================
 exports.searchDoctorByFiltets = async function (req, res, next) {
   try {
@@ -246,31 +290,88 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
     const limit = parseInt(req.query.limit) || 5;
     const name = req.query.name || "";
     const specialities = req.query.specialities || "";
-    let sort = req.query.sort || 1;
-    let minAMT = req.query.minAmount || 0;
-    let maxAMT = req.query.maxAmount || 1000;
+    const sort = req.query.sort || 1;
+    const minAMT = req.query.minAmount || 0;
+    const maxAMT = req.query.maxAmount || 2000;
+    const Star = req.query.rating||'';
+    const location = req.query.location || "";
+    const Gender = req.query.gender || "";
+    var { mydate, diff } = req.query;
 
-var method = { doctorName:Number(sort) };
-   
+    const notAvailableDoctorIds = [];
+    if(mydate!=0){
+
+      const currentDate = new Date(mydate);
+
+      const nextSevenDays = new Date(mydate);
+
+      nextSevenDays.setDate(currentDate.getDate() + diff);
+
+      const allDoctors = await DOCTORAVAILABILITY.find({});
+      if (!allDoctors || allDoctors.length === 0) {
+        throw new Error("No doctors found or no availability for any doctor.");
+      }
+
+      
+      for (const doctor of allDoctors) {
+        const hasNotAvailability = doctor.bookingavailabilityInformation.some(
+          (availability) => {
+            const dayDate = new Date();
+            dayDate.setDate(
+              currentDate.getDate() +
+                ((["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+                  availability.day
+                ) -
+                  currentDate.getDay() +
+                  diff) %
+                  diff)
+            );
+            console.log(
+              dayDate + ":" + availability.day + ":" + availability.available
+            );
+            return (
+              dayDate <= nextSevenDays &&
+              dayDate.getDate() >= currentDate.getDate() &&
+              availability.available === false
+            );
+          }
+        );
+
+        if (hasNotAvailability) {
+          notAvailableDoctorIds.push(doctor.doctorid.toString());
+        }
+        //check
+      }
+
+    }
+
+    var method = { doctorName: Number(sort) };
+
     const data = await DOCTOR.find({
+      _id: { $nin: notAvailableDoctorIds },
+      gender: { $regex: Gender },
       doctorName: { $regex: name, $options: "i" },
       specialities: { $regex: specialities },
+      totalratings: { $regex: Star },
+      // isVarified: true,
       price: { $gte: minAMT, $lte: maxAMT },
     })
       .sort(method)
       .skip(currentpage * limit)
-      .limit(limit);
+      .limit(limit)
+      .populate("ratings.postedby")
+      .populate("assign.hospitals");
 
     const total = await DOCTOR.countDocuments({
+      gender: { $regex: Gender },
       doctorName: { $regex: name, $options: "i" },
-      
       specialities: { $regex: specialities },
+      totalratings: { $regex: Star },
       price: { $gte: minAMT, $lte: maxAMT },
+      // isVarified: true,
     });
-    const totalPages = Math.ceil(total / limit) 
-        
+    const totalPages = Math.ceil(total / limit);
 
-    console.log(total);
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
@@ -283,3 +384,100 @@ var method = { doctorName:Number(sort) };
     });
   }
 };
+
+// Block the Doctor
+
+exports.blockDoctor = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const block = await DOCTOR.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: true,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({
+      message: "Doctor Blocked",
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+exports.unblockDoctor = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const unblock = DOCTOR.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: false,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({
+      message: "Doctor UnBlocked",
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
+exports.acceptdoctor = async (req,res)=>{
+
+  try {
+
+    const data = await DOCTOR.findByIdAndUpdate(
+      req.params.id,
+      {
+        isVarified: true,
+      },
+      {
+        new: true,
+      }
+    );
+ res.status(200).json({
+   status: "Successfull",
+   message: "accept is found",
+   data,
+ });
+
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
+
+
+
+
+exports.verifiedDoctor = async (req,res)=>{
+
+  try {
+
+    const data = await DOCTOR.find({
+
+      isVarified: true
+    }
+    );
+ res.status(200).json({
+   status: "Successfull",
+   message: "accept is found",
+   data,
+ });
+
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
+
+
+
