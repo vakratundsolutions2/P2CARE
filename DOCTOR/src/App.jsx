@@ -4,7 +4,7 @@ import MainLayout from "./components/MainLayout";
 import Appointments from "./pages/Appointments";
 import Login from "./pages/auth/Login";
 import MyPatients from "./pages/MyPatients";
-import PatientProfile from "./pages/patientProfile";
+import PatientProfile from "./pages/PatientProfile";
 import ScheduleTime from "./pages/ScheduleTime";
 import AvailableTime from "./pages/AvailableTime";
 import Invoice from "./pages/Invoice";
