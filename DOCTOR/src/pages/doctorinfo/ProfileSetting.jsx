@@ -152,8 +152,8 @@ const ProfileSetting = () => {
                   formData.append("departmentName", departmentName);
                   formData.append("departmentCode", departmentCode);
                   formData.append("designation", designation);
-                  formData.append("experties", expertiesName);
-                  formData.append("specialities", JSON.stringify(specialities));
+                  formData.append("experties", JSON.stringify(expertiesName));
+                  formData.append("specialities", specialities);
 
                   formData.append("location", location);
                   formData.append("experienceInfo", experienceInfo);
