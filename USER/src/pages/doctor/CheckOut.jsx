@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-import LOGO from "../../assets/images/p2Care.png";
+import LOGO from "../../assets/p2care.png";
 import { Rate } from "antd";
 const CheckOut = () => {
   const data = location.search?.split("?")[1];
