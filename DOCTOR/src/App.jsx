@@ -4,6 +4,10 @@ import MainLayout from "./components/MainLayout";
 import Appointments from "./pages/Appointments";
 import Login from "./pages/auth/Login";
 import MyPatients from "./pages/MyPatients";
+// <<<<<<< HEAD
+// =======
+// import PatientProfile from "./pages/PatientProfile";
+// >>>>>>> 75b01684bdfd4f358b9c023d918022061abfed2c
 import ScheduleTime from "./pages/ScheduleTime";
 import AvailableTime from "./pages/AvailableTime";
 import Invoice from "./pages/Invoice";
