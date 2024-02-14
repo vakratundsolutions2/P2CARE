@@ -184,10 +184,6 @@ const MainLayout = () => {
                 icon: <FaClipboardList className="fs-4" />,
                 label: "Reports",
                 children: [
-                  // {
-                  //   key: "invoice",
-                  //   label: "Invoice Report",
-                  // },
                   {
                     key: "appointment",
                     label: "All Appointments ",
@@ -195,7 +191,31 @@ const MainLayout = () => {
 
                   {
                     key: "inquary-list",
-                    label: "Inquaries ",
+                    label: "Inquiry ",
+                  },
+                ],
+              },
+              {
+                key: "pages",
+                icon: <FaClipboardList className="fs-4" />,
+                label: "Pages",
+                children: [
+                  {
+                    key: "home",
+                    label: "Home ",
+                  },
+
+                  {
+                    key: "about",
+                    label: "About",
+                  },
+                  {
+                    key: "contact",
+                    label: "Contact",
+                  },
+                  {
+                    key: "faq-list",
+                    label: "Faq ",
                   },
                 ],
               },

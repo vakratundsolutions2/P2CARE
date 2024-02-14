@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { bookingDetails, getADoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
+import {
+  bookingDetails,
+  getADoctor,
+  getAllDoctors,
+  resetState,
+} from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
-import { getPatients } from "../../features/patient/patientSlice";
 import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
@@ -12,12 +16,19 @@ const key = import.meta.env.TEST_ID;
 import LOGO from "../../assets/images/p2Care.png";
 import { Rate } from "antd";
 const CheckOut = () => {
-  const data = location.search?.split("?")[1];
-  const date = data?.split("&")[1]?.split("=")[1];
-  const time = data?.split("&")[2]?.split("=")[1];
-  const doctorID = data?.split("&")[0]?.split("=")[1];
-  const category = data?.split("&")[3]?.split("=")[1];
-  console.log(category);
+  const { BOOKSTATE } = useSelector((state) => state.doctor);
+
+  const date = BOOKSTATE?.date;
+  const time = BOOKSTATE?.time;
+  const doctorID = BOOKSTATE?.doctor;
+  const category = BOOKSTATE?.Speciality;
+
+  // const data = location.search?.split("?")[1];
+  // const date = data?.split("&")[1]?.split("=")[1];
+  // const time = data?.split("&")[2]?.split("=")[1];
+  // const doctorID = data?.split("&")[0]?.split("=")[1];
+  // const category = data?.split("&")[3]?.split("=")[1];
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (doctorID !== undefined) {
@@ -26,9 +37,9 @@ const CheckOut = () => {
       dispatch(resetState());
     }
   }, [doctorID, dispatch]);
- 
+
   const DoctorState = useSelector((state) => state?.doctor);
-  const { SingleData } = DoctorState
+  const { SingleData } = DoctorState;
   const USERState = useSelector((state) => state.auth?.user);
 
   const formik = useFormik({
@@ -40,19 +51,15 @@ const CheckOut = () => {
       user: USERState?._id,
       name: USERState?.Name,
       email: USERState?.Email,
-      gender: USERState?.gender || "",
+      gender: USERState?.gender ,
       transactionid: "",
-      category:category
+      category: category,
     },
     // validationSchema: schema,
     onSubmit: (values) => {
-     
       dispatch(bookingDetails(values));
     },
   });
-
-
-
 
   // razorpay
   const checkoutHandler = async (amount) => {
@@ -74,7 +81,7 @@ const CheckOut = () => {
       prefill: {
         name: USERState?.Name,
         email: USERState?.Email,
-        contact: USERState?.MobileNo,
+        contact: USERState?.phoneNumber,
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -86,8 +93,6 @@ const CheckOut = () => {
     const razor = new window.Razorpay(options);
     razor.open();
   };
-
-
 
   return (
     <div>
@@ -145,8 +150,8 @@ const CheckOut = () => {
                                   className="form-check-input"
                                   type="radio"
                                   name="gender"
-                                  id="inlineRadio1"
-                                  value="Male"
+                                  // id="inli neRadio1"
+                                  value={formik.values.gender}
                                   onChange={formik.handleChange("gender")}
                                 />
                                 <label
@@ -161,9 +166,9 @@ const CheckOut = () => {
                                   className="form-check-input"
                                   type="radio"
                                   name="gender"
-                                  id="inlineRadio2"
+                                  // id="inlineRadio2"
                                   onChange={formik.handleChange("gender")}
-                                  value="Female"
+                                  value={formik.values.gender}
                                 />
                                 <label
                                   className="form-check-label"
@@ -270,9 +275,7 @@ const CheckOut = () => {
                             <input type="checkbox" id="terms_accept" />
                             <label htmlFor="terms_accept">
                               I have read and accept{" "}
-                              <Link >
-                                Terms &amp; Conditions
-                              </Link>
+                              <Link>Terms &amp; Conditions</Link>
                             </label>
                           </div>
                         </div>

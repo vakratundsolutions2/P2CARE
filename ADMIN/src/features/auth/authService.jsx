@@ -41,6 +41,7 @@ const searchuser = async (DATA) => {
   return res.data;
 };
 
+
 const authService = {
   login,
   reg,
@@ -49,6 +50,7 @@ const authService = {
   getusers,
   edituser,
   searchuser,
+  
 };
 
 export default authService;

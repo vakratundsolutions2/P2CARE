@@ -3,7 +3,8 @@ import toast from "react-hot-toast";
 
 import doctorService from "./doctorService";
 const initialState = {
-  doctors : [],
+  doctors: [],
+  newdoctors: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -13,7 +14,6 @@ const initialState = {
 export const createDoctor = createAsyncThunk(
   "doctor/add",
   async (Data, thunkAPI) => {
-    
     try {
       return await doctorService.createNewDoctor(Data);
     } catch (error) {
@@ -24,7 +24,6 @@ export const createDoctor = createAsyncThunk(
 export const SearchDoctors = createAsyncThunk(
   "doctor/search",
   async (Data, thunkAPI) => {
-    
     try {
       return await doctorService.searchDoctors(Data);
     } catch (error) {
@@ -43,9 +42,19 @@ export const getAllDoctors = createAsyncThunk(
     }
   }
 );
+export const GetAllRequest = createAsyncThunk(
+  "doctor/getnewDoctors",
+  async (thunkAPI) => {
+    try {
+      return await doctorService.newDoctors();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 export const getADoctor = createAsyncThunk(
   "doctor/getADoctor",
-  async (id,thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
       return await doctorService.getADoctor(id);
     } catch (error) {
@@ -69,6 +78,16 @@ export const updateDoctor = createAsyncThunk(
   async (drData, thunkAPI) => {
     try {
       return await doctorService.updateDoctor(drData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const AddManyDoctors = createAsyncThunk(
+  "doctor/add-many",
+  async (drData, thunkAPI) => {
+    try {
+      return await doctorService.addDoctors(drData);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -134,24 +153,26 @@ export const doctorSlice = createSlice({
       });
     builder.addCase(updateDoctor.pending, (state) => {
       state.isLoading = true;
-        state.isSuccess = false;
-        state.isError = false;
-
+      state.isSuccess = false;
+      state.isError = false;
     }),
       builder.addCase(updateDoctor.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
 
-        state.updatedDoctor = action.payload?.data;
+        state.updatedDoctor = action.payload?.udata;
         if (state.isSuccess === true) {
           toast.success("Doctor Updated successfully");
         }
       }),
-      builder.addCase(updateDoctor.rejected, (state) => {
+      builder.addCase(updateDoctor.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+        if (state.isError === true) {
+          toast.error(action.payload.response.data.message);
+        }
       });
     builder.addCase(getADoctor.pending, (state) => {
       state.isLoading = true;
@@ -162,8 +183,7 @@ export const doctorSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.SingleData = action.payload?.data
-        
+        state.SingleData = action.payload?.data;
       }),
       builder.addCase(getADoctor.rejected, (state) => {
         state.isLoading = false;
@@ -186,8 +206,42 @@ export const doctorSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
       });
-      builder.addCase(resetState, () => initialState);
+    builder.addCase(GetAllRequest.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(GetAllRequest.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.newdoctors = action.payload?.data;
+      }),
+      builder.addCase(GetAllRequest.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(AddManyDoctors.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(AddManyDoctors.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        if (state.isSuccess === true) {
+          toast.success(action.payload?.message);
+        }
+      }),
+      builder.addCase(AddManyDoctors.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
 
+    builder.addCase(resetState, () => initialState);
   },
 });
 

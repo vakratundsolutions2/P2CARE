@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import CustomModal from "../../components/CustomModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  AddManyDoctors,
   SearchDoctors,
   deleteADoctor,
   getAllDoctors,
@@ -22,6 +23,8 @@ import {
 } from "../../features/availablity/availablitySlice";
 import CheckableTag from "antd/es/tag/CheckableTag";
 import { alltime } from "../../features/time/timeSlice";
+import CustomInput from "../../components/CustomInput";
+import { useFormik } from "formik";
 
 const columns = [
   {
@@ -98,7 +101,7 @@ const DoctorList = () => {
     } else {
       dispatch(getAllDoctors());
     }
-  }, [ search]);
+  }, [search]);
 
   useEffect(() => {
     dispatch(getAllDoctors());
@@ -151,7 +154,7 @@ const DoctorList = () => {
     bookingtime: selectedTagsSAT,
   });
 
-const finalAvailable = {
+  const finalAvailable = {
     doctorid: AvailDoc,
     bookingavailabilityInformation: [
       Sunday,
@@ -222,9 +225,6 @@ const finalAvailable = {
     setSelectedTagsSAT(nextSelectedTags);
   };
 
-
-
-
   useEffect(() => {
     if (AvailByDocId === null || AvailByDocId === undefined) {
       setSunday({
@@ -279,6 +279,7 @@ const finalAvailable = {
       setSelectedTagsSUN(
         AvailByDocId?.bookingavailabilityInformation[0]?.bookingtime
       );
+
       setMonday(AvailByDocId?.bookingavailabilityInformation[1]);
       setSelectedTagsMON(
         AvailByDocId?.bookingavailabilityInformation[1]?.bookingtime
@@ -319,8 +320,6 @@ const finalAvailable = {
   console.log("Thursday", Thursday);
   console.log("Friday", Friday);
   console.log("saturday", Saturday);
-
-  
 
   console.log("finalAvailable", finalAvailable);
 
@@ -626,7 +625,10 @@ const finalAvailable = {
       specialization: searchResult[i]?.specialities,
       name: (
         <>
-          <Link className="nav-link" to={`/admin/doctor-profile/${searchResult[i]?._id}`}>
+          <Link
+            className="nav-link"
+            to={`/admin/doctor-profile/${searchResult[i]?._id}`}
+          >
             {searchResult[i]?.doctorName}
           </Link>
         </>
@@ -702,6 +704,26 @@ const finalAvailable = {
     setOpenAvail(false);
   };
 
+  const formik = useFormik({
+    initialValues: {
+      file: "",
+    },
+    onSubmit: (values) => {
+      const { file } = values;
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log(file);
+      dispatch(AddManyDoctors(formData)).then(() => {
+        setTimeout(() => {
+          dispatch(getAllDoctors());
+        }, 600);
+
+      });
+      
+    },
+  });
+
+
   return (
     <div>
       <div className="input-group mb-3 px-4  w-25 float-end  ">
@@ -717,7 +739,30 @@ const finalAvailable = {
           aria-describedby="basic-addon1"
         />
       </div>
+
       <h3 className="mb-4  px-5">All Doctors</h3>
+
+      <div className="input-group mb-3  w-50     ">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="d-flex align-items-center float-end"
+        >
+          <CustomInput
+            type="file"
+            label="Please enter Exel or CSV "
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            name="file"
+            id="formFile"
+            onChng={(e) => formik.setFieldValue("file", e.target.files[0])}
+          />
+
+          <div className="p-3  ">
+            <button type="submit" className="btn btn-primary ">
+              Add Doctors
+            </button>
+          </div>
+        </form>
+      </div>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>

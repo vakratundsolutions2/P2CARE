@@ -32,7 +32,7 @@ const EditInquary = () => {
       <div className="my-3 mb-4 justify-content-center d-flex">
         <div className="col-sm-8">
           <div className="card p-5">
-            <h3 className=" title text-center mb-3 ">Inquary</h3>
+            <h3 className=" title text-center mb-3 ">Inquiry</h3>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
               <CustomInput
                 type="text"

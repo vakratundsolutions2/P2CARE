@@ -4,7 +4,6 @@ import MainLayout from "./components/MainLayout";
 import Appointments from "./pages/Appointments";
 import Login from "./pages/auth/Login";
 import MyPatients from "./pages/MyPatients";
-import PatientProfile from "./pages/patientProfile";
 import ScheduleTime from "./pages/ScheduleTime";
 import AvailableTime from "./pages/AvailableTime";
 import Invoice from "./pages/Invoice";
@@ -22,6 +21,7 @@ import InvoiceView from "./pages/InvoiceView";
 
 import ProfileSetting from "./pages/doctorinfo/ProfileSetting";
 import DoctorDashboard from "./pages/DoctorDashbord";
+import PatientProfile from "./pages/patientProfile";
 // import PrivateRoute from "./pages/private/PrivateRoute";
 // import PrivateRoute from "./pages/private/PrivateRoute
 // import Dashboard from "./pages/Dashboard";

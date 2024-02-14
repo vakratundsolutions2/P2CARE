@@ -1,6 +1,18 @@
-.doctor-aos{
+.doctor-aos {
     display: flex;
 }
 
+.icon {
+    height: 500px;
+    width: 500px;
+}
 
+.wpImage {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
 
+    z-index: 300;
+    width: 7rem;
+
+}

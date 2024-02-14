@@ -67,7 +67,7 @@ const assignDoctor = async (DATA) => {
 };
 const deleteAssign = async (DATA) => {
   
-  const res = await axios.delete(
+  const res = await axios.delete( 
     `${baseUrl}hospital/removeassign/${DATA?.data}?hospital=${DATA?.HospitalID}`,
 
     config

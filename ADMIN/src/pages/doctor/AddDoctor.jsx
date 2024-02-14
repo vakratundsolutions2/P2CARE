@@ -15,6 +15,7 @@ import {
 } from "../../features/doctor/doctorSlice";
 import { Switch } from "antd";
 import Select from "react-dropdown-select";
+import { useNavigate } from "react-router-dom";
 
 let schema = yup.object().shape({
   doctorName: yup.string().required("Doctor Name is Required"),
@@ -50,6 +51,7 @@ let schema = yup.object().shape({
 });
 
 const AddDoctor = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const doctorId = location.pathname.split("/")[3];
   useEffect(() => {
@@ -59,10 +61,7 @@ const AddDoctor = () => {
     dispatch(resetState());
   }, [dispatch]);
 
-
-
   const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
-
 
   useEffect(() => {
     if (doctorId !== undefined || "") {
@@ -74,8 +73,11 @@ const AddDoctor = () => {
   }, [dispatch, doctorId]);
 
   const DoctorState = useSelector((state) => state?.doctor);
-  const { SingleData } = DoctorState;
+  const { SingleData, updatedDoctor, isSuccess } = DoctorState;
 
+  if (isSuccess === true && updatedDoctor) {
+    navigate("/admin/all-doctors");
+  }
   return (
     <>
       <Formik
@@ -146,7 +148,7 @@ const AddDoctor = () => {
             status,
           } = values;
 
-          console.log(values);
+          console.log("values", values);
           const expertiesName = [];
           for (let index = 0; index < experties.length; index++) {
             expertiesName.push(experties[index]?.name);

@@ -1,8 +1,12 @@
-import { Link, } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FilterDoctor, getAllDoctors, resetState } from "../../features/doctor/doctorSlice";
+import {
+  FilterDoctor,
+  getAllDoctors,
+  resetState,
+} from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
 import BreadCrum from "../../components/BreadCrum";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
@@ -10,11 +14,9 @@ import { Pagination, Rate, Slider } from "antd";
 import { GetAllAavailablity } from "../../features/availablity/availablitySlice";
 import dayjs from "dayjs";
 
-
 const DoctorList = () => {
-  
   const nowdate = dayjs().format("YY-M-D");
-  const sevenday = dayjs().add(7, "day").format('YYYY-M-D');
+  const sevenday = dayjs().add(7, "day").format("YYYY-M-D");
   const tomorrow = dayjs().add(1, "day").format("YYYY-M-D");
   const thirty = dayjs().add(30, "day").format("YYYY-M-D");
   console.log(nowdate);
@@ -26,18 +28,18 @@ const DoctorList = () => {
   const [valuePrice, setvaluePrice] = useState([0, 2000]);
   const [category, setcategory] = useState("");
   const [gender, setgender] = useState("");
-  const [avail,setavail] = useState([0,1]);
+  const [avail, setavail] = useState([0, 1]);
 
   const [Sort, setSort] = useState("");
   const [name, setName] = useState("");
   const [page, setPage] = useState("");
   const [limit, setLimit] = useState("");
   const [star, setStar] = useState("");
-  // const [Locaton, setLocaton] = useState("");
+  const [location, setLocaton] = useState("");
 
-  const query = location?.search?.split("&")[1];
+  // const query = location?.search?.split("&")[1];
 
-  console.log('avail',avail);
+  console.log("avail", avail);
 
   // const loc = query?.split('=')[1];
   // setLocaton(loc);
@@ -60,9 +62,10 @@ const DoctorList = () => {
       star !== undefined ||
       star !== "" ||
       gender !== undefined ||
-      gender !== ""||
-      avail !== undefined   
-
+      gender !== "" ||
+      avail !== undefined ||
+      location !== "" ||
+      location !== undefined
     ) {
       dispatch(
         FilterDoctor({
@@ -75,6 +78,7 @@ const DoctorList = () => {
           star,
           gender,
           avail,
+          location,
         })
       );
     } else {
@@ -91,13 +95,10 @@ const DoctorList = () => {
     star,
     gender,
     avail,
+    location,
   ]);
 
-
-
   const { doctors, doctorsFilter } = useSelector((state) => state.doctor);
-
-  
 
   const handleReset = () => {
     setStar("");
@@ -106,18 +107,15 @@ const DoctorList = () => {
     setName("");
     setcategory("");
     setgender("");
-    setavail([0,1]);
+    setavail([0, 1]);
     setvaluePrice([]);
     dispatch(resetState());
     setTimeout(() => {
-      
       dispatch(getAllDoctors());
       dispatch(GetAllAavailablity());
       dispatch(allDoctorCategory());
     }, 400);
-
   };
-
 
   console.log("filter", {
     name,

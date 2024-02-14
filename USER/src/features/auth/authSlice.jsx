@@ -2,10 +2,11 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
 import toast from "react-hot-toast";
 const getUserLocalStorage = localStorage.getItem("USER")
-? JSON.parse(localStorage.getItem("USER"))
-: null;
+  ? JSON.parse(localStorage.getItem("USER"))
+  : null;
 const initialState = {
   user: getUserLocalStorage,
+  appoinments: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -42,11 +43,40 @@ export const register = createAsyncThunk(
     }
   }
 );
-export const logout = createAsyncThunk(
-  "auth/user-logout",
-  async ( thunkAPI) => {
+export const logout = createAsyncThunk("auth/user-logout", async (thunkAPI) => {
+  try {
+    return await authService.out();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+export const GetAUser = createAsyncThunk(
+  "auth/user-get",
+  async (data, thunkAPI) => {
     try {
-      return await authService.out();
+      return await authService.getAuser(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const UpdateUser = createAsyncThunk(
+  "auth/user-update",
+  async (data, thunkAPI) => {
+    localStorage.removeItem("USER");
+
+    try {
+      return await authService.updateUser(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const GetAppoinmentsUser = createAsyncThunk(
+  "auth/get-appoinments",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.getAppoinmentsUser(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -64,24 +94,24 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
     }),
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      if (state.isSuccess === true) {
-        toast.success('Login successful');
-      }
-      state.user = action.payload;
-      state.isError = false;
-    }),
-    builder.addCase(login.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.isSuccess = false;
-      state.user = null;
-         if (state.isError === true) {
-           toast.error(action?.payload?.response?.data?.message);
-         }
-      })
+      builder.addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        if (state.isSuccess === true) {
+          toast.success("Login successful");
+        }
+        state.user = action.payload;
+        state.isError = false;
+      }),
+      builder.addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.user = null;
+        if (state.isError === true) {
+          toast.error(action?.payload?.response?.data?.message);
+        }
+      });
     builder.addCase(register.pending, (state) => {
       state.isLoading = true;
       state.isSuccess = false;
@@ -96,7 +126,7 @@ export const authSlice = createSlice({
         state.registerUser = action.payload?.data;
         state.isError = false;
       }),
-      builder.addCase(register.rejected, (state,action) => {
+      builder.addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -115,7 +145,7 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
       }),
-      builder.addCase(logout.rejected, (state,action) => {
+      builder.addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -129,7 +159,7 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
     }),
-      builder.addCase(LoginOTP.fulfilled, (state,action) => {
+      builder.addCase(LoginOTP.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -144,8 +174,62 @@ export const authSlice = createSlice({
           toast.error(action?.payload?.response?.data?.message);
         }
       });
-          builder.addCase(resetState, () => initialState);
+    builder.addCase(GetAUser.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(GetAUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.user = action.payload?.data;
+      }),
+      builder.addCase(GetAUser.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.user = null;
+      });
+    builder.addCase(UpdateUser.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(UpdateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.user = action.payload?.udata;
 
+        if (state.isSuccess === true) {
+          toast.success(action?.payload?.message);
+        }
+      }),
+      builder.addCase(UpdateUser.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.user = null;
+      });
+    builder.addCase(GetAppoinmentsUser.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.isError = false;
+    }),
+      builder.addCase(GetAppoinmentsUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.appoinments = action.payload?.data;
+      }),
+      builder.addCase(GetAppoinmentsUser.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.appoinments = null;
+      });
+    builder.addCase(resetState, () => initialState);
   },
 });
 

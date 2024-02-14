@@ -1,6 +1,8 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BreadCrum from "../components/BreadCrum";
 import { AddInquiry } from "../features/inquary/inquarySlice";
+import { GetContact } from "../features/content/ContentSlice";
+import { useEffect } from "react";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -9,6 +11,11 @@ function Contact() {
     event.target.reset();
     event.preventDefault();
   };
+
+  useEffect(() => {
+    dispatch(GetContact());
+  }, []);
+  const { contact } = useSelector((state) => state.content);
 
   return (
     <>
@@ -29,7 +36,7 @@ function Contact() {
                     </div>
                     <div className="contact-details">
                       <h4>Address</h4>
-                      <p>8432 Mante Highway, Aminaport, USA</p>
+                      <p>{contact?.address}</p>
                     </div>
                   </div>
                 </div>
@@ -40,7 +47,7 @@ function Contact() {
                     </div>
                     <div className="contact-details">
                       <h4>Phone Number</h4>
-                      <p>+1 315 369 5943</p>
+                      <p>{contact?.phone}</p>
                     </div>
                   </div>
                 </div>
@@ -51,15 +58,7 @@ function Contact() {
                     </div>
                     <div className="contact-details">
                       <h4>Email Address</h4>
-                      <p>
-                        <a
-                          to="/cdn-cgi/l/email-protection"
-                          className="__cf_email__"
-                          data-cfemail="0c68636f6f797e694c69746d617c6069226f6361"
-                        >
-                          [email&#160;protected]
-                        </a>
-                      </p>
+                      <p>{contact?.email}</p>
                     </div>
                   </div>
                 </div>
@@ -137,8 +136,10 @@ function Contact() {
 
         <div className="contact-map d-flex">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3193.7301009561315!2d-76.13077892422932!3d36.82498697224007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89bae976cfe9f8af%3A0xa61eac05156fbdb9!2sBeachStreet%20USA!5e0!3m2!1sen!2sin!4v1669777904208!5m2!1sen!2sin"
-            allowFullScreen=""
+            src={contact?.map}
+            width="600"
+            height="450"
+            allowfullscreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>

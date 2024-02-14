@@ -12,6 +12,7 @@ import testimonialReducer from "../features/testimonial/testimonialSlice";
 import assignReducer from "../features/assingn/assignSlice";
 import availablityReducer from "../features/availablity/availablitySlice";
 import reportReducer from "../features/report/reportSlice";
+import contentReducer from "../features/content/ContentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
     assign: assignReducer,
     available: availablityReducer,
     report: reportReducer,
+    content: contentReducer,
   },
 });

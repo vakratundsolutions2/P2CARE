@@ -24,7 +24,6 @@ import work2 from "../assets/img/icons/work-02.svg";
 import work3 from "../assets/img/icons/work-03.svg";
 import work4 from "../assets/img/icons/work-04.svg";
 
-
 //App
 // import scanImg from "../assets/img/scan-img.png";
 // import googlePlay from "../assets/img/google-play.png";
@@ -35,13 +34,111 @@ import work4 from "../assets/img/icons/work-04.svg";
 // import faqImg from "../assets/img/faq-img.png";
 // import smileIcon from "../assets/img/icons/smiling-icon.svg";
 
-import BestDoctor from "../components/BestDoctor";
 import Testimonial from "../components/Testimonial";
 import Articles from "../components/Articles";
 import { Link } from "react-router-dom";
-
+import BestDoctor from "../components/BestDoctor";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllHome } from "../features/content/ContentSlice";
+import { useEffect } from "react";
+import { baseUrl } from "../utils/baseUrl";
+import { useState } from "react";
+import { useRef } from "react";
+import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
+import { useFormik } from "formik";
+import { FilterDoctor } from "../features/doctor/doctorSlice";
 
 const Home = () => {
+  const [valuePrice, setvaluePrice] = useState([0, 2000]);
+
+  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
+  const autoCompleteRef = useRef(null);
+  const [selectedLocation, setSelectedLocation] = useState({
+    lat: 28.7041,
+    lng: 77.1025,
+  });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(GetAllHome());
+  }, []);
+
+  const { home } = useSelector((state) => state.content);
+
+  // ======================google Map =============================
+
+  let autoComplete;
+
+  const loadScript = (url, callback) => {
+    let script = document.createElement("script");
+    script.type = "text/javascript";
+
+    if (script.readyState) {
+      script.onreadystatechange = function () {
+        if (
+          script.readyState === "loaded" ||
+          script.readyState === "complete"
+        ) {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else {
+      script.onload = () => callback();
+    }
+
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+
+  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+    autoComplete = new window.google.maps.places.Autocomplete(
+      autoCompleteRef.current,
+      {
+        // types: ["(cities)"],
+        componentRestrictions: { country: "IN" },
+      }
+    );
+
+    autoComplete.addListener("place_changed", () => {
+      handlePlaceSelect(updateQuery);
+    });
+  };
+
+  const handlePlaceSelect = async (updateQuery) => {
+    const addressObject = await autoComplete.getPlace();
+
+    const query = addressObject.formatted_address;
+    updateQuery(query);
+    console.log({ query });
+
+    const latLng = {
+      lat: addressObject?.geometry?.location?.lat(),
+      lng: addressObject?.geometry?.location?.lng(),
+    };
+
+    console.log({ latLng });
+    setSelectedLocation(latLng);
+  };
+
+  useEffect(() => {
+    loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GOOGLE_MAPS_KEY}&libraries=places`,
+      () => handleScriptLoad(setQuery, autoCompleteRef)
+    );
+  }, []);
+
+  const handleSubmit = (el) => {
+    el.preventDefault();
+    console.log(query);
+    console.log(search);
+    dispatch(
+      FilterDoctor({
+        location: query,
+        name: search,
+      })
+    );
+  };
   return (
     <div className="main-wrapper">
       {/* <!-- Home Banner --> */}
@@ -52,7 +149,8 @@ const Home = () => {
             <div className="col-lg-6">
               <div className="banner-content aos" data-aos="fade-up">
                 <h1>
-                  Consult <span>Best Doctors</span> Your Nearby Location.
+                  {/* Consult <span>Best Doctors</span> Your Nearby Location. */}
+                  {home?.bennertitle}
                 </h1>
 
                 <img
@@ -60,7 +158,7 @@ const Home = () => {
                   className="header-icon"
                   alt="header-icon"
                 />
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+                <p>{home?.bennerdescription},</p>
                 <Link to="/doctor-list" className="btn">
                   Start a Consult
                 </Link>
@@ -70,43 +168,43 @@ const Home = () => {
               </div>
 
               <div className="search-box-one aos " data-aos="fade-up">
-                {/* <form  > */}
-
-                  <div className="search-input search-line">
+                <form onSubmit={handleSubmit}>
+                  <div className="search-input search-line ">
                     <i className="feather-search bficon"></i>
                     <div className="mb-0">
                       <input
                         type="text"
                         name="search"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
                         className="form-control"
                         placeholder="Search doctors, clinics, hospitals, etc"
                       />
                     </div>
                   </div>
-                  <div className="search-input search-map-line">
+                  <div className="search-input ">
                     <i className="feather-map-pin"></i>
                     <div className="mb-0">
                       <input
+                        ref={autoCompleteRef}
                         type="text"
+                        onChange={(event) => setQuery(event.target.value)}
+                        value={query}
                         className="form-control"
                         placeholder="Location"
                         name="location"
                       />
-                      {/* <a
-                        className="current-loc-icon current_location"
-                        href="#"
-                      > */}
+
                       <i className="feather-crosshair"></i>
-                      {/* </a> */}
                     </div>
                   </div>
-                  
+
                   <div className="form-search-btn">
                     <button className="btn" type="submit">
                       Search
                     </button>
                   </div>
-                {/* </form> */}
+                </form>
               </div>
             </div>
             <div className="col-lg-6">
@@ -115,12 +213,12 @@ const Home = () => {
                 <div className="banner-img1">
                   <img src={img1} className="img-fluid" alt="checkup-image" />
                 </div>
-                <div className="banner-img2">
+                {/* <div className="banner-img2">
                   <img src={img2} className="img-fluid" alt="doctor-slide" />
-                </div>
-                <div className="banner-img3">
+                </div> */}
+                <Link to={"/doctor-list"} className="banner-img3">
                   <img src={img3} className="img-fluid" alt="doctors-list" />
-                </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -310,23 +408,34 @@ const Home = () => {
                 </h2>
               </div>
               <div className="row">
-                <div className="col-lg-6 col-md-6 aos" data-aos="fade-up">
-                  <div className="work-info">
-                    <div className="work-icon">
-                      <span>
-                        <img src={work1} alt="search-doctor-icon" />
-                      </span>
-                    </div>
-                    <div className="work-content">
-                      <h5>Search Doctor</h5>
-                      <p>
-                        Lorem ipsum dolor consectetur adipiscing elit, tempor
-                        incididunt labore dolore magna aliqua.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-6 aos" data-aos="fade-up">
+                {home?.howitworks?.map((el, i) => {
+                  return (
+                    <>
+                      <div
+                        className="col-lg-6 col-md-6 aos"
+                        data-aos="fade-up"
+                        key={i}
+                      >
+                        <div className="work-info">
+                          <div className="work-icon">
+                            <span>
+                              <img
+                                src={`${baseUrl}content/${el?.icon}`}
+                                alt="search-doctor-icon"
+                              />
+                            </span>
+                          </div>
+                          <div className="work-content">
+                            <h5>{el?.shorttitle}</h5>
+                            <p>{el?.shortdescription}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+
+                {/* <div className="col-lg-6 col-md-6 aos" data-aos="fade-up">
                   <div className="work-info">
                     <div className="work-icon">
                       <span>
@@ -373,7 +482,7 @@ const Home = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -503,11 +612,6 @@ const Home = () => {
         </div>
       </section> */}
       {/* <!-- /Partners Section --> */}
-
-      {/* <!-- Cursor --> */}
-      <div className="mouse-cursor cursor-outer"></div>
-      <div className="mouse-cursor cursor-inner"></div>
-      {/* <!-- /Cursor --> */}
     </div>
   );
 };

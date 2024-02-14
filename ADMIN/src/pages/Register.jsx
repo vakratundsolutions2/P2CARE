@@ -12,16 +12,17 @@ let schema = yup.object().shape({
     .string()
     .email("Email should be valid")
     .required("Email is Required"),
-    Name: yup.string().required("Name is Required"),
+  Name: yup.string().required("Name is Required"),
   Username: yup.string().required("Username is Required"),
+  // phoneNumber: yup.string().required("Phone Number is Required"),
   Password: yup
-  .string()
-  .required("No password provided.")
-  .min(8, "Password is too short - should be 8 chars minimum."),
+    .string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum."),
   // .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-CPassword: yup
-  .string()
-  .oneOf([yup.ref("Password"), null], "Passwords must match"),
+  CPassword: yup
+    .string()
+    .oneOf([yup.ref("Password"), null], "Passwords must match"),
 });
 const Login = () => {
   const authState = useSelector((state) => state.auth);
@@ -29,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   if (isSuccess === true) {
-    navigate("admin");
+    navigate("/admin");
   }
 
   const formik = useFormik({
@@ -39,11 +40,11 @@ const Login = () => {
       Email: "",
       Password: "",
       CPassword: "",
+      phoneNumber: "",
     },
     validationSchema: schema,
     onSubmit: (values) => {
-
-      dispatch(register(values))
+      dispatch(register(values));
 
       // console.log(values);
     },
@@ -69,7 +70,7 @@ const Login = () => {
           <form className="form-group mt-3" onSubmit={formik.handleSubmit}>
             <div className="mb-3">
               <div className="mb-3">
-              <CustomInput
+                <CustomInput
                   type="text"
                   label="Enater Name "
                   name="Name"
@@ -83,7 +84,7 @@ const Login = () => {
               </div>
 
               <div className="mb-3">
-              <CustomInput
+                <CustomInput
                   type="text"
                   label="Username "
                   name="Username"
@@ -95,7 +96,19 @@ const Login = () => {
                   {formik.touched.Username && formik.errors.Username}
                 </div>
               </div>
-
+              {/* <div className="mb-3">
+                <CustomInput
+                  type="text"
+                  label="Enater Phone Number"
+                  name="phoneNumber"
+                  onChng={formik.handleChange("phoneNumber")}
+                  onBlr={formik.handleBlur("phoneNumber")}
+                  val={formik.values.phoneNumber}
+                />
+                <div className="error">
+                  {formik.touched.phoneNumber && formik.errors.phoneNumber}
+                </div>
+              </div> */}
               <div className="mb-3">
                 <CustomInput
                   type="text"
