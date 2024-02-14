@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import LIGO from import LIGO from "../assets/images/P2CARE.png";
+import LIGO from "../assets/images/P2CARE.png";
 import { useEffect } from "react";
 import { GetContact } from "../features/content/ContentSlice";
 import { useDispatch, useSelector } from "react-redux";
