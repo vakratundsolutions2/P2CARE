@@ -128,10 +128,9 @@ const Inquary = () => {
      return (
        <div className="mt-3">
          <div className="header d-flex mb-4 justify-content-between">
-           <h2 className="text-header mb-4">All Inquary</h2>
-           
+           <h2 className="text-header mb-4">All inquiry</h2>
          </div>
-{/* 
+         {/* 
          <div className="input-group mb-3 px-4  w-25 float-end  ">
            <span className="input-group-text" id="basic-addon1">
              <AiOutlineFileSearch />
@@ -156,7 +155,7 @@ const Inquary = () => {
            hideModal={hideModal}
            open={open}
            performAction={() => {
-            deleteINQ(delId);
+             deleteINQ(delId);
            }}
            title="Are you sure you want to delete this inquary?"
          />

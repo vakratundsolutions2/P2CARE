@@ -12,6 +12,7 @@ import blogcategoryReducer from "../features/blogCategory/BlogCategorySlice";
 
 import hospitalReducer from "../features/hospital/hospitalSlice";
 import inquarySlice from "../features/inquary/inquarySlice";
+import contentReducer from "../features/content/ContentSlice";
 
 
 const reduxStore = configureStore({
@@ -27,7 +28,8 @@ const reduxStore = configureStore({
     dCategory: dCategoryReducer,
     testimonial: testimonialReducer,
     service: serviceReducer,
-    inquary: inquarySlice
+    inquary: inquarySlice,
+    content:contentReducer
   },
 });
 export default reduxStore;

@@ -10,7 +10,6 @@ const getTokenFromLocalStorage = sessionStorage.getItem("DOCTOR")
 
 
 
-//console.log(getTokenFromLocalStorage.token);
 export const config = {
   headers: {
     Authorization: `${

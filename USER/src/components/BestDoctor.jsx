@@ -24,7 +24,6 @@ const BestDoctor = () => {
       (prevSlide) => (prevSlide - 1 + doctors.length) % doctors.length
     );
     sliderRef.current.slickPrev();
-
   };
 
   const handleBestDoctorNextClick = () => {
@@ -111,14 +110,14 @@ const BestDoctor = () => {
                       <div className="doctor-profile-img">
                         <img
                           src={`${baseUrl}doctor/${doctor.image}`}
-                          className="img-fluid"
+                          className="img-fluid doc-img"
                           alt={doctor.name}
-                          style={{ maxWidth: "100%" }}
+                          // style={{ maxWidth: "100%" }}
                         />
                       </div>
                     </Link>
                     <div className="doctor-amount">
-                      <span> $ {doctor?.price}</span>
+                      <span> &#x20B9; {doctor?.price}</span>
                     </div>
                   </div>
                   <div className="doc-content">

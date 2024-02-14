@@ -1,11 +1,15 @@
-import { Skeleton } from 'antd';
+import { Skeleton, Spin } from "antd";
 
 const Loding = () => {
   return (
     <>
-      <Skeleton active loading={true} />
+    <div className="d-flex justify-content-center">
+
+      {/* <Skeleton active loading={true} /> */}
+      <Spin size="large" />
+    </div>
     </>
   );
-}
+};
 
-export default Loding
+export default Loding;

@@ -1,7 +1,21 @@
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import LIGO from "../assets/images/p2c_logo.jpg";
+=======
+import LIGO from "../assets/images/p2Care.png";
+import { useEffect } from "react";
+import { GetContact } from "../features/content/ContentSlice";
+import { useDispatch, useSelector } from "react-redux";
+>>>>>>> 29d82bb342b1f237fc514dd48b913d279a506ded
 
 const Footer = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(GetContact());
+  }, []);
+  const { contact } = useSelector((state) => state.content);
+
   return (
     <>
       <footer className="footer footer-one pt-5">
@@ -16,10 +30,10 @@ const Footer = () => {
                     </Link>
                   </div>
                   <div className="footer-about-content">
-                    <p>
+                    {/* <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt ut labore.
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>
@@ -63,26 +77,20 @@ const Footer = () => {
                       <div className="footer-contact-info">
                         <div className="footer-address">
                           <p>
-                          <i className="fa-solid fa-map-pin"></i> 3556 Beech
-                            Street, USA
+                            <i className="fa-solid fa-map-pin"></i>{" "}
+                            {contact?.address}
                           </p>
                         </div>
                         <div className="footer-address">
                           <p>
-                          <i className="fa-solid fa-phone"></i> +1 315 369
-                            5943
+                            <i className="fa-solid fa-phone"></i>{" "}
+                            {contact?.phone}
                           </p>
                         </div>
                         <div className="footer-address mb-0">
                           <p>
                             <i className="fa-solid fa-envelope"></i>{" "}
-                            <Link
-                              to="/cdn-cgi/l/email-protection"
-                              className="__cf_email__"
-                              data-cfemail="294d464a4a5c5b4c694c51484459454c074a4644"
-                            >
-                              [email&#160;protected]
-                            </Link>
+                            {contact?.email}
                           </p>
                         </div>
                       </div>
@@ -142,7 +150,9 @@ const Footer = () => {
                         <Link to="privacy-policy">Privacy Policy</Link>
                       </li>
                       <li>
-                        <Link to="terms-condition.html">Terms and Conditions</Link>
+                        <Link to="terms-condition.html">
+                          Terms and Conditions
+                        </Link>
                       </li>
                     </ul>
                   </div>

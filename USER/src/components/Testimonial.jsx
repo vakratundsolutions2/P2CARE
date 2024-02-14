@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
-import { GetAllTestimonial, resetState } from "../features/testimonial/testimonialSlice";
+import {
+  GetAllTestimonial,
+  resetState,
+} from "../features/testimonial/testimonialSlice";
 import { baseUrl } from "../utils/baseUrl";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -40,12 +43,23 @@ const Testimonial = () => {
       <section className="testimonial-section">
         <div className="container">
           <div className="row">
+            <div className="col-md-6 aos" data-aos="fade-up">
+              <div className="section-header-one section-header-slider">
+                <h2 className="section-title">Testimonials</h2>
+              </div>
+            </div>
             <div className="col-md-12">
               <div className="owl-nav slide-nav-1 text-end nav-control">
-                <button className="owl-prev" onClick={handleTestimonialPrevClick}>
+                <button
+                  className="owl-prev"
+                  onClick={handleTestimonialPrevClick}
+                >
                   <i className="fas fa-chevron-left custom-arrow"></i>
                 </button>
-                <button className="owl-next" onClick={handleTestimonialNextClick}>
+                <button
+                  className="owl-next"
+                  onClick={handleTestimonialNextClick}
+                >
                   <i className="fas fa-chevron-right custom-arrow"></i>
                 </button>
               </div>

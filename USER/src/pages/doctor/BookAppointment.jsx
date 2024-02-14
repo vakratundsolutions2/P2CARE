@@ -1,21 +1,26 @@
 import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../../utils/baseUrl";
-import { getADoctor, resetState } from "../../features/doctor/doctorSlice";
+import {
+  BOOKNOW,
+  getADoctor,
+  resetState,
+} from "../../features/doctor/doctorSlice";
 import { Rate } from "antd";
 import { GetAavailablity } from "../../features/availablity/availablitySlice";
 import Slider from "react-slick";
 
-import { GetAllTestimonial } from "../../features/testimonial/testimonialSlice";
 import axios from "axios";
 
+import noResult from "../../assets/images/download.svg";
+1
 const BookAppointment = () => {
   const ID = location.pathname.split("/")[2];
   var crtDate = new Date();
   const [TIME, setTIME] = useState("");
-  // <<<<<<< HEAD
+
   const [NEWDATE, setNEWDATE] = useState(
     crtDate.getFullYear() +
       "-" +
@@ -23,32 +28,9 @@ const BookAppointment = () => {
       "-" +
       crtDate.getDate()
   );
-  
-//  =======
-  // const [NEWDATE, setNEWDATE] = useState(
-  //   crtDate.getFullYear() +
-  //     "-" +
-  //     (crtDate.getMonth() + 1) +
-  //     "-" +
-  //     crtDate.getDate()
-  // );
+
   const [currentDate, setCurrentDate] = useState(""); // State for the current date
   const [availableSchedule, setavailableSchedule] = useState([]);
-
-  // const handlePrev = () => {
-  //   if (currentPosition != -1) {
-  //     changeCurrentPosition(currentPosition - 1);
-  //     setNEWDATE(scheduleWiseDate[currentPosition + 1]);
-  //   }
-  // };
-
-  // const handleNext = () => {
-  //   if (currentPosition <= 13) {
-  //     changeCurrentPosition(currentPosition + 1);
-  //     setNEWDATE(scheduleWiseDate[currentPosition + 1]);
-  //   }
-  // };
-  // >>>>>>> 88f733e5a2b78db3feb35d8044d4bde51f621b29
 
   const dispatch = useDispatch();
 
@@ -78,18 +60,17 @@ const BookAppointment = () => {
     axios
       .get(`${baseUrl}available/searchdoctortime/${ID}?date=${NEWDATE}`)
       .then((res) => {
-        console.log(res.data);
         setavailableSchedule(
           res.data.responseData.bookingavailabilityInformation[0]?.bookingtime
         );
       })
       .catch((err) => {
         console.log(err);
-      })
-    }, [NEWDATE, currentPosition, ID]);
-    
-    console.log("NEWDATE", NEWDATE);
-    console.log("availableSchedule", availableSchedule);
+      });
+  }, [NEWDATE, currentPosition, ID]);
+
+  // console.log("NEWDATE", NEWDATE);
+  // console.log("availableSchedule", availableSchedule);
   const month = [
     "Jan",
     "Feb",
@@ -104,7 +85,7 @@ const BookAppointment = () => {
     "Nov",
     "Dec",
   ];
-   // >>>>>>> 88f733e5a2b78db3feb35d8044d4bde51f621b29
+  // >>>>>>> 88f733e5a2b78db3feb35d8044d4bde51f621b29
   const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   useEffect(() => {
@@ -118,7 +99,7 @@ const BookAppointment = () => {
           date.getDate() +
           " " +
           month[date.getMonth()]
-      );//try
+      ); //try
       setScheduleDateWise.push(
         date.getFullYear() +
           "-" +
@@ -147,8 +128,6 @@ const BookAppointment = () => {
     }
   };
 
-  // =======
-  // >>>>>>> 88f733e5a2b78db3feb35d8044d4bde51f621b29
   const sliderRef = React.createRef();
   const sliderRef2 = React.createRef();
 
@@ -253,7 +232,6 @@ const BookAppointment = () => {
                         >
                           <option value="">Please Select Speciality</option>
                           {SingleData?.experties?.map((el) => {
-
                             return (
                               <>
                                 {" "}
@@ -290,7 +268,7 @@ const BookAppointment = () => {
                                         <div className="p-2">
                                           {index == 0 || index == 1 ? (
                                             index == 0 ? (
-                                              "Today"
+                                              <span>Today</span>
                                             ) : index == 1 ? (
                                               <>
                                                 <span>Tomorrow</span>
@@ -299,7 +277,7 @@ const BookAppointment = () => {
                                               ""
                                             )
                                           ) : (
-                                            val
+                                            <span>{val}</span>
                                           )}
                                         </div>
                                         <div
@@ -352,136 +330,71 @@ const BookAppointment = () => {
                                                   {/* <!-- Time Slot --> */}
 
                                                   <div className="time-slot">
-                                                    <ul className="clearfix">
-                                                      {/* {AvailableByID?.bookingavailabilityInformation?.map(
-                                                        (days, index) => {
-                                                          return val.slice(
-                                                            0,
-                                                            3
-                                                          ) == days.day ? (
-                                                            <>
-                                                              <li key={index}>
-                                                                {days.bookingtime?.map(
-                                                                  (
-                                                                    timeSlots,
-                                                                    i
-                                                                  ) => {
-                                                                    return (
-                                                                      <>
-                                                                        <div
-                                                                          className="form-check-inline visits me-0"
-                                                                          key={
-                                                                            i
-                                                                          }
-                                                                        >
-                                                                          <label className="visit-btns">
-                                                                            <input
-                                                                              type="radio"
-                                                                              name="time"
-                                                                              required={
-                                                                                true
-                                                                              }
-                                                                              className="form-check-input"
-                                                                              id=""
-                                                                              onChange={(
-                                                                                e
-                                                                              ) => {
-                                                                                setTIME(
-                                                                                  e
-                                                                                    .target
-                                                                                    .value
-                                                                                );
-                                                                              }}
-                                                                              value={
-                                                                                timeSlots
-                                                                              }
-                                                                              // disabled={
-                                                                              //   availableSchedule.includes(
-                                                                              //     timeSlots
-                                                                              //   )
-                                                                              //     ? true
-                                                                              //     : false
-                                                                              // }
-                                                                            />
-                                                                            <span
-                                                                              className="visit-rsn"
-                                                                              data-bs-toggle="tooltip"
-                                                                            >
-                                                                              {
-                                                                                timeSlots
-                                                                              }
-                                                                            </span>{" "}
-                                                                          </label>
-                                                                        </div>
-                                                                      </>
-                                                                    );
-                                                                  }
-                                                                )}
-                                                              </li>
-                                                              {days.bookingtime
-                                                                .length ===
-                                                              0 ? (
-                                                                <div>
-                                                                  <h4>
-                                                                    No Any
-                                                                    Schedule
-                                                                    Found !
-                                                                  </h4>
-                                                                </div>
-                                                              ) : (
-                                                                ""
-                                                              )}
-                                                            </>
-                                                          ) : null;
-                                                        }
-                                                      )} */}
-                                                      {availableSchedule?.map((el,i)=>{
-                                                       
-                                                        return (
-                                                          <>
-                                                            <div
-                                                              className="form-check-inline visits me-0"
-                                                              key={i}
-                                                            >
-                                                              <label className="visit-btns">
-                                                                <input
-                                                                  type="radio"
-                                                                  name="time"
-                                                                  required={
-                                                                    true
-                                                                  }
-                                                                  className="form-check-input"
-                                                                  id=""
-                                                                  onChange={(
-                                                                    e
-                                                                  ) => {
-                                                                    setTIME(
-                                                                      e.target
-                                                                        .value
-                                                                    );
-                                                                  }}
-                                                                  value={
-                                                                    el
-                                                                  }
-                                                                  // disabled={
-                                                                  //   availableSchedule.includes(
-                                                                  //     timeSlots
-                                                                  //   )
-                                                                  //     ? true
-                                                                  //     : false
-                                                                  // }
-                                                                />
-                                                                <span
-                                                                  className="visit-rsn"
-                                                                  data-bs-toggle="tooltip"
+                                                    <ul className="clearfix ">
+                                                      {availableSchedule?.length ===
+                                                        0 ||
+                                                      availableSchedule ===
+                                                        undefined ? (
+                                                        <div className="d-flex flex-column justify-content-center  ">
+                                                          <div className=" mb-3 m-auto">
+                                                            <img
+                                                              src={noResult}
+                                                              alt="No Slots Available"
+                                                              className="imf-fluid"
+                                                            />
+                                                          </div>
+                                                          No Slots available for{" "}
+                                                          {index == 0 ||
+                                                          index == 1
+                                                            ? index == 0
+                                                              ? "Today"
+                                                              : index == 1
+                                                              ? "Tomorrow"
+                                                              : ""
+                                                            : val}
+                                                        </div>
+                                                      ) : (
+                                                        availableSchedule?.map(
+                                                          (el, i) => {
+                                                            return (
+                                                              <>
+                                                                <div
+                                                                  className="form-check-inline visits  "
+                                                                  key={i}
                                                                 >
-                                                                  {el}
-                                                                </span>{" "}
-                                                              </label>
-                                                            </div>
-                                                          </>
-                                                        );
-                                                      })}
+                                                                  <label className="visit-btns">
+                                                                    <input
+                                                                      type="radio"
+                                                                      name="time"
+                                                                      required={
+                                                                        true
+                                                                      }
+                                                                      className="form-check-input"
+                                                                      id=""
+                                                                      onChange={(
+                                                                        e
+                                                                      ) => {
+                                                                        setTIME(
+                                                                          e
+                                                                            .target
+                                                                            .value
+                                                                        );
+                                                                      }}
+                                                                      value={el}
+                                                                    />
+                                                                    <span
+                                                                      className="visit-rsn"
+                                                                      data-bs-toggle="tooltip"
+                                                                    >
+                                                                      {el}
+                                                                    </span>{" "}
+                                                                  </label>
+                                                                </div>
+                                                              </>
+                                                            );
+                                                          }
+                                                        )
+                                                      )}
                                                     </ul>
                                                   </div>
 
@@ -510,15 +423,22 @@ const BookAppointment = () => {
                 <div className="submit-section proceed-btn text-end">
                   <button
                     type="submit"
-                    className="outline-none border-0 bg-transprent"
+                    className="outline-none border-0 p-0 bg-transprent"
                   >
                     <Link
                       // to={`/checkout?doctor=${DOCTOR._id}&date=${NEWDATE}&time=${TIME}`}
-                      to={
-                        user
-                          ? `/checkout?doctor=${SingleData?._id}&date=${NEWDATE}&time=${TIME}&speciality=${Speciality}`
-                          : `/login`
+
+                      onClick={() =>
+                        dispatch(
+                          BOOKNOW({
+                            doctor: SingleData?._id,
+                            date: NEWDATE,
+                            time: TIME,
+                            Speciality: Speciality,
+                          })
+                        )
                       }
+                      to={user ? `/checkout` : `/login`}
                       className="btn btn-primary submit-btn"
                     >
                       Proceed to Pay

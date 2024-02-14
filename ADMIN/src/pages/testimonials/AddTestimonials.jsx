@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import * as yup from "yup";
 import { IoArrowBack } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +9,11 @@ import {
   UpdateTestimonial,
   resetState,
 } from "../../features/testimonial/testimonialSlice";
+
 import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 
+import * as yup from "yup";
 let schema = yup.object().shape({
   name: yup.string().required("Name is Required"),
   designation: yup.string().required("Designation is Required"),

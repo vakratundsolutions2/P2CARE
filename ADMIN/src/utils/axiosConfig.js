@@ -3,7 +3,7 @@ const getTokenFromLocalStorage = localStorage.getItem("ADMIN")
   : null;
   
 
-  // console.log(getTokenFromLocalStorage);
+  console.log(getTokenFromLocalStorage);
 export const config = {
   headers: {
     Authorization: `${

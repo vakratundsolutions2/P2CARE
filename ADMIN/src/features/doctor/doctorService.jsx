@@ -19,7 +19,10 @@ const searchDoctors = async (e) => {
   return res.data;
 };
 const getADoctor = async (id) => {
-  const res = await axios.get(`${baseUrl}doctor/searchdoctorbyid/${id}`, config);
+  const res = await axios.get(
+    `${baseUrl}doctor/searchdoctorbyid/${id}`,
+    config
+  );
 
   return res.data;
 };
@@ -32,7 +35,7 @@ const deleteDoctor = async (id) => {
   return response.data;
 };
 const updateDoctor = async (DrData) => {
-  const response = axios.put(
+  const response = await axios.put(
     `${baseUrl}doctor/updatedoctor/${DrData.id}`,
     DrData.formData,
     config
@@ -40,16 +43,19 @@ const updateDoctor = async (DrData) => {
   return response.data;
 };
 
+const newDoctors = async () => {
+  const response = await axios.get(
+    `${baseUrl}doctor/newrequest`,
 
+    config
+  );
+  return response.data;
+};
 
-
-
-
-
-
-
-
-
+const addDoctors = async (DATA) => {
+  const res = await axios.post(`${baseUrl}user/importdoctor`, DATA, config);
+  return res.data;
+};
 
 const doctorService = {
   createNewDoctor,
@@ -58,6 +64,8 @@ const doctorService = {
   updateDoctor,
   getADoctor,
   searchDoctors,
+  newDoctors,
+  addDoctors,
 };
 
 export default doctorService;

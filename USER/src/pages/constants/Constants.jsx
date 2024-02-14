@@ -1,2 +1,1 @@
-export const REACT_APP_GOOGLE_MAPS_KEY =
-  "";
+export const REACT_APP_GOOGLE_MAPS_KEY = "AIzaSyDf3m2Riy9RKDuAocail0y1RzMxxpVoIcw";

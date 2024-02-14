@@ -7,6 +7,7 @@ const initialState = {
   doctorsFilter: [],
   BookingDetails: [],
   DoctorsDetails: [],
+  booking: "",
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -36,7 +37,7 @@ export const getADoctor = createAsyncThunk(
 export const FilterDoctor = createAsyncThunk(
   "doctor/search/filter",
   async (DATA, thunkAPI) => {
-    console.log('data', DATA);
+    console.log("data", DATA);
     try {
       return await doctorService.filterDoctor(DATA);
     } catch (error) {
@@ -79,10 +80,12 @@ export const doctorSlice = createSlice({
   initialState,
   reducers: {
     booking: (state, action) => {
-      state.booking = action.payload;
-    }, bookingDetails: (state, action) => {
+      console.log(action);
+      state.booking = action.payload.date;
+    },
+    bookingDetails: (state, action) => {
       localStorage.setItem("bookingDetails", JSON.stringify(action.payload));
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllDoctors.pending, (state) => {
@@ -160,7 +163,6 @@ export const doctorSlice = createSlice({
 
         state.doctors = action.payload?.data?.data;
         state.doctorsFilter = action.payload?.data;
-
       }),
       builder.addCase(FilterDoctor.rejected, (state) => {
         state.isLoading = false;

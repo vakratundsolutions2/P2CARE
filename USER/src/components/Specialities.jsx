@@ -1,13 +1,12 @@
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-import { useState, useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { allDoctorCategory } from '../features/dCategory/dCategorySlice';
-import { baseUrl } from '../utils/baseUrl';
-import { Link } from 'react-router-dom';
-
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
+import { baseUrl } from "../utils/baseUrl";
+import { Link } from "react-router-dom";
 
 const Specialities = () => {
   const [specilities, setSpecilities] = useState(0);
@@ -30,21 +29,18 @@ const Specialities = () => {
         breakpoint: 992,
         settings: {
           slidesToShow: 3,
-          
         },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
-        
         },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-         
         },
       },
     ],
@@ -94,19 +90,19 @@ const Specialities = () => {
           </div>
         </div>
 
-        <div className="specialities-carousel-wrapper aos img-set" data-aos="fade-up">
+        <div
+          className="specialities-carousel-wrapper aos img-set"
+          data-aos="fade-up"
+        >
           <Slider ref={sliderRef} {...settings}>
             {category.map((e, index) => (
               <div className="specialities-item" key={index}>
-
-                <div
-                  className="specialities-img "
-                >
+                <div className="specialities-img ">
                   <img
                     src={`${baseUrl}doctorcategory/${e.image}`}
                     alt={e.name}
-                    className="img-fluid"
-                    style={{ width: "fit-content" }}
+                    className="img-fluid "
+                    style={{ width: "5rem", height: "5rem", objectFit: "fill" }}
                   />
                 </div>
                 <p>{e.name}</p>
