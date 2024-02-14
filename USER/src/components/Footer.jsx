@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import LIGO from "../assets/images/p2Care.png";
+import LIGO from "../assets/images/p2c_logo.jpg";
 
 const Footer = () => {
   return (
