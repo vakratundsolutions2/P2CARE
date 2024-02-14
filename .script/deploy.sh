@@ -23,6 +23,11 @@ npm install --yes
 pm2 start 0
 cd ..
 
+cd DOCTOR
+npm install --yes
+pm2 start 0
+cd ..
+
 
 
 
