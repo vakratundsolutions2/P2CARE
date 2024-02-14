@@ -4,7 +4,7 @@ import LIGO from import LIGO from "../assets/images/P2CARE.png";
 import { useEffect } from "react";
 import { GetContact } from "../features/content/ContentSlice";
 import { useDispatch, useSelector } from "react-redux";
->>>>>>> 29d82bb342b1f237fc514dd48b913d279a506ded
+
 
 const Footer = () => {
   const dispatch = useDispatch();
