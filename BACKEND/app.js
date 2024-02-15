@@ -21,6 +21,7 @@ var testimonialRouter = require("./routes/testimonial");
 var bookRouter = require("./routes/bookappointment");
 var paymentRoute = require("./routes/payment");
 var inquiryRoute = require("./routes/inquary");
+var contentRoute = require("./routes/content");
 
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -33,8 +34,6 @@ mongoose
     console.log(error.message);
   });
 
-
-  
 // const generateSecretKey = () => {
 //   return crypto.randomBytes(32).toString("hex");
 // };
@@ -42,10 +41,6 @@ mongoose
 // const secretKey = generateSecretKey();
 
 // console.log("JWT Secret Key:", secretKey);
-
-
-
-
 
 // export const instance = new Razorpay({
 //   key_id: process.env.testID,
@@ -81,21 +76,17 @@ app.use("/testimonial", testimonialRouter);
 app.use("/book", bookRouter);
 app.use("/payment", paymentRoute);
 app.use("/inquary", inquiryRoute);
+app.use("/content", contentRoute);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-
 // app.listen(PORT, () => {
 //   console.log(`listening on port ${PORT}`);
 // });
 
-
-
 // error handler
-
-
 
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -106,8 +97,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-
-
-
 
 module.exports = app;
