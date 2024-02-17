@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+   import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -13,11 +13,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-<<<<<<< HEAD
-import LOGO from "../../assets/images/p2c_logo.jpg";
-=======
 import LOGO from "../../assets/images/p2Care.png";
->>>>>>> 6bced31835d41bc3c8a04bfda702144cb35829eb
 import { Rate } from "antd";
 const CheckOut = () => {
   const { BOOKSTATE } = useSelector((state) => state.doctor);

@@ -12,6 +12,7 @@ import {
 } from "../../features/report/reportSlice";
 import { IoEyeOutline } from "react-icons/io5";
 import { AiFillDelete } from "react-icons/ai";
+import dayjs from "dayjs";
 const columns = [
   {
     title: "SNo",
@@ -85,9 +86,9 @@ const Appoinments = () => {
   const deleteApponment = (e) => {
     dispatch(DeleteBookings(e));
     setTimeout(() => {
-        dispatch(ResetState());
-        dispatch(GetAllBookings());
-        setOpen(false);
+      dispatch(ResetState());
+      dispatch(GetAllBookings());
+      setOpen(false);
     }, 300);
   };
   console.log("SingleData", SingleData);
@@ -108,7 +109,8 @@ const Appoinments = () => {
       appointment: (
         <>
           <button className="btn btn-sm ">
-            {BOOKINGS[i]?.date} At {BOOKINGS[i]?.time}
+            {dayjs(BOOKINGS[i]?.date).format("DD-MM-YYYY")} At{" "}
+            {BOOKINGS[i]?.time}
           </button>
         </>
       ),

@@ -1,4 +1,3 @@
-
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -6,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { register, resetState } from "../../features/auth/authSlice";
 import { useEffect } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+
 let schema = yup.object().shape({
   Email: yup
     .string()
@@ -40,11 +42,10 @@ function Register() {
       Email: "",
       Password: "",
       CPassword: "",
-      
     },
     validationSchema: schema,
     onSubmit: (values) => {
-console.log(values);
+      console.log(values);
       dispatch(register(values));
       // dispatch(resetState());
     },
@@ -104,15 +105,24 @@ console.log(values);
                       </div>
 
                       <div className="mb-3 form-focus">
-                        <input
+                        {/* <input
                           type="text"
                           name="Conatct"
                           onChange={formik.handleChange("phoneNumber")}
                           value={formik.values.phoneNumber}
                           className="form-control floating"
                         />
-                        <label className="focus-label">phoneNumber</label>
+                        <label className="focus-label">phoneNumber</label> */}
 
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
+                          value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
+                        />
                         <div className="text-danger">
                           {formik.touched.phoneNumber &&
                             formik.errors.phoneNumber}
@@ -171,9 +181,8 @@ console.log(values);
 
                       <div className="text-center dont-have">
                         Don’t have an account?{" "}
-                        
                         <Link className="forgot-link" to="/login">
-                          Login 
+                          Login
                         </Link>{" "}
                       </div>
                     </form>
@@ -189,4 +198,3 @@ console.log(values);
 }
 
 export default Register;
-

@@ -7,6 +7,10 @@ const contactSchema = new Schema(
     phone: String,
     email: String,
     map: String,
+    instagram: String,
+    facebook: String,
+    twitter: String,
+    linkedin: String
   },
   { timeseries: true }
 );

@@ -31,10 +31,10 @@ const UpdateAppoinment = async (DATA) => {
   return res.data;
 };
 const AcceptAppoinment = async (DATA) => {
-  console.log(DATA);
+
   const res = await axios.put(
-    `${baseUrl}book/acceptappoinment/${DATA} `,
-    { Accepted: true },
+    `${baseUrl}book/acceptappoinment/${DATA.id} `,
+    DATA,
     config
   );
 

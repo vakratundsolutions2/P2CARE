@@ -1,17 +1,15 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom';
-import { baseUrl } from '../utils/baseUrl';
-import { useDispatch, useSelector } from 'react-redux';
-import { GetAllBlogs } from '../features/blog/blogSlice';
-
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { baseUrl } from "../utils/baseUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllBlogs } from "../features/blog/blogSlice";
 
 const Articles = () => {
   const blog = useSelector((state) => state.blog.blogs);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetAllBlogs());
-
-  }, [])
+  }, []);
   const blogState = blog?.slice(0, 4);
 
   return (
@@ -32,12 +30,12 @@ const Articles = () => {
                   <div
                     className="col-lg-6 col-md-6 d-flex aos"
                     key={i}
-                    data-aos="fade-up" 
+                    data-aos="fade-up"
                   >
                     <div className="articles-grid w-100">
                       <div className="articles-info">
                         <div className="articles-left">
-                          <a href="blog-details.jsx">
+                          <Link to={`/blog-details/${e?._id}`}>
                             <div className="articles-img">
                               <img
                                 src={`${baseUrl}blog/${e.blogimage}`}
@@ -45,7 +43,7 @@ const Articles = () => {
                                 alt="John Doe"
                               />
                             </div>
-                          </a>
+                          </Link>
                         </div>
                         <div className="articles-right">
                           <div className="articles-content">
@@ -60,12 +58,19 @@ const Articles = () => {
                               </li> */}
                             </ul>
                             <h4>
-                              <Link to={`blog-details/${e?._id}`}>
+                              <Link to={`/blog-details/${e?._id}`}>
                                 {e?.title}{" "}
                               </Link>
                             </h4>
-                            <p>{e?.blogcontent}</p>
-                            <Link to={`blog-details/${e?._id}`} className="btn">
+                            <p>
+                              {e?.blogcontent?.length < 100
+                                ? e?.blogcontent
+                                : e?.blogcontent?.slice(0, 100) + "..."}
+                            </p>
+                            <Link
+                              to={`/blog-details/${e?._id}`}
+                              className="btn"
+                            >
                               View Blog
                             </Link>
                           </div>
@@ -83,4 +88,4 @@ const Articles = () => {
   );
 };
 
-export default Articles
+export default Articles;

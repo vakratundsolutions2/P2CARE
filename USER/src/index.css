@@ -16,3 +16,27 @@
     width: 7rem;
 
 }
+
+.PhoneInputInput,
+
+.PhoneInputInput:focus-visible {
+    flex: 1;
+    border: none;
+}
+
+.PhoneInputInput--focus {
+    border: 5px solid red;
+}
+
+.PhoneInput {
+    color: blue;
+    border: 1px solid #dee2e6;
+    height: 50px;
+    border-color: #dcdcdc;
+    color: #333333;
+    font-size: 15px;
+    min-height: 46px;
+    border-radius: .375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    padding: 11px 15px
+}

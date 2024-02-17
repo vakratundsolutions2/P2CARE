@@ -9,15 +9,15 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
-  const USER = useSelector((state)=>state?.auth?.admin) 
-  
+  const USER = useSelector((state) => state?.auth?.admin);
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     localStorage.removeItem("ADMIN");
     navigate("/");
@@ -27,14 +27,18 @@ const MainLayout = () => {
     {
       key: "1",
       label: (
-        <Link className="nav-link px-3" to="#">
+        <Link to={"profile-settings"} className="nav-link px-3">
           Edit Profile
         </Link>
       ),
     },
     {
       key: "2",
-      label: <button onClick={handleLogout} className="nav-link px-3">Logout</button>,
+      label: (
+        <button onClick={handleLogout} className="nav-link px-3">
+          Logout
+        </button>
+      ),
     },
   ];
   return (

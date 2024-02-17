@@ -28,23 +28,75 @@ const filterDoctor = async (DATA) => {
     star,
     avail,
     location,
+    city,
+    pincode,
+    locality,
   } = DATA;
   const res = await axios.get(
     `${baseUrl}doctor/searchDoctorByFilters/?${
       category ? `specialities=${category}` : ""
     }${name ? `&name=${name}` : ""}${Sort ? `&sort=${Sort}` : ""}${
       page ? `&page=${page}` : ""
-    }${limit ? `&limit=${limit}` : ""}${
-      star ? `&rating=${star}` : ""
-    }${gender ?`&gender=${gender}`:''}${
-      avail ? `&mydate=${avail[0]}&diff=${avail[1]}` : ""
-    }${location ? `&location=${location}`:''}${
+    }${limit ? `&limit=${limit}` : ""}${star ? `&rating=${star}` : ""}${
+      gender ? `&gender=${gender}` : ""
+    }${avail ? `&mydate=${avail[0]}&diff=${avail[1]}` : ""}${
+      location ? `&location=${location}` : ""
+    }${
       valuePrice
         ? `&minAmount=${valuePrice[0]}&maxAmount=${valuePrice[1]}  `
         : ""
+    }
+    
+    
+    
+    ${city ? `&city=${city}` : ""}${pincode ? `&pincode=${pincode}` : ""}${
+      locality ? `&locality=${locality}` : ""
     }`,
     config
   );
+
+  return res.data;
+};
+const filterDoctor2 = async (DATA) => {
+   console.log(DATA);
+   const {
+     category,
+     name,
+     Sort,
+     valuePrice,
+     page,
+     limit,
+     gender,
+     star,
+     avail,
+     location,
+     city,
+     pincode,
+     locality,
+   } = DATA;
+   const res = await axios.get(
+     `${baseUrl}doctor/searchDoctorByFiltersathome/?${
+       category ? `specialities=${category}` : ""
+     }${name ? `&name=${name}` : ""}${Sort ? `&sort=${Sort}` : ""}${
+       page ? `&page=${page}` : ""
+     }${limit ? `&limit=${limit}` : ""}${star ? `&rating=${star}` : ""}${
+       gender ? `&gender=${gender}` : ""
+     }${avail ? `&mydate=${avail[0]}&diff=${avail[1]}` : ""}${
+       location ? `&location=${location}` : ""
+     }${
+       valuePrice
+         ? `&minAmount=${valuePrice[0]}&maxAmount=${valuePrice[1]}  `
+         : ""
+     }
+    
+    
+    
+    ${city ? `&city=${city}` : ""}${pincode ? `&pincode=${pincode}` : ""}${
+       locality ? `&locality=${locality}` : ""
+     }`,
+     config
+   );
+
 
   return res.data;
 };
@@ -68,6 +120,7 @@ const doctorService = {
   ratingDoctor,
   filterDoctor,
   BookingDetails,
+  filterDoctor2,
 };
 
 export default doctorService;

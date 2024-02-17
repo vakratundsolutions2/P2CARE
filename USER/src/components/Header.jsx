@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LIGO from "../assets/images/P2CARE.png";
 import patient2 from "../assets/img/patients/patient2.jpg";
 import { FaUser } from "react-icons/fa";
@@ -8,8 +8,11 @@ import WP from "../assets/images/WP.svg";
 
 import { useState } from "react";
 import { baseUrl } from "../utils/baseUrl";
+import { GetContact } from "../features/content/ContentSlice";
+import { useEffect } from "react";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const { user } = useSelector((state) => state?.auth);
 
@@ -25,6 +28,11 @@ const Header = () => {
     setIsMobile(!isMobile);
   };
 
+  useEffect(() => {
+    dispatch(GetContact());
+  }, []);
+
+  const { contact } = useSelector((state) => state.content);
   return (
     <>
       <header className="header header-custom header-fixed header-one">
@@ -59,29 +67,29 @@ const Header = () => {
                   <NavLink to="/doctor-list">All Doctors</NavLink>
                 </li>
                 <li className="has-submenu">
-                  <NavLink to="hospitals">Hospitals</NavLink>
+                  <NavLink to="/hospitals">Hospitals</NavLink>
                 </li>
                 <li className="has-submenu">
-                  <NavLink to="blogs">Blog</NavLink>
+                  <NavLink to="/blogs">Blog</NavLink>
                 </li>
                 <li className="has-submenu">
-                  <NavLink to="about">About Us</NavLink>
+                  <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li className="has-submenu">
-                  <NavLink to="contact">Contact Us</NavLink>
+                  <NavLink to="/contact">Contact Us</NavLink>
                 </li>
                 {user === null ? (
                   <>
                     <li className="login-link">
-                      <NavLink to="login">Login / Signup</NavLink>
+                      <NavLink to="/login">Login / Signup</NavLink>
                     </li>
                     <li className="register-btn">
-                      <NavLink to="register" className="btn reg-btn">
+                      <NavLink to="/register" className="btn reg-btn">
                         <i className="fa-solid fa-user"></i>Register
                       </NavLink>
                     </li>
                     <li className="register-btn">
-                      <NavLink to="login" className="btn btn-primary log-btn">
+                      <NavLink to="/login" className="btn btn-primary log-btn">
                         <i className="fa-solid fa-lock"></i>Login
                       </NavLink>
                     </li>
@@ -128,13 +136,13 @@ const Header = () => {
                               <h6>{user?.Username}</h6>
                             </div>
                           </div>
-                          <Link className="dropdown-item" to="profile-setting">
+                          <Link className="dropdown-item" to="/profile-setting">
                             Profile Settings
                           </Link>
-                          <Link className="dropdown-item" to="appointments">
+                          <Link className="dropdown-item" to="/appointments">
                             Appointment
                           </Link>
-                          <Link className="dropdown-item" to="login">
+                          <Link className="dropdown-item" to="/login">
                             {/* <li className="register-btn"> */}
                             <Link
                               onClick={handleLogout}
@@ -158,7 +166,7 @@ const Header = () => {
       </header>
 
       <div className="wpImage">
-        <Link to={`https://wa.me/+919904662944`}>
+        <Link to={`https://wa.me/${contact?.phone}`}>
           <img src={WP} alt="" />
         </Link>
       </div>

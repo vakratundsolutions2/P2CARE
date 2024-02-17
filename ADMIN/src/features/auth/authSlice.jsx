@@ -63,7 +63,7 @@ export const GetUSERBYID = createAsyncThunk(
     }
   }
 );
-export const EdirUser = createAsyncThunk(
+export const EditUser = createAsyncThunk(
   "auth/edit/user",
   async (id, thunkAPI) => {
     console.log(id);
@@ -198,12 +198,12 @@ export const authSlice = createSlice({
           toast.error(action.payload.response.data.message);
         }
       });
-    builder.addCase(EdirUser.pending, (state) => {
+    builder.addCase(EditUser.pending, (state) => {
       state.isLoading = true;
       state.isSuccess = false;
       state.isError = false;
     }),
-      builder.addCase(EdirUser.fulfilled, (state, action) => {
+      builder.addCase(EditUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -212,7 +212,7 @@ export const authSlice = createSlice({
           toast.success(action.payload.message);
         }
       }),
-      builder.addCase(EdirUser.rejected, (state, action) => {
+      builder.addCase(EditUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -220,7 +220,6 @@ export const authSlice = createSlice({
         state.message = action.payload;
         if (state.isError === true) {
           toast.error(action.payload.response.data.message);
-
         }
       });
     builder.addCase(SearchUser.pending, (state) => {

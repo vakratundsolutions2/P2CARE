@@ -1,6 +1,7 @@
 const DOCTORAVAILABILITY = require("../model/doctoravailability");
 const BOOKAPPOINTMENT = require("../model/bookappointment");
 const DOCTOR = require("../model/doctor");
+const USER = require("../model/user");
 
 //====================bookappointment====================
 
@@ -44,8 +45,9 @@ exports.book = async function (req, res, next) {
     }
 
     const doctorDetails = await DOCTOR.findById({ _id: req.body.doctor });
-    const data = await BOOKAPPOINTMENT.create(req.body);
 
+    const data = await BOOKAPPOINTMENT.create(req.body);
+    
     res.status(201).json({
       status: "sucessfull",
       messgae: "appointment booked sucessfully",
@@ -82,7 +84,7 @@ exports.allAppointment = async function (req, res, next) {
 };
 
 //==========================Check Appointment==================================
-
+// doctor + date
 exports.AvailableAppointment = async function (req, res, next) {
   try {
     const data = await BOOKAPPOINTMENT.find({
@@ -111,6 +113,7 @@ exports.AvailableAppointment = async function (req, res, next) {
   }
 };
 
+// BY BOOKING ID
 exports.getAppointmentbyID = async function (req, res, next) {
   try {
     const data = await BOOKAPPOINTMENT.findById(req.params.id)
@@ -128,6 +131,7 @@ exports.getAppointmentbyID = async function (req, res, next) {
     });
   }
 };
+
 exports.DeleteAppointment = async function (req, res, next) {
   try {
     const data = await BOOKAPPOINTMENT.findByIdAndDelete(req.params.id);
@@ -203,22 +207,6 @@ exports.rescheduleBooking = async (req, res) => {
   }
 };
 
-exports.ApponmentByID = async (req, res) => {
-  try {
-    const data = await BOOKAPPOINTMENT.findById(req.params.id);
-
-    res.status(201).json({
-      status: "sucessfull",
-      message: "Get book Apponments",
-      data,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error.message,
-    });
-  }
-};
 exports.AcceptAppoinment = async (req, res) => {
   console.log(req.params);
   console.log(req.body);
@@ -233,6 +221,17 @@ exports.AcceptAppoinment = async (req, res) => {
       }
     );
 
+
+
+    // updateDoctor = await DOCTOR.updateOne(
+    //   { _id: req.body.doctor },
+    //   {
+    //     $push: {
+    //       patients: req.body.user,
+    //     },
+    //   },
+    //   { new: true }
+    // );
     res.status(201).json({
       status: "sucessfull",
       message: "Accept  Apponments",
@@ -246,11 +245,12 @@ exports.AcceptAppoinment = async (req, res) => {
   }
 };
 
-
-
 exports.AcceptedAppoinmentList = async (req, res) => {
   try {
-    const data = await BOOKAPPOINTMENT.find({ isAccepted: req.query.isAccepted,doctor:req.params.id }).populate('user')
+    const data = await BOOKAPPOINTMENT.find({
+      isAccepted: req.query.isAccepted,
+      doctor: req.params.id,
+    }).populate("user");
 
     res.status(201).json({
       status: "sucessfull",
@@ -264,3 +264,27 @@ exports.AcceptedAppoinmentList = async (req, res) => {
     });
   }
 };
+
+
+
+
+exports.bookingsBYuserList = async (req, res) => {
+  const userID = req.params.id;
+  try {
+    const data = await BOOKAPPOINTMENT?.find({ user: userID }).populate(
+      "doctor"
+    );
+
+    res.status(201).json({
+      status: "sucessfull",
+      message: "Get book Apponments",
+      data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
+

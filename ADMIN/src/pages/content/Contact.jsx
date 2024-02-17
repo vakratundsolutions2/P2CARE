@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/CustomInput";
 import { GetContact, UpdateContact } from "../../features/content/ContentSlice";
-
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 const Contact = () => {
   const ID = "65ca130f8cea85c2dff194dc";
 
@@ -24,7 +25,12 @@ const Contact = () => {
       phone: contact?.phone || "",
       address: contact?.address || "",
       map: contact?.map || "",
+      linkedin: contact?.linkedin || "",
+      instagram: contact?.instagram || "",
+      twitter: contact?.twitter || "",
+      facebook: contact?.facebook || "",
     },
+
     // validationSchema: schema,
 
     onSubmit: (values) => {
@@ -59,14 +65,13 @@ const Contact = () => {
                 {formik.touched.email && formik.errors.email}
               </div>
 
-              <CustomInput
-                type="text"
-                label="Phone Number"
-                name="phone"
-                onChng={formik.handleChange("phone")}
-                onBlr={formik.handleBlur("phone")}
-                val={formik.values.phone}
+              <PhoneInput
+                countrySelectProps={{ unicodeFlags: true }}
+                className="form-control phoneINP"
+                value={formik.values.phone}
+                onChange={(el) => formik.setFieldValue("phone", el)}
               />
+
               <div className="error">
                 {formik.touched.phone && formik.errors.phone}
               </div>
@@ -82,6 +87,51 @@ const Contact = () => {
               <div className="error">
                 {formik.touched.address && formik.errors.address}
               </div>
+              <CustomInput
+                type="text"
+                label="Instagram"
+                name="instagram"
+                onChng={formik.handleChange("instagram")}
+                onBlr={formik.handleBlur("instagram")}
+                val={formik.values.instagram}
+              />
+              <div className="error">
+                {formik.touched.instagram && formik.errors.instagram}
+              </div>
+              <CustomInput
+                type="text"
+                label="Facebook"
+                name="facebook"
+                onChng={formik.handleChange("facebook")}
+                onBlr={formik.handleBlur("facebook")}
+                val={formik.values.facebook}
+              />
+              <div className="error">
+                {formik.touched.facebook && formik.errors.facebook}
+              </div>
+              <CustomInput
+                type="text"
+                label="Twitter"
+                name="twitter"
+                onChng={formik.handleChange("twitter")}
+                onBlr={formik.handleBlur("twitter")}
+                val={formik.values.twitter}
+              />
+              <div className="error">
+                {formik.touched.twitter && formik.errors.twitter}
+              </div>
+              <CustomInput
+                type="text"
+                label="LinkedIn"
+                name="linkedin"
+                onChng={formik.handleChange("linkedin")}
+                onBlr={formik.handleBlur("linkedin")}
+                val={formik.values.linkedin}
+              />
+              <div className="error">
+                {formik.touched.linkedin && formik.errors.linkedin}
+              </div>
+
               <CustomInput
                 type="text"
                 label="Map Location"

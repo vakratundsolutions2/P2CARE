@@ -62,15 +62,11 @@ const userImageResize = async (req, res, next) => {
     
   if (!req.file) return next();
 
-//   await Promise.all(
    await  sharp(req.file.path)
       .resize(300, 300)
       .toFormat("jpeg")
       .jpeg({ quality: 90 })
       .toFile(`public/user/${req.file.filename}`)
-
-    // })
-//   );
   next();
 };
 

@@ -1,2 +1,5 @@
 .profile-sidebar {
     min-width: 20rem;}
+    .active{
+            color: #0de0fe;
+    }

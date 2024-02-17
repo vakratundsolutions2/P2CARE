@@ -33,17 +33,16 @@ const Register = () => {
     },
     validationSchema: registerSchema,
     onSubmit: (values) => {
-      dispatch(register(values)).then((data) => {
-        if(data != null && isSuccess === true && user != null){
-           toast.success("Regsiter successful");
-           navigate("/login");
-        }
-      })
+      dispatch(register(values))
       dispatch(resetState());
       
     },
   });
   
+  if ( isSuccess === true && user != null) {
+    toast.success("Regsiter successful");
+    navigate("/login");
+  }
 
 
   return (

@@ -8,12 +8,12 @@ import toast from "react-hot-toast";
 //   ? JSON.parse(localStorage.getItem("DOCTOR"))
 //   : null;
 
-const getUserLocalStorage = sessionStorage.getItem("DOCTOR")
-  ? JSON.parse(sessionStorage.getItem("DOCTOR"))
+const getUserLocalStorage = sessionStorage?.getItem("DOCTOR")
+  ? JSON.parse(sessionStorage?.getItem("DOCTOR"))
   : null;
 const initialState = {
 
-    user: null ?? getUserLocalStorage,
+    user:  getUserLocalStorage,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -36,7 +36,7 @@ export const doctorProfileUpdate = createAsyncThunk(
   "auth/doctor-profile-update",
   async (user, thunkAPI) => {
     try {
-      var data = await authService.profuleUpdateData(user);
+      var data = await authService.doctorupdate(user);
 
       return data;
     } catch (error) {
@@ -119,6 +119,7 @@ export const authSlice = createSlice({
           state.isLoading = false;
           state.isSuccess = true;
           state.user = action.payload.data;
+          
           state.isError = false;
         }),
         builder.addCase(doctorProfileUpdate.rejected, (state, action) => {
@@ -152,14 +153,18 @@ export const authSlice = createSlice({
         }
       });
     builder.addCase(editData.fulfilled, (state, action) => {
+      state.isSuccess = true;
+      state.isError = false;
+      state.isLoading = false;
+
       toast.success("Update Successfull");
-      state.user = action.payload;
+      // state.user = action.payload?.udata;
     }),
       builder.addCase(editData.rejected, (state, action) => {
         state.isError = true;
         if (state.isError === true) {
           console.log(action);
-          toast.error(action.payload.response.data.message);
+          toast.error(action.payload?.response?.data?.message);
         }
       }).addCase(logoutData.fulfilled, (state, action) => {
             toast.success("logout Successfull");

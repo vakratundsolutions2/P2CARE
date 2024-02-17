@@ -6,72 +6,52 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/CustomInput";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Switch } from "antd";
-import {  EditUser, GetUSERBYID, register, resetState } from "../../features/auth/authSlice";
+import { EditUser, register, resetState } from "../../features/auth/authSlice";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
-const AddUsers = () => {
+const EditProfile = () => {
+  const { admin } = useSelector((state) => state?.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const ID = location.pathname.split("/")[3];
 
-  useEffect(() => {
-    if (ID !== undefined || "") {
-      dispatch(GetUSERBYID(ID));
-    } else {
-      dispatch(resetState());
-    }
-  }, [ID]);
+  const formik = useFormik({
+    initialValues: {
+      Name: admin?.Name || "",
+      Username: admin?.Username || "",
+      Email: admin?.Email || "",
+      phoneNumber: admin?.phoneNumber || "",
+      Role: admin?.Role || "",
+      isBlocked: admin?.isBlocked || false,
+      ProfilePic: admin?.ProfilePic || "",
+    },
+    enableReinitialize: true,
+    onSubmit: (values) => {
+      const {
+        Name,
+        Username,
+        Email,
+        phoneNumber,
+        Role,
+        isBlocked,
+        ProfilePic,
+      } = values;
 
-  const { SingleData } = useSelector((state) => state?.auth);
-const formik = useFormik({
-  initialValues: {
-    Name: SingleData?.Name || "",
-    Username: SingleData?.Username || "",
-    Email: SingleData?.Email || "",
-    phoneNumber: SingleData?.phoneNumber || "",
-    Role: SingleData?.Role || "",
-    isBlocked: SingleData?.isBlocked || false,
-    ProfilePic: SingleData?.ProfilePic || "",
-  },
-  enableReinitialize: true,
-  onSubmit: (values) => {
-    const {
-      Name,
-      Username,
-      Email,
-      phoneNumber,
-      Role,
-      isBlocked,
-      ProfilePic,
-      
-    } = values;
+      console.log(values);
+      const formData = new FormData();
+      formData.append("Name", Name);
 
-      console.log(values)
-    const formData = new FormData()
-          formData.append("Name", Name);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("Email", Email);
+      formData.append("Username", Username);
+      formData.append("Name", Name);
+      formData.append("Role", Role);
+      formData.append("isBlocked", isBlocked);
+      formData.append("ProfilePic", ProfilePic);
 
-    formData.append("phoneNumber", phoneNumber);
-    formData.append("Email",Email);
-    formData.append("Username", Username);
-    formData.append("Name",Name);
-    formData.append("Role", Role);
-    formData.append("isBlocked", isBlocked);
-    formData.append("ProfilePic", ProfilePic);
-  
-
-    if (ID === undefined || "") {
-      dispatch(register(values));
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 300);
-    } else {
-      dispatch(EditUser({ formData: values, id: ID }));
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 300);
-    }
-  },
-});
-
+      dispatch(EditUser({ formData: values, id: admin?._id }));
+    },
+  });
 
   return (
     <>
@@ -86,7 +66,7 @@ const formik = useFormik({
         </div>
         <div className="row ">
           <div className="card p-4 px-5">
-            <h3 className="px-4 py-4 my-4">{ID ? "Edit" : "Add"} User</h3>
+            <h3 className="px-4 py-4 my-4">Edit Profile</h3>
             <form
               onSubmit={formik.handleSubmit}
               className="m-5"
@@ -136,13 +116,11 @@ const formik = useFormik({
                     </div>
                   </div>
                   <div className="col-6">
-                    <CustomInput
-                      type="text"
-                      label="Enter Phone Number "
-                      name="phoneNumber"
-                      onChng={formik.handleChange("phoneNumber")}
-                      onBlr={formik.handleBlur("phoneNumber")}
-                      val={formik.values.phoneNumber}
+                    <PhoneInput
+                      countrySelectProps={{ unicodeFlags: true }}
+                      className="form-control phoneINP"
+                      value={formik.values.phoneNumber}
+                      onChange={(el) => formik.setFieldValue("phoneNumber", el)}
                     />
                     <div className="error">
                       {formik.touched.phoneNumber && formik.errors.phoneNumber}
@@ -183,7 +161,7 @@ const formik = useFormik({
                     </div>
                   </div>
                   <div className="col-6 m-4 d-flex">
-                    <div className="form-check-inline visits ">
+                    {/* <div className="form-check-inline visits ">
                       <label className="">
                         <Switch
                           type="checkbox"
@@ -194,9 +172,9 @@ const formik = useFormik({
                           onChange={(e) => formik.setFieldValue("isBlocked", e)}
                         />
 
-                        <span className="px-3">Block User</span>
+                        <span className="px-3">Block account</span>
                       </label>
-                    </div>
+                    </div> */}
 
                     <div className="error">
                       {formik.touched.isBlocked && formik.errors.isBlocked}
@@ -218,4 +196,4 @@ const formik = useFormik({
   );
 };
 
-export default AddUsers;
+export default EditProfile;

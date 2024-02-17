@@ -1,15 +1,15 @@
+const { request } = require('express');
 const DOCTORCATEGORY = require('../model/doctorcategory')
 
 //=======================addCategory====================
 exports.newCategory = async function (req, res, next) {
   try {
    
-    console.log(req.body);
-    console.log(req.file);
-    
-    
-    req.body.image = req.file?.filename  
+    // console.log(req.body);
+    // console.log(req.file);
 
+    req.body.image =req.file.filename;
+    
       
     if (!req.body.name || !req.body.image || !req.body.status) {
 

@@ -15,11 +15,11 @@ const columns = [
     dataIndex: "Doctor",
     sorter: (a, b) => a.name.length - b.name.length,
   },
-  {
-    title: "Appt Date",
-    dataIndex: "Apptdate",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
+  // {
+  //   title: "Appt Date",
+  //   dataIndex: "Apptdate",
+  //   sorter: (a, b) => a.name.length - b.name.length,
+  // },
   {
     title: "Booking Date",
     dataIndex: "BookingDate",
@@ -30,15 +30,15 @@ const columns = [
     dataIndex: "Amount",
     sorter: (a, b) => a.name.length - b.name.length,
   },
-  {
-    title: "Status",
-    dataIndex: "status",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
-  {
-    title: "Action",
-    dataIndex: "action",
-  },
+  // {
+  //   title: "Status",
+  //   dataIndex: "status",
+  //   sorter: (a, b) => a.name.length - b.name.length,
+  // },
+  // {
+  //   title: "Action",
+  //   dataIndex: "action",
+  // },
 ];
 
 const MyAppoinments = () => {
@@ -55,6 +55,12 @@ const MyAppoinments = () => {
       key: i + 1,
       Doctor: appoinments[i].doctor?.doctorName,
       BookingDate: dayjs(appoinments[i].date).format("DD-MM-YYYY"),
+      Amount: appoinments[i].doctor?.price,
+      // action:(<>
+      
+      
+      
+      // </>),
     });
   }
   return (

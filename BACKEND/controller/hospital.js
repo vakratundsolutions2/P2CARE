@@ -57,9 +57,8 @@ exports.addHospital = async function (req, res, next) {
       throw new Error("Invalid add service");
     }
 
-    
     req.body.category = JSON.parse(req.body.category);
-    
+
     req.body.service = JSON.parse(req.body.service);
 
     const data = await HOSPITAL.create(req.body);
@@ -139,10 +138,9 @@ exports.updateHospital = async function (req, res, next) {
       }
     }
     req.body.hospitallogo = updata.hospitallogo;
-    
-        updata.category = JSON.parse(updata.category);
-        updata.service = JSON.parse(updata.service);
 
+    updata.category = JSON.parse(updata.category);
+    updata.service = JSON.parse(updata.service);
 
     const udata = await HOSPITAL.findByIdAndUpdate(req.params.id, updata);
     res.status(200).json({
@@ -243,7 +241,7 @@ exports.searchHospitalByFiltets = async function (req, res, next) {
     });
     const totalPages = Math.ceil(total / limit);
 
-   res.status(200).json({
+    res.status(200).json({
       status: "Successfull",
       message: "Data is found",
       data: { data, total, currentpage: currentpage + 1, limit, totalPages },
@@ -316,11 +314,6 @@ exports.rating = async (req, res) => {
   }
 };
 
-
-
-
-
-
 exports.asignDoctorHospital = async function (req, res, next) {
   try {
     if (
@@ -362,7 +355,6 @@ exports.asignDoctorHospital = async function (req, res, next) {
     let alreadyassign = checkHospital.assign.find(
       (docId) => docId.doctor.toString() === checkDoctor?._id.toString()
     );
-
 
     let alreadyassignDOC = checkDoctor.assign.find(
       (docId) => docId.hospitals === checkHospital?._id
@@ -464,19 +456,17 @@ exports.removeAssign = async (req, res) => {
       { new: true }
     );
 
-    const doctor = await DOCTOR.updateOne(
-      {
-        assign: { $elemMatch: { hospitals: req.query.hospital } },
-      },
-      {
-        $pull: {
-          assign: { $elemMatch: { hospitals: req.query.hospital } },
-        },
-      },
-      { new: true }
-    );
-
-
+const doctor = await DOCTOR.updateOne(
+  {
+    assign: { $elemMatch: { hospitals: req.query.hospital } },
+  },
+  {
+    $pull: {
+      assign: { hospitals: req.query.hospital },
+    },
+  },
+  { new: true }
+);
 
     res.status(200).json({
       status: "sucessfully",

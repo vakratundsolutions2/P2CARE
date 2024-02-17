@@ -130,7 +130,7 @@ const {BlogCategories} = useSelector(
                         placeholder="Search..."
                         className="form-control"
                       />
-                      <button type="submit" className="btn btn-primary">
+                      <button type="button" className="btn btn-primary">
                         <i className="fa fa-search"></i>
                       </button>
                     </div>
@@ -269,36 +269,8 @@ const {BlogCategories} = useSelector(
                         </>
                       );
                     })}
-                    <li>
-                      <Link to="#">
-                        Cardiology <span>(62)</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Health Care <span>(27)</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Nutritions <span>(41)</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Health Tips <span>(16)</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Medical Research <span>(55)</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Health Treatment <span>(07)</span>
-                      </Link>
-                    </li>
+
+                    
                   </ul>
                 </div>
               </div>
