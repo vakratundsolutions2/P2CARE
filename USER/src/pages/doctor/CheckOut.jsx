@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-import LOGO from "../../assets/images/p2Care.png";
+import LOGO from "../../assets/images/P2CARE.png";
 import { Rate } from "antd";
 const CheckOut = () => {
   const { BOOKSTATE } = useSelector((state) => state.doctor);
