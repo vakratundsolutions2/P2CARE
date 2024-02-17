@@ -6,6 +6,7 @@ const initialState = {
   doctors: [],
   doctorsFilter: [],
   BookingDetails: [],
+  allDoctors: [],
   DoctorsDetails: [],
   booking: "",
   isError: false,
@@ -40,6 +41,17 @@ export const FilterDoctor = createAsyncThunk(
     console.log("data", DATA);
     try {
       return await doctorService.filterDoctor(DATA);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const FilterDoctor2 = createAsyncThunk(
+  "doctor/search/filter2",
+  async (DATA, thunkAPI) => {
+    console.log("data", DATA);
+    try {
+      return await doctorService.filterDoctor2(DATA);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -163,8 +175,27 @@ export const doctorSlice = createSlice({
 
         state.doctors = action.payload?.data?.data;
         state.doctorsFilter = action.payload?.data;
+        state.allDoctors = action.payload?.data?.allDoctors;
       }),
       builder.addCase(FilterDoctor.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(FilterDoctor2.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(FilterDoctor2.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+
+        state.doctors = action.payload?.data?.data;
+        state.doctorsFilter = action.payload?.data;
+                state.allDoctors = action.payload?.data?.allDoctors;
+
+      }),
+      builder.addCase(FilterDoctor2.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

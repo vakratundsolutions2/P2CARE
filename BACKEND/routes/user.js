@@ -1,7 +1,23 @@
-var express = require('express');
+var express = require("express");
 const router = express.Router();
-const userController = require('../controller/user');
-const { isAdmin, isDoctor } = require('../middleware/authMidleware');
+const userController = require("../controller/user");
+const { isAdmin, isDoctor } = require("../middleware/authMidleware");
+const { uploadPhoto, userImageResize } = require("../middleware/uploadImg");
+const fs = require("fs");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + file.originalname);
+  },
+});
+
+
+const uploadCSV = multer({ storage: storage });
 
 //signup
 router.post("/add", userController.addUser);
@@ -10,22 +26,36 @@ router.post("/add", userController.addUser);
 router.post("/addadmin", userController.addAdmin);
 
 //Login
-router.post('/login', userController.logIn);
+router.post("/login", userController.logIn);
 //Login
 router.post("/loginadmin", userController.logInAdmin);
 
-
 //SignUP_DOCTOR
 router.post("/adddoctor", userController.addDoctor);
+
+//SignUP_DOCTOR
+router.post(
+  "/importdoctor",
+  uploadCSV.single("file"),
+  userController.CHECKJWT,
+  isAdmin,
+  userController.importManyDoctor,
+ 
+);
 //Login_Doctor
-router.post('/logindoctor', userController.logInDoctor);
+router.post("/logindoctor", userController.logInDoctor);
 // Edit_Doctor
-router.put('/editdoctor/:id', userController.CHECKJWT, isDoctor, userController.EditDoctor);
+router.put(
+  "/editdoctor/:id",
+  userController.CHECKJWT,
+  isDoctor,
+  userController.EditDoctor
+);
 
 //Alluser
 router.get("/all", userController.CHECKJWT, isAdmin, userController.ALLUSER);
 //getuser
-router.get("/getuser/:id", userController.CHECKJWT, userController.USERBYID);
+router.get("/getuser/:id", userController.USERBYID);
 //getuser
 router.get(
   "/searchuserbyname/:name",
@@ -34,24 +64,28 @@ router.get(
 );
 
 // update
-router.put('/update/:id', userController.CHECKJWT, userController.EDITUSER);
+router.put(
+  "/update/:id",
+  uploadPhoto.single("Profile"),
+  userImageResize,
+  userController.CHECKJWT,
+  userController.EDITUSER
+);
 
 // delete
-router.delete('/delete/:id', userController.CHECKJWT, userController.DELETETUSER);
+router.delete(
+  "/delete/:id",
+  userController.CHECKJWT,
+  userController.DELETETUSER
+);
 
 // //Logout
 router.get("/alldata", userController.ALLDATA);
 
-
-
-
-
-
-
 //mobile verification
 
-router.post("/start-verification",userController.startVerification);
+router.post("/start-verification", userController.startVerification);
 
-router.post("/check-verification",userController.checkVerification);
+router.post("/check-verification", userController.checkVerification);
 
 module.exports = router;

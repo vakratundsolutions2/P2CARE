@@ -6273,9 +6273,9 @@ th.table-head-days {
 @media (max-width: 991.98px) {
   .header-one .header-nav .main-menu-wrapper {
     background-color: #1CA39C;
+    display: inline;
   }
 }
-
 @media (max-width: 991.98px) {
   .header-one .navbar-header {
     -webkit-box-align: center;

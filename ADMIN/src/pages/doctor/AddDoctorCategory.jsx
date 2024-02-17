@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,6 +13,9 @@ import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
 import Loding from "../../components/Loding.jsx";
 import * as yup from "yup";
+import { Modal } from "antd";
+import axios from "axios";
+import { IconPicker } from "react-fa-icon-picker";
 let schema = yup.object().shape({
   name: yup.string().required("Category Name is Required"),
   image: yup.string().required("Image is Required"),
@@ -21,6 +24,9 @@ let schema = yup.object().shape({
 
 const AddDoctorCategory = () => {
   const dispatch = useDispatch();
+  const [Open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [Response, setResponse] = useState("");
   const navigate = useNavigate();
   const catId = location.pathname.split("/")[3];
   useEffect(() => {
@@ -34,6 +40,11 @@ const AddDoctorCategory = () => {
 
   const dCategory = useSelector((state) => state?.dCategory);
   const { SingleData, isLoading } = dCategory;
+
+  useEffect(() => {
+    if (search) {
+      console.log(search);}
+  }, [search]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -57,6 +68,7 @@ const AddDoctorCategory = () => {
     },
   });
 
+  console.log(Response);
   return (
     <>
       <div className="">
@@ -87,6 +99,33 @@ const AddDoctorCategory = () => {
               <div className="error">
                 {formik.touched.name && formik.errors.name}
               </div>
+              {/* <div className="form-group">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setOpen(true)}
+                  type="button"
+                >
+                  Upload Image
+                </button>
+                <Modal
+                  onOk={() => setOpen(false)}
+                  open={Open}
+                  width={800}
+                  onCancel={() => setOpen(false)}
+                >
+                  <div className="form-group w-75 m-auto py-4">
+                    <CustomInput
+                      type="text"
+                      label="Search icon ... "
+                      name="search"
+                      onChng={(e) => setSearch(e.target.value)}
+                      val={search}
+                    />
+                    <IconPicker value={search} onChange={(v) => setSearch(v)} />
+                    <div className="box"></div>
+                  </div>
+                </Modal>
+              </div> */}
               <CustomInput
                 type="file"
                 label="Category Name "

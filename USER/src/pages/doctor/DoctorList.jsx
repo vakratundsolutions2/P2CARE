@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,11 +19,10 @@ const DoctorList = () => {
   const sevenday = dayjs().add(7, "day").format("YYYY-M-D");
   const tomorrow = dayjs().add(1, "day").format("YYYY-M-D");
   const thirty = dayjs().add(30, "day").format("YYYY-M-D");
-  console.log(nowdate);
-  console.log(sevenday);
-  console.log(tomorrow);
-  console.log(thirty);
+  const LOCATION = useLocation();
+
   const dispatch = useDispatch();
+  const catHead = LOCATION.search.split("?")[1]?.split("=")[1];
 
   const [valuePrice, setvaluePrice] = useState([0, 2000]);
   const [category, setcategory] = useState("");
@@ -43,6 +42,9 @@ const DoctorList = () => {
 
   // const loc = query?.split('=')[1];
   // setLocaton(loc);
+  useEffect(() => {
+    if (catHead) setcategory(catHead);
+  }, []);
 
   useEffect(() => {
     dispatch(getAllDoctors());
@@ -328,6 +330,7 @@ const DoctorList = () => {
                                             <input
                                               type="radio"
                                               name="speciality"
+                                              // checked={category}
                                               value={e.name}
                                               onChange={() =>
                                                 setcategory(e.name)

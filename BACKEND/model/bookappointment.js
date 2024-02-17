@@ -8,8 +8,6 @@ const bookappointmentSchema = new Schema({
 
   time: String,
 
-  // user : [{type : mongoose.Schema.ObjectId, ref: 'user', required: true },
-  // { type: mongoose.Schema.ObjectId, ref: 'patient' }],
   user: { type: mongoose.Schema.ObjectId, ref: "user", required: true },
 
   isAccepted: { type: Boolean, default: false },

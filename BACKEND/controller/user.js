@@ -4,19 +4,21 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const twilio = require("twilio");
-
+const DOCTORAVAILABILITY = require("../model/doctoravailability");
+const csv = require("csvtojson");
+const { response } = require("express");
 // Twilio credentials
 const accountSid = process.env.twilioAccountSid;
 const authToken = process.env.twilioAuthToken;
 const verifySid = process.env.twilioVerifySid;
 const client = twilio(accountSid, authToken);
-
+const fs = require("fs");
 //==================================checkToken===============
 https: exports.CHECKJWT = async function (req, res, next) {
   try {
     const token = req.headers.authorization;
-    console.log(req.headers.authorization);
 
+    console.log(token);
     if (!token) {
       throw new Error("Token not found");
     }
@@ -51,7 +53,6 @@ exports.addUser = async function (req, res, next) {
       throw new Error("Please Enter Valid Field");
     }
     req.body.Password = await bcrypt.hash(req.body.Password, 10);
-   
 
     //check if user already exists or not for same phoneNumber
 
@@ -121,7 +122,9 @@ exports.addAdmin = async function (req, res, next) {
 exports.logIn = async function (req, res, next) {
   // req.body.phoneNumber = req.body.Email
   try {
-    const checkUser = await USER.findOne({ phoneNumber: req.body.phoneNumber });
+    const checkUser = await USER.findOne({
+      phoneNumber: req.body.phoneNumber,
+    });
 
     if (!checkUser) {
       throw new Error("User not found");
@@ -149,6 +152,8 @@ exports.logIn = async function (req, res, next) {
         Name: checkUser.Name,
         Email: checkUser.Email,
         phoneNumber: checkUser.phoneNumber,
+        Profile: checkUser.Profile,
+        gender: checkUser.gender,
         _id: checkUser._id,
       },
     });
@@ -195,6 +200,9 @@ exports.logInAdmin = async function (req, res, next) {
         Email: checkUser.Email,
         Name: checkUser.Name,
         phoneNumber: checkUser.phoneNumber,
+        Profile: checkUser.Profile,
+        gender: checkUser.gender,
+        Role: checkUser.Role,
         _id: checkUser._id,
       },
     });
@@ -211,7 +219,7 @@ exports.logInAdmin = async function (req, res, next) {
 exports.ALLUSER = async function (req, res, next) {
   try {
     const data = await USER.find({
-      Role :'USER'
+      Role: "USER",
     });
     res.status(200).json({
       status: "Success",
@@ -265,6 +273,11 @@ exports.USERBYID = async function (req, res, next) {
 
 exports.DELETETUSER = async function (req, res, next) {
   try {
+    const DR = await DOCTOR.findOne({ userId: req.params.id });
+    if (DR) {
+      await DOCTOR.deleteOne({ userId: req.params.id });
+      await DOCTORAVAILABILITY.deleteOne({ doctorid: DR?._id });
+    }
     await USER.findByIdAndDelete(req.params.id);
     res.status(200).json({
       status: "sucessfully",
@@ -301,8 +314,12 @@ exports.SearchBYnameTUSER = async function (req, res, next) {
 //=======================EditUser====================
 
 exports.EDITUSER = async function (req, res, next) {
-  console.log("req.body", req.body);
   try {
+    req.body.token = req.headers.authorization;
+    if (req.file) {
+      req.body.Profile = req.file.filename;
+    }
+
     const getData = await USER.findById(req.params.id);
 
     var data = { ...getData._doc, ...req.body };
@@ -310,9 +327,8 @@ exports.EDITUSER = async function (req, res, next) {
       req.body.Password = await bcrypt.hash(req.body.Password, 10);
     }
 
-    if (req.file) {
-      req.body.profileImage = req.file.filename;
-    }
+    console.log("req.body", req.body);
+    console.log("data", data);
 
     const udata = await USER.findByIdAndUpdate(
       req.params.id,
@@ -323,11 +339,14 @@ exports.EDITUSER = async function (req, res, next) {
         Password: data?.Password,
         phoneNumber: data?.phoneNumber,
         isBlocked: data?.isBlocked,
-        ProfilePic: data?.ProfilePic,
+        Profile: data?.Profile,
+        gender: data?.gender,
         Role: data?.Role,
+        token: data?.token,
       },
       { new: true }
     );
+
     res.status(200).json({
       status: "Suceess",
       message: "user updated",
@@ -336,6 +355,11 @@ exports.EDITUSER = async function (req, res, next) {
         Name: udata.Name,
         Email: udata.Email,
         phoneNumber: udata.phoneNumber,
+        Profile: udata.Profile,
+        gender: udata.gender,
+        token: data?.token,
+
+        _id: udata._id,
       },
     });
   } catch (error) {
@@ -346,7 +370,7 @@ exports.EDITUSER = async function (req, res, next) {
   }
 };
 
-//=======================logout====================
+//=======================addDoctor====================
 
 //======================Add Doctor====================
 
@@ -376,18 +400,55 @@ exports.addDoctor = async function (req, res, next) {
 
     const data = await USER.create(req.body);
 
+    const DOCTOREXIST = await DOCTOR.findOne({ userId: data?._id });
+    if (DOCTOREXIST) {
+      throw new Error("This Doctor already exist");
+    }
+    const DRdata = await DOCTOR.create({
+      userId: data._id,
+      doctorName: data.Name,
+    });
 
-    //doctor.js entry-> data._id
-    //step1 check if(data._id )
-
-
-
-      const DOCTOREXIST = await DOCTOR.findOne({_id:data._id});
-      if(DOCTOREXIST){
-              throw new Error("This Doctor already exist");
-
-      }
-      const DRdata = await DOCTOR.create({ userId: data._id, doctorName :data.Name});
+    const available = await DOCTORAVAILABILITY.create({
+      doctorid: DRdata?._id,
+      bookingavailabilityInformation: [
+        {
+          day: "Sun",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Mon",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Tue",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Wed",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Thu",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Fri",
+          available: false,
+          bookingtime: [],
+        },
+        {
+          day: "Sat",
+          available: false,
+          bookingtime: [],
+        },
+      ],
+    });
 
     res.status(201).json({
       status: "Successful",
@@ -397,8 +458,126 @@ exports.addDoctor = async function (req, res, next) {
         Name: data.Name,
         Email: data.Email,
         phoneNumber: data.phoneNumber,
-        DRdata:DRdata?._id
+        DRdata: DRdata?._id,
       },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+//======================Add Doctor====================
+
+exports.importManyDoctor = async function (req, res, next) {
+  try {
+    const userData = [];
+    const doctorData = [];
+    const availData = [];
+    const user = await csv().fromFile(req.file.path);
+
+    for (let i = 0; i < user.length; i++) {
+      await userData.push({
+        Username: user[i].Username,
+        Name: user[i].Name,
+        phoneNumber: user[i].phoneNumber,
+        Role: user[i].Role,
+        Email: user[i].Email,
+        Password: await bcrypt.hash(user[i].Password, 10),
+      });
+    }
+
+    const DATA = await USER?.insertMany(userData);
+
+    for (let i = 0; i < user.length; i++) {
+      await doctorData?.push({
+        userId: DATA[i]?._id,
+        doctorName: user[i]?.Name,
+        gender: user[i]?.gender,
+        doctorCode: user[i]?.doctorCode,
+        departmentName: user[i]?.departmentName,
+        departmentCode: user[i]?.departmentCode,
+        designation: user[i]?.designation,
+        location: user[i]?.location,
+        zipcode: user[i]?.zipcode,
+        description: user[i]?.description,
+        shortDescription: user[i]?.shortDescription,
+        specialities: user[i]?.specialities,
+        metaTitle: user[i]?.metaTitle,
+        ogMetaTitle: user[i]?.ogMetaTitle,
+        metaDescription: user[i]?.metaDescription,
+        ogMetaDescription: user[i]?.ogMetaDescription,
+        metaTags: user[i]?.metaTags,
+        price: user[i]?.price,
+        yearofexperience: user[i]?.yearofexperience,
+        status: user[i]?.status,
+        experties: user[i]?.experties,
+        experienceInfo: user[i]?.experienceInfo,
+        awardAndAchivementsInfo: user[i]?.awardAndAchivementsInfo,
+        talkPublicationInfo: user[i]?.talkPublicationInfo,
+        languageInfo: user[i]?.languageInfo,
+        fellowShipInfo: user[i]?.fellowShipInfo,
+        educationInfo: user[i]?.educationInfo,
+      });
+    }
+
+    const DRDATA = await DOCTOR?.insertMany(doctorData);
+
+    console.log(DRDATA);
+
+    for (let i = 0; i < DRDATA.length; i++) {
+      await availData.push({
+        doctorid: DRDATA[i]?._id,
+        bookingavailabilityInformation: [
+          {
+            day: "Sun",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Mon",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Tue",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Wed",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Thu",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Fri",
+            available: false,
+            bookingtime: [],
+          },
+          {
+            day: "Sat",
+            available: false,
+            bookingtime: [],
+          },
+        ],
+      });
+    }
+
+    
+    const AVAILABLE = await DOCTORAVAILABILITY?.insertMany(availData);
+console.log(req.file);
+     
+    await fs.unlinkSync(`./public/uploads/${req?.file?.filename}`);
+    res.status(201).json({
+      status: "Successful",
+      message: "Doctor SucessFully Added",
     });
   } catch (error) {
     res.status(404).json({
@@ -436,7 +615,7 @@ exports.logInDoctor = async function (req, res, next) {
 
     const DRdata = await DOCTOR.findOne({ userId: checkUser?.id }).populate(
       "ratings.postedby"
-    );      
+    );
     console.log("DRdata", DRdata);
 
     res.status(200).json({
@@ -450,6 +629,9 @@ exports.logInDoctor = async function (req, res, next) {
         phoneNumber: checkUser.phoneNumber,
         _id: checkUser._id,
         Role: checkUser.Role,
+        Profile: checkUser.Profile,
+        gender: checkUser.gender,
+
         DRdata: DRdata,
       },
     });
@@ -464,6 +646,8 @@ exports.logInDoctor = async function (req, res, next) {
 //=======================EditDoctor====================
 
 exports.EditDoctor = async function (req, res, next) {
+  req.body.token = req.headers.authorization;
+
   try {
     const getData = await USER.findById(req.params.id);
 
@@ -472,13 +656,9 @@ exports.EditDoctor = async function (req, res, next) {
       req.body.Password = await bcrypt.hash(req.body.Password, 10);
     }
 
-    
-
     if (req.file) {
-      req.body.profileImage = req.file.filename;
+      req.body.Profile = req.file.filename;
     }
-
-
 
     const udata = await USER.findByIdAndUpdate(
       req.params.id,
@@ -488,6 +668,9 @@ exports.EditDoctor = async function (req, res, next) {
         Email: req?.body?.Email,
         Password: req?.body?.Password,
         phoneNumber: req?.body?.phoneNumber,
+        gender: req?.body?.gender,
+
+        Profile: req.body.Profile,
       },
       { new: true }
     );
@@ -500,6 +683,9 @@ exports.EditDoctor = async function (req, res, next) {
         Email: udata.Email,
         token: req.headers.authorization,
         phoneNumber: udata.phoneNumber,
+        Profile: udata.Profile,
+        gender: udata.gender,
+
         _id: req.params.id,
       },
     });
@@ -510,10 +696,6 @@ exports.EditDoctor = async function (req, res, next) {
     });
   }
 };
-
-
-
-
 
 //=======================API endpoint to initiate verification====================
 exports.startVerification = async function (req, res) {
@@ -527,8 +709,6 @@ exports.startVerification = async function (req, res) {
       phoneNumber: phoneNumber,
       isActive: false,
     });
-
-
 
     if (unverifiedUser == null) {
       throw new Error("No Such User Exists");
@@ -557,13 +737,7 @@ exports.checkVerification = async function (req, res) {
     const verificationCheck = await client.verify.v2
       .services(verifySid)
       .verificationChecks.create({ to: phoneNumber, code: otpCode });
-    // client.verify.v2
-    //   .services(verifySid)
-    //   .verifications("VEb4e6fad8425ed6d261b13c6c55879839")
-    //   .update({ status: "approved" })
-    //   .then((verification) => console.log(verification.status));
 
-    //if status is approved make user Active
     if (verificationCheck.status == "approved") {
       unverifiedUser = await USER.findOneAndUpdate(
         { phoneNumber: phoneNumber },

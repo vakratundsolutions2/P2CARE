@@ -1,6 +1,9 @@
 import { Field, FieldArray, Formik } from "formik";
-import CustomInput from "../..//components/CustomInput";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import CustomInput from "../../components/CustomInput";
 import * as yup from "yup";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
@@ -51,6 +54,14 @@ let schema = yup.object().shape({
 });
 
 const AddDoctor = () => {
+
+
+
+
+
+
+
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const doctorId = location.pathname.split("/")[3];
@@ -112,6 +123,10 @@ const AddDoctor = () => {
             SingleData?.availabileforappointment || false,
           yearofexperience: SingleData?.yearofexperience || "",
           status: SingleData?.status || "",
+          Username: SingleData?.userId?.Username || "",
+          Email: SingleData?.userId?.Email || "",
+          phoneNumber: SingleData?.userId?.phoneNumber || "",
+          Password: SingleData?.userId?.Password || "",
         }}
         validationSchema={schema}
         onSubmit={(values) => {
@@ -146,6 +161,11 @@ const AddDoctor = () => {
             availabileforappointment,
             yearofexperience,
             status,
+
+            Username,
+            Email,
+            Password,
+            phoneNumber,
           } = values;
 
           console.log("values", values);
@@ -163,17 +183,24 @@ const AddDoctor = () => {
           formData.append("designation", designation);
           formData.append("experties", JSON.stringify(expertiesName));
           formData.append("specialities", specialities);
-
           formData.append("location", location);
-          formData.append("experienceInfo", experienceInfo);
           formData.append("description", description);
           formData.append("shortDescription", shortDescription);
-          formData.append("awardAndAchivementsInfo", awardAndAchivementsInfo);
-          formData.append("talkPublicationInfo", talkPublicationInfo);
-          formData.append("languageInfo", languageInfo);
-          formData.append("educationInfo", educationInfo);
-          formData.append("fellowShipInfo", fellowShipInfo);
           formData.append("image", image);
+
+          formData.append("experienceInfo", JSON.stringify(experienceInfo));
+          formData.append(
+            "awardAndAchivementsInfo",
+            JSON.stringify(awardAndAchivementsInfo)
+          );
+          formData.append(
+            "talkPublicationInfo",
+            JSON.stringify(talkPublicationInfo)
+          );
+          formData.append("languageInfo", JSON.stringify(languageInfo));
+          formData.append("educationInfo", JSON.stringify(educationInfo));
+          formData.append("fellowShipInfo", JSON.stringify(fellowShipInfo));
+
           formData.append("availabileforappointment", availabileforappointment);
           formData.append("yearofexperience", yearofexperience);
           formData.append("status", status);
@@ -184,6 +211,11 @@ const AddDoctor = () => {
           formData.append("metaDescription", metaDescription);
           formData.append("ogMetaTitle", ogMetaTitle);
           formData.append("metaTitle", metaTitle);
+
+          formData.append("phoneNumber", phoneNumber);
+          formData.append("Password", Password);
+          formData.append("Email", Email);
+          formData.append("Username", Username);
 
           if (doctorId === undefined || "") {
             dispatch(createDoctor(formData));
@@ -224,6 +256,61 @@ const AddDoctor = () => {
                       />
                       <div className="error">
                         {formik.touched.doctorName && formik.errors.doctorName}
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <CustomInput
+                        type="text"
+                        label="User Name "
+                        name="Username"
+                        onChng={formik.handleChange("Username")}
+                        onBlr={formik.handleBlur("Username")}
+                        val={formik.values.Username}
+                      />
+                      <div className="error">
+                        {formik.touched.Username && formik.errors.Username}
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <CustomInput
+                        type="text"
+                        label="Email Address"
+                        name="Email"
+                        onChng={formik.handleChange("Email")}
+                        onBlr={formik.handleBlur("Email")}
+                        val={formik.values.Email}
+                      />
+                      <div className="error">
+                        {formik.touched.Email && formik.errors.Email}
+                      </div>
+                    </div>
+                    <div className="col-6">
+
+                      <PhoneInput
+                        countrySelectProps={{ unicodeFlags: true }}
+                        className="form-control phoneINP"
+                        value={formik.values.phoneNumber}
+                        onChange={(el) =>
+                          formik.setFieldValue("phoneNumber", el)
+                        }
+                      />
+
+                      <div className="error">
+                        {formik.touched.phoneNumber &&
+                          formik.errors.phoneNumber}
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <CustomInput
+                        type="password"
+                        label="Password "
+                        name="Password"
+                        onChng={formik.handleChange("Password")}
+                        onBlr={formik.handleBlur("Password")}
+                        val={formik.values.Password}
+                      />
+                      <div className="error">
+                        {formik.touched.Password && formik.errors.Password}
                       </div>
                     </div>
 

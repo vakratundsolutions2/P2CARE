@@ -43,14 +43,14 @@ function BlogDetails() {
                     </Link>
                   </div>
                   <h3 className="blog-title">
-                    <Link to="/doctorprofile">{SingleBlog?.title}</Link>
+                    <Link >{SingleBlog?.title}</Link>
                   </h3>
                   <div className="blog-info clearfix">
                     <div className="post-left">
                       <ul>
                         <li>
                           <div className="post-author">
-                            <Link to="/doctorprofile">
+                            <Link >
                               <img
                                 src="/src/assets/img/doctors/doctor-thumb-02.jpg"
                                 alt="Post Author"
@@ -59,9 +59,9 @@ function BlogDetails() {
                             </Link>
                           </div>
                         </li>
-                        <li>
+                        {/* <li>
                           <i className="far fa-calendar"></i>4 Dec 2023
-                        </li>
+                        </li> */}
                         {/* <li>
                           <i className="far fa-comments"></i>12 Comments
                         </li>
@@ -76,7 +76,7 @@ function BlogDetails() {
                   </div>
                 </div>
 
-                <div className="card blog-share clearfix">
+                {/* <div className="card blog-share clearfix">
                   <div className="card-header">
                     <h4 className="card-title">Share the post</h4>
                   </div>
@@ -109,11 +109,11 @@ function BlogDetails() {
                       </li>
                     </ul>
                   </div>
-                </div>
+                       </div> */}
                 {/* <div className="card author-widget clearfix">
                   <div className="card-header">
                     <h4 className="card-title">About Author</h4>
-                  </div>
+                  <div>
                   <div className="card-body">
                     <div className="about-author">
                       <div className="about-author-img">

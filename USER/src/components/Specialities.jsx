@@ -96,7 +96,11 @@ const Specialities = () => {
         >
           <Slider ref={sliderRef} {...settings}>
             {category.map((e, index) => (
-              <div className="specialities-item" key={index}>
+              <Link
+                to={`/doctor-list?category=${e.name}`}
+                className="specialities-item"
+                key={index}
+              >
                 <div className="specialities-img ">
                   <img
                     src={`${baseUrl}doctorcategory/${e.image}`}
@@ -106,7 +110,7 @@ const Specialities = () => {
                   />
                 </div>
                 <p>{e.name}</p>
-              </div>
+              </Link>
             ))}
           </Slider>
         </div>

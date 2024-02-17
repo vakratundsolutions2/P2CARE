@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const FaqSchema = new Schema({
   question: String,
   answer: String,
-  date: Date,
+  date: String,
 },{timeseries: true});
 
 const FAQ = mongoose.model("faq", FaqSchema);

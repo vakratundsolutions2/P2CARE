@@ -1,5 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
+import { config } from "../../utils/axiosConfig";
 const login = async (userData) => {
   const res = await axios.post(`${baseUrl}user/logindoctor`, userData);
 
@@ -26,14 +27,9 @@ const editData = async (userData) => {
   if (userData.Password === "") {
     delete userData.Password;
   }
-  const res = await axios.put(`${baseUrl}user/editdoctor/${data._id}`, userData, {
-    headers: {
-      'Content-Type': 'application/json',
-      "Authorization": `${data.token}`
-    },
-  });
+  const res = await axios.put(`${baseUrl}user/editdoctor/${data._id}`, userData, config);
 
-  console.log(res);
+  
   if (res.data) {
     sessionStorage.setItem("DOCTOR", JSON.stringify(res.data?.udata));
   }
@@ -44,17 +40,13 @@ const logout = () => {
   return sessionStorage.removeItem("DOCTOR");
 }
 
-const profuleUpdateData = async (userData) => {
-
-  var data = JSON.parse(sessionStorage.getItem("DOCTOR"));
-  const res = await axios.put(`${baseUrl}doctor/updatedoctor/${data.DRdata._id}` , userData, {
-    headers: {
-      'Content-Type': 'application/json',
-      "authorization": `${data.token}`
-    },
-  });
-  console.log(res);
-
+const doctorupdate = async (userData) => {
+  const res = await axios.put(
+    `${baseUrl}doctor/updatedoctor/${userData?.id}`,
+    userData?.formData,
+    config
+  );
+  console.log(res.data);
 
   if (res.data) {
     sessionStorage.setItem("DOCTOR", JSON.stringify(res.data?.data));
@@ -67,7 +59,7 @@ const authService = {
   login,
   editData,
   loginOTP,
-  profuleUpdateData,
+  doctorupdate,
   logout,
 };
 

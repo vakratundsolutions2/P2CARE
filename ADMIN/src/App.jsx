@@ -6,13 +6,15 @@ import Contact from "./pages/content/Contact";
 import About from "./pages/content/About";
 import Faq from "./pages/content/Faq";
 import AddFaq from "./pages/content/AddFaq";
+import AddDoctor from "./pages/doctor/AddDoctor";
+import EditProfile from "./pages/users/EditProfile";
 
 const Login = lazy(() => import("./pages/Login"));
 const MainLayout = lazy(() => import("./components/MainLayout"));
 const Dashbord = lazy(() => import("./pages/Dashbord"));
 const DoctorList = lazy(() => import("./pages/doctor/DoctorList"));
 
-const AddDoctor = lazy(() => import("./pages/doctor/AddDoctor"));
+// const AddDoctor = lazy(() => import("./pages/doctor/AddDoctor"));
 const DoctorCategory = lazy(() => import("./pages/doctor/DoctorCategory"));
 const AddDoctorCategory = lazy(() =>
   import("./pages/doctor/AddDoctorCategory")
@@ -173,10 +175,9 @@ function App() {
               <Route path="faq-list" element={<Faq />} />
               <Route path="faq" element={<AddFaq />} />
               <Route path="faq/:id" element={<AddFaq />} />
+              <Route path="profile-settings" element={<EditProfile />} />
             </Route>
           </Routes>
-
-          
         </Suspense>
         <Toaster />
       </BrowserRouter>

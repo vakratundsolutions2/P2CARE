@@ -46,7 +46,6 @@ export const UpdateAppoinment = createAsyncThunk(
 export const AcceptAppoinment = createAsyncThunk(
   "appoinment/accept",
   async (Data, thunkAPI) => {
-    //  console.log(catData);
     try {
       return await appoinmentService.AcceptAppoinment(Data);
     } catch (error) {

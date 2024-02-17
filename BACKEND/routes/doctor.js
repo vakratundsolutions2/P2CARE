@@ -39,7 +39,7 @@ router.put(
   "/updatedoctor/:id",
   upload.single("image"),
   userController.CHECKJWT,
-  
+
   doctorController.updateDoctor
 );
 
@@ -53,13 +53,30 @@ router.put(
 
 // UnblockeDoctor
 router.put('/unblockdoctor/:id',userController.CHECKJWT,isAdmin,doctorController.updateDoctor);
-// UnblockeDoctor
+
+
+
+
+// accept  Doctor
+
 router.put(
   "/accept/:id",
   userController.CHECKJWT,
   isAdmin,
   doctorController.acceptdoctor
 );
+
+// New request Doctor
+
+router.get(
+  "/newrequest",
+  userController.CHECKJWT,
+  isAdmin,
+  doctorController.newRequestDoctor
+);
+
+
+
 
 //deleteDoctor
 router.delete(
@@ -76,9 +93,10 @@ router.put("/rating", userController.CHECKJWT,doctorController.rating);
 
 //searchDoctorbyId
 router.get("/searchdoctorbyid/:id", doctorController.searchDoctorById);
+router.get("/searchDoctorByFilters", doctorController.searchDoctorByFiltets);
 router.get(
-  "/searchDoctorByFilters",
-  doctorController.searchDoctorByFiltets
+  "/searchDoctorByFiltersathome",
+  doctorController.searchDoctorByFiltetsatHome
 );
 
 

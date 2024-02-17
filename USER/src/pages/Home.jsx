@@ -46,18 +46,30 @@ import { useState } from "react";
 import { useRef } from "react";
 import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
 import { useFormik } from "formik";
-import { FilterDoctor } from "../features/doctor/doctorSlice";
+import {
+  FilterDoctor,
+  FilterDoctor2,
+  getAllDoctors,
+  resetState,
+} from "../features/doctor/doctorSlice";
+import { Modal, Pagination } from "antd";
 
 const Home = () => {
   const [valuePrice, setvaluePrice] = useState([0, 2000]);
 
-  const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState("");
+  
+  const [query, setQuery] = useState("");
   const autoCompleteRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState({
     lat: 28.7041,
     lng: 77.1025,
+    city: "",
+    locality: "",
+    pincode: "",
   });
+  const [Open, setOpen] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetAllHome());
@@ -115,9 +127,28 @@ const Home = () => {
     const latLng = {
       lat: addressObject?.geometry?.location?.lat(),
       lng: addressObject?.geometry?.location?.lng(),
+      city: " ",
+      locality: " ",
+      pincode: " ",
     };
 
-    console.log({ latLng });
+    for (const component of addressObject.address_components) {
+      if (component.types.includes("sublocality_level_1")) {
+        latLng.locality = component.long_name;
+      } else if (
+        component.types.includes("administrative_area_level_3") ||
+        component.types.includes("locality")
+      ) {
+        latLng.city = component.long_name;
+      } else if (component.types.includes("postal_code")) {
+        latLng.pincode = component.long_name;
+      }
+    } //check
+    console.log(
+      "addressObject.address_components",
+      addressObject.address_components
+    );
+    console.log("latln", latLng);
     setSelectedLocation(latLng);
   };
 
@@ -132,13 +163,30 @@ const Home = () => {
     el.preventDefault();
     console.log(query);
     console.log(search);
+
+    setOpen(true);
     dispatch(
-      FilterDoctor({
+      FilterDoctor2({
         location: query,
         name: search,
+        city: selectedLocation?.city,
+        pincode: selectedLocation?.pincode,
+        locality: selectedLocation?.locality,
       })
     );
   };
+  const handleOK = () => {
+    setOpen(false);
+    dispatch(getAllDoctors());
+  };
+
+  console.log(Open);
+  const { doctors, doctorsFilter, allDoctors } = useSelector(
+    (state) => state.doctor
+  );
+  console.log(doctors);
+  console.log("selectedLocation", selectedLocation);
+
   return (
     <div className="main-wrapper">
       {/* <!-- Home Banner --> */}
@@ -200,13 +248,128 @@ const Home = () => {
                   </div>
 
                   <div className="form-search-btn">
-                    <button className="btn" type="submit">
+                    <button
+                      className="btn"
+                      type={search !== "" && query !== "" ? "submit" : "button"}
+                    >
                       Search
                     </button>
                   </div>
                 </form>
               </div>
             </div>
+
+            <Modal
+              title={`${allDoctors?.length} Doctors found`}
+              open={Open}
+              onOk={handleOK}
+              width={1000}
+              onCancel={handleOK}
+            >
+              <div className="my-3">
+                {allDoctors?.length === 0 ? (
+                  <>
+                    <div className="row justify-content-center py-5">
+                      no data available
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {allDoctors?.map((e, i) => {
+                      return (
+                        <>
+                          <div className="card doctor-card" key={i}>
+                            <div className="card-body">
+                              <div className="doctor-widget-one">
+                                <div className="doc-info-left">
+                                  <div className="doctor-img">
+                                    <Link to={`/doctor-profile/${e._id}`}>
+                                      <img
+                                        src={`${baseUrl}doctor/${e.image}`}
+                                        className="img-fluid"
+                                        alt="John Doe"
+                                      />
+                                    </Link>
+                                  </div>
+                                  <div className="doc-info-cont">
+                                    <h4 className="doc-name">
+                                      <Link to={`/doctor-profile/${e._id}`}>
+                                        {e?.doctorName}
+                                      </Link>
+                                    </h4>
+                                    <p className="doc-speciality">
+                                      {e?.specialities}
+                                    </p>
+                                    <div className="clinic-details">
+                                      <p className="doc-location">
+                                        <i className="fa fa-location"></i>
+                                        {e.location}
+                                        <a href="">Get Direction</a>
+                                      </p>
+                                    </div>
+                                    <div className="reviews-ratings">
+                                      <p>
+                                        <span>
+                                          <i className="fas fa-star"></i>{" "}
+                                          {e?.totalratings}
+                                        </span>{" "}
+                                        ({e.ratings?.length} Reviews)
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="doc-info-right">
+                                  <div className="clini-infos">
+                                    <ul>
+                                      <li>
+                                        <i className="feather-clock available-icon"></i>
+                                        <span className="available-date available-today">
+                                          Available Today
+                                        </span>
+                                      </li>
+
+                                      <li>
+                                        <i className="feather-dollar-sign available-icon"></i>{" "}
+                                        &#x20B9; {e?.price}{" "}
+                                        <i className="feather-info available-info-icon"></i>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div className="clinic-booking book-appoint">
+                                    <Link
+                                      className="btn btn-primary"
+                                      to={`/doctor-profile/${e?._id}`}
+                                    >
+                                      View Profile
+                                    </Link>
+                                    <Link
+                                      className="btn btn-primary-light"
+                                      to={`/bookappointment/${e?._id}`}
+                                    >
+                                      Book Appointment
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* <nav className="d-flex justify-content-end w-full px-5 py-2">
+                  <Pagination
+                    current={page}
+                    onChange={(e) => setPage(e)}
+                    total={doctorsFilter?.total}
+                    pageSize={doctorsFilter?.limit}
+                  />
+                </nav> */}
+              </div>
+            </Modal>
+
             <div className="col-lg-6">
               <div className="banner-img aos" data-aos="fade-up">
                 <img src={img} className="img-fluid" alt="patient-image" />

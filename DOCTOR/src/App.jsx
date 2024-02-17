@@ -4,10 +4,6 @@ import MainLayout from "./components/MainLayout";
 import Appointments from "./pages/Appointments";
 import Login from "./pages/auth/Login";
 import MyPatients from "./pages/MyPatients";
-// <<<<<<< HEAD
-// =======
-// import PatientProfile from "./pages/PatientProfile";
-// >>>>>>> 75b01684bdfd4f358b9c023d918022061abfed2c
 import ScheduleTime from "./pages/ScheduleTime";
 import AvailableTime from "./pages/AvailableTime";
 import Invoice from "./pages/Invoice";
@@ -47,9 +43,9 @@ function App() {
 
           {/* <Route index element={<Dashboard />} /> */}
 
-          {/* <Route index element={<Dashboard />} /> */}
           <Route path="/doctor" element={<MainLayout />}>
-            <Route path="doctor-dashboard" element={<DoctorDashboard />} />
+            {/* <Route path="doctor-dashboard" element={< />} /> */}
+          <Route index element={< DoctorDashboard/>} />
             <Route path="appointment" element={<Appointments />} />
             <Route path="my-patient" element={<MyPatients />} />
             <Route path="patient-profile" element={<PatientProfile />} />
@@ -58,8 +54,10 @@ function App() {
             <Route path="invoice" element={<Invoice />} />
             <Route path="invoice-view" element={<InvoiceView />} />
             <Route path="account" element={<Accounts />} />
-            <Route path="profile-setting" element={<ProfileSettings />} />
             <Route path="review" element={<Review />} />
+
+            
+            <Route path="profile-setting" element={<ProfileSettings />} />
             <Route path="profile-details" element={<ProfileSetting />} />
 
             {/* <Route path="reset-password" element={<ResetPassword />} /> */}

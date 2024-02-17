@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import * as yup from "yup";
 import axios from "axios";
 import { baseUrl } from "../utils/baseUrl";
+import noResult from "../assets/images/download.svg";
 
 let schema = yup.object().shape({
   DATE: yup
@@ -13,40 +14,31 @@ let schema = yup.object().shape({
     .required("Required"),
 });
 const AvailableTime = () => {
-      const [availableSchedule, setavailableSchedule] = useState([]);
+  const [availableSchedule, setavailableSchedule] = useState([]);
 
-    const {user} = useSelector((state)=>state.auth)
-    const  ID = user?.DRdata?._id
-    const formik = useFormik({
-        enableReinitialize:true,
-        initialValues:{
-            DATE:'',
-            ID : ID
-
-
-        },
-        validationSchema:schema,
-    onSubmit:async(values)=>{
-            axios
-              .get(
-                `${baseUrl}available/searchdoctortime/${ID}?date=${values?.DATE}`
-              )
-              .then((res) => {
-                console.log(res.data);
-                setavailableSchedule(
-                  res.data.responseData.bookingavailabilityInformation[0]
-                    ?.bookingtime
-                );
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-        
-
-    }
-
-
-    })
+  const { user } = useSelector((state) => state.auth);
+  const ID = user?.DRdata?._id;
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      DATE: "",
+      ID: ID,
+    },
+    validationSchema: schema,
+    onSubmit: async (values) => {
+      axios
+        .get(`${baseUrl}available/searchdoctortime/${ID}?date=${values?.DATE}`)
+        .then((res) => {
+          console.log(res.data);
+          setavailableSchedule(
+            res.data.responseData.bookingavailabilityInformation[0]?.bookingtime
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  });
   return (
     <>
       <div className="main-wrapper">
@@ -102,7 +94,19 @@ const AvailableTime = () => {
                   <div className="row">
                     <div className="col-lg-12">
                       <div className="token-slot m-5 gap-3 d-flex">
-                        {availableSchedule?.map((el,i)=>{
+                        {availableSchedule?.length === 0 ? (
+                          <div className="d-flex flex-column justify-content-center  ">
+                            <div className=" mb-3 m-auto">
+                              <img
+                                src={noResult}
+                                alt="No Slots Available"
+                                className="imf-fluid"
+                              />
+                            </div>
+                            No Slots available
+                          </div>
+                        ) : (
+                          availableSchedule?.map((el, i) => {
                             console.log(i);
                             return (
                               <>
@@ -124,8 +128,8 @@ const AvailableTime = () => {
                                 </div>
                               </>
                             );
-                        })}
-                      
+                          })
+                        )}
                       </div>
                     </div>
                   </div>

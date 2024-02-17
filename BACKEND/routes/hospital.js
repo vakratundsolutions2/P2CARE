@@ -78,5 +78,4 @@ router.get(
   hospitalController.searchHospitalByFiltets
 );
 
-
 module.exports = router;

@@ -1,29 +1,13 @@
 import React from "react";
 import patient from "../../assets/img/patients/patient.jpg";
 import { Link } from "react-router-dom";
+import BreadCrum from "../../components/BreadCrum";
 
 const ProfileSetting = () => {
   return (
     <div>
-      <div className="breadcrumb-bar-two">
-        <div className="container">
-          <div className="row align-items-center inner-banner">
-            <div className="col-md-12 col-12 text-center">
-              <h2 className="breadcrumb-title">Profile Settings</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item" aria-current="page">
-                    Profile Settings
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+      <BreadCrum location={"Profile Settings"} heading={"Profile Settings"} />
+      
       <div className="content">
         <div className="container">
           <div className="row">

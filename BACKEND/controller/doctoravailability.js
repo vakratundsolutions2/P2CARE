@@ -4,6 +4,7 @@ const DOCTORAVAILABILITY = require("../model/doctoravailability");
 const BOOKAPPOINTMENT = require("../model/bookappointment");
 //====================doctorAvailable================
 exports.availability = async function (req, res, next) {
+  console.log(req.body);
   try {
     var bookdata = req.body.bookingavailabilityInformation;
     const bookingAvailabilityInformation =
@@ -58,16 +59,20 @@ exports.allData = async function (req, res, next) {
 //====================updateAvailableTime==================
 
 exports.updatAvailable = async function (req, res, next) {
+  console.log("req.body", req.body);
+
   try {
     const getData = await DOCTORAVAILABILITY.findOne({
       doctorid: req.params.id,
     });
+
+    
     const data = { ...getData?._doc, ...req.body };
 
     if (data?.doctorid) {
       const cheCkid = await DOCTOR.findOne({ _id: data.doctorid });
       if (!cheCkid) {
-        throw new Error("doctor is not");
+        throw new Error("doctor not found");
       }
     }
 
@@ -76,7 +81,8 @@ exports.updatAvailable = async function (req, res, next) {
 
       const bookingAvailabilityInformation =
         bookdata.bookingavailabilityInformation;
-      const time = bookdata.map((info) => info?.bookingtime);
+      const time = bookdata?.map((info) => info?.bookingtime);
+      console.log(time);
       // const bookingAvailabilityInformation = bookdata.bookingavailabilityInformation;
       // includes;
       const checkTime = async (el) => {
@@ -86,14 +92,23 @@ exports.updatAvailable = async function (req, res, next) {
       const isValidTime = await Promise.all(
         time.flat().map(async (el) => await checkTime(el))
       );
+
+      console.log(isValidTime);
+
       if (!isValidTime.every(Boolean)) {
         throw new Error("Invalid add value");
       }
     }
 
-    const udata = await DOCTORAVAILABILITY.findOneAndUpdate({ doctorid:req.params.id }, req.body, {
-      new: true,
-    });
+    const udata = await DOCTORAVAILABILITY.findOneAndUpdate(
+      { doctorid: req.params.id },
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    console.log("udata", udata);
     res.status(200).json({
       status: "successfull",
       message: "updated successfull",
@@ -112,6 +127,21 @@ exports.updatAvailable = async function (req, res, next) {
 exports.deleteAvailable = async function (req, res, next) {
   try {
     const data = await DOCTORAVAILABILITY.deleteMany();
+    res.status(200).json({
+      status: "successfull",
+      message: "deleted successfull",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
+exports.deleteAvailableSingle = async function (req, res, next) {
+  try {
+    const data = await DOCTORAVAILABILITY.findByIdAndDelete(req.params.id);
     res.status(200).json({
       status: "successfull",
       message: "deleted successfull",
@@ -146,55 +176,46 @@ exports.DOCTORIDSEARCH = async function (req, res, next) {
 
 //================SearchAvailability=======================
 
-
-
 exports.searchAvailableDrID = async function (req, res, next) {
-  console.log("date:",req.query.date);
   try {
+    const data2 = await BOOKAPPOINTMENT.find({
+      doctor: req.params.id,
+      date: req.query.date,
+    });
 
-    
-     const data2 = await BOOKAPPOINTMENT.find({
-       doctor: req.params.id,
-       date: req.query.date,
-     });
-     date=new Date(req.query.date);
-     //send date in body in checkAvailability
-     const time = [];
-     data2.forEach((e) => {
-       return time.push(e.time);
-     });
-     
+    date = new Date(req.query.date);
+    //send date in body in checkAvailability
+    const time = [];
+    data2?.forEach((e) => {
+      return time?.push(e.time);
+    });
 
-  
-     var day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-     targetDay=day[date.getDay()]
+    var day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    targetDay = day[date.getDay()];
 
-     console.log("targetDay", targetDay);
-     
-    
-     responseData = await DOCTORAVAILABILITY.findOne({
-       doctorid: req.params.id,
-     });
+    responseData = await DOCTORAVAILABILITY.findOne({
+      doctorid: req.params.id,
+    });
 
-     
-     responseData.bookingavailabilityInformation =
-       responseData.bookingavailabilityInformation.filter(
-         (dayInfo) => dayInfo.day === targetDay
-       );
-   if (time.length > 0) {
-     console.log("data", responseData.bookingavailabilityInformation);
-     responseData.bookingavailabilityInformation[0].bookingtime =
-       responseData.bookingavailabilityInformation[0]?.bookingtime?.filter(
-         (ele) => !time.includes(ele)
-       );
-   }
+    responseData.bookingavailabilityInformation =
+      responseData?.bookingavailabilityInformation?.filter(
+        (dayInfo) => dayInfo.day === targetDay
+      );
 
-   console.log('responseData',responseData);
+    console.log("time", time);
+    if (time?.length > 0) {
+      console.log("data", responseData?.bookingavailabilityInformation);
+      responseData.bookingavailabilityInformation[0].bookingtime =
+        responseData?.bookingavailabilityInformation[0]?.bookingtime?.filter(
+          (ele) => !time.includes(ele)
+        );
+    }
+
+    console.log("responseData", responseData);
     res.status(200).json({
       status: "successfull",
       message: "data generated successfully",
       responseData,
-      
     });
   } catch (error) {
     res.status(500).json({
@@ -204,54 +225,63 @@ exports.searchAvailableDrID = async function (req, res, next) {
   }
 };
 
-
-exports.searchAvailableByDate=async function(req,res,next){
-
+exports.searchAvailableByDate = async function (req, res, next) {
   try {
     console.log("Searching");
     var { mydate, diff } = req.query;
-   
-    const currentDate = new Date(mydate);
-    
-    const nextSevenDays = new Date(mydate);
-   
-    nextSevenDays.setDate(currentDate.getDate()  + diff);
 
-    
+    const currentDate = new Date(mydate);
+
+    const nextSevenDays = new Date(mydate);
+
+    nextSevenDays.setDate(currentDate.getDate() + diff);
 
     const allDoctors = await DOCTORAVAILABILITY.find({}).limit(1000);
-     if (!allDoctors || allDoctors.length === 0) {
+    if (!allDoctors || allDoctors.length === 0) {
       throw new Error("No doctors found or no availability for any doctor.");
-     }
+    }
 
-     const notAvailableDoctorIds = [];
-      for (const doctor of allDoctors) {
-     const hasNotAvailability = doctor.bookingavailabilityInformation.some(
-       (availability) => {
-         const dayDate = new Date();
-         dayDate.setDate(
-           currentDate.getDate() +((["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(availability.day) - currentDate.getDay() +   diff) %  diff)
-         );
-          console.log(dayDate+":"+availability.day+":"+availability.available);
-         return dayDate <= nextSevenDays && dayDate.getDate()>=currentDate.getDate() && availability.available === false;
-       }
-     );
-     
-     if (hasNotAvailability) {
-       notAvailableDoctorIds.push(doctor.doctorid.toString());
-     }
- //check 
-  }
+    const notAvailableDoctorIds = [];
+    for (const doctor of allDoctors) {
+      const hasNotAvailability = doctor?.bookingavailabilityInformation?.some(
+        (availability) => {
+          const dayDate = new Date();
+          dayDate.setDate(
+            currentDate.getDate() +
+              ((["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+                availability.day
+              ) -
+                currentDate.getDay() +
+                diff) %
+                diff)
+          );
+          console.log(
+            dayDate + ":" + availability.day + ":" + availability.available
+          );
+          return (
+            dayDate <= nextSevenDays &&
+            dayDate.getDate() >= currentDate.getDate() &&
+            availability.available === false
+          );
+        }
+      );
 
-  const filterData = await DOCTOR.find({_id:{$nin:notAvailableDoctorIds}});
+      if (hasNotAvailability) {
+        notAvailableDoctorIds.push(doctor.doctorid.toString());
+      }
+      //check
+    }
 
-  
-          res.status(200).json({
-            status: "successfull",
-            message: "data generated successfully",
-            filterData,
-          });
-   /* const { mydate , diff}=req.query;
+    const filterData = await DOCTOR.find({
+      _id: { $nin: notAvailableDoctorIds },
+    });
+
+    res.status(200).json({
+      status: "successfull",
+      message: "data generated successfully",
+      filterData,
+    });
+    /* const { mydate , diff}=req.query;
 
     console.log("req.query", req.query);
     const currentDate = new Date(mydate);
@@ -312,13 +342,11 @@ res.status(200).json({
 
 }
 
-); */ 
+); */
   } catch (error) {
-    
-     res.status(500).json({
-       status: "fail",
-       message: error.message,
-     });
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
   }
-
-}
+};

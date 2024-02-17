@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const doctorSchema = new Schema({
   userId: { type: mongoose.Schema.ObjectId, ref: "user", required: true },
-  patients: [{ type: mongoose.Schema.ObjectId, ref: "user", required: true }],
+  patients: [{ type: mongoose.Schema.ObjectId, ref: "user"}],
 
   doctorName: {
     type: String,
@@ -20,18 +20,20 @@ const doctorSchema = new Schema({
   doctorCode: String,
   departmentName: String,
   departmentCode: String,
-  experties: [String],
+
 
   designation: String,
-  experienceInfo: [String],
-
+  
+  
   location: String,
   zipcode: String,
   description: String,
   shortDescription: String,
   specialities: String,
+  
+  experties: [String],
+  experienceInfo: [String],
   awardAndAchivementsInfo: [String],
-
   talkPublicationInfo: [String],
   languageInfo: [String],
   educationInfo: [String],
@@ -85,7 +87,6 @@ const doctorSchema = new Schema({
     enum: ["publish", "draft"],
     default: "draft",
   },
-  bookings:[ { type: mongoose.Schema.Types.ObjectId, ref: "bookappointment" }],
 });
 
 

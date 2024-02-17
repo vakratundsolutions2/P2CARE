@@ -1,4 +1,3 @@
-
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,11 +6,11 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { message } from "antd";
 import { useEffect } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 let schema = yup.object().shape({
-  phoneNumber: yup
-    .number()
-    .required("Email is Required"),
+  phoneNumber: yup.number().required("Email is Required"),
   Password: yup.string().required("Password is Required"),
 });
 
@@ -61,19 +60,29 @@ const Login = () => {
                   <div className="col-md-12 col-lg-6 login-right">
                     <div className="login-header">
                       <h3>
-                        Login  to  <span>P2CARE</span>
+                        Login to <span>P2CARE</span>
                       </h3>
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
-                        <input
+                        {/* <input
                           type="text"
                           name="phoneNumber"
                           onChange={formik.handleChange("phoneNumber")}
                           value={formik.values.phoneNumber}
                           className="form-control floating"
+                        /> */}
+
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
+                          value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
                         />
-                        <label className="focus-label">Phone Number</label>
+                        {/* <label className="focus-label">Phone Number</label> */}
 
                         <div className="text-danger">
                           {formik.touched.phoneNumber &&
@@ -108,7 +117,7 @@ const Login = () => {
 
                       <div className="text-center dont-have">
                         Don’t have an account?{" "}
-                        <Link to="register">Register</Link>
+                        <Link to="/register">Register</Link>
                       </div>
                     </form>
                   </div>

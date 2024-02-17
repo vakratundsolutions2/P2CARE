@@ -8,7 +8,7 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import ReactQuill from "react-quill";
 import { Switch } from "antd";
 import Select from "react-dropdown-select";
-import { doctorProfileUpdate, resetState } from "../../features/auth/authSlice";
+import { doctorProfileUpdate } from "../../features/auth/authSlice";
 import CustomInput from "../../components/CustomFormGroup";
 import { Link, useNavigate } from "react-router-dom";
 import { allDoctorCategory } from "../../features/category/dCategorySlice";
@@ -29,16 +29,17 @@ let schema = yup.object().shape({
   specialities: yup.string(),
 
   price: yup.string().required("Doctor Price is Required"),
-  image: yup.string().required("Doctor image is Required"),
-  availabileforappointment: yup
-    .string(),
+  // image: yup.string().required("Doctor image is Required"),
+  availabileforappointment: yup.string(),
   yearofexperience: yup.number().required("year of experience is Required"),
   status: yup.string().required("status is Required"),
 });
 
 const ProfileSetting = () => {
-  const { isError, isSuccess, user } = useSelector((state) => state.auth);
-  const DoctorCategory = useSelector((state) => state.doctorCategory?.dCategories);
+  const { isError, isSuccess, user } = useSelector((state) => state?.auth);
+  const DoctorCategory = useSelector(
+    (state) => state.doctorCategory?.dCategories
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,9 +47,10 @@ const ProfileSetting = () => {
 
   useEffect(() => {
     dispatch(allDoctorCategory());
-  }, [dispatch])
+  }, [dispatch]);
 
-  console.log(DoctorCategory)
+  const DRdata = useSelector((state)=>state?.auth?.user?.DRdata)
+  
   return (
     <div className="main-wrapper">
       {/* <!-- Breadcrumb --> */}
@@ -94,8 +96,10 @@ const ProfileSetting = () => {
                   shortDescription: userData?.DRdata?.shortDescription || "",
                   experienceInfo: userData?.DRdata?.experienceInfo || [],
                   specialities: userData?.DRdata?.specialities || "",
-                  awardAndAchivementsInfo: userData?.DRdata?.awardAndAchivementsInfo || [],
-                  talkPublicationInfo: userData?.DRdata?.talkPublicationInfo || [],
+                  awardAndAchivementsInfo:
+                    userData?.DRdata?.awardAndAchivementsInfo || [],
+                  talkPublicationInfo:
+                    userData?.DRdata?.talkPublicationInfo || [],
                   languageInfo: userData?.DRdata?.languageInfo || [],
                   educationInfo: userData?.DRdata?.educationInfo || [],
                   fellowShipInfo: userData?.DRdata?.fellowShipInfo || [],
@@ -109,7 +113,7 @@ const ProfileSetting = () => {
                 }}
                 validationSchema={schema}
                 onSubmit={(values) => {
-                  console.log(values)
+                  console.log(values);
                   const {
                     doctorName,
                     gender,
@@ -138,49 +142,59 @@ const ProfileSetting = () => {
                     status,
                   } = values;
 
-
                   const expertiesName = [];
                   for (let index = 0; index < experties.length; index++) {
                     expertiesName.push(experties[index]?.name);
                   }
 
                   const formData = new FormData();
-                  console.log(expertiesName);
 
-                  formData.append("doctorName", doctorName);
-                  formData.append("doctorCode", doctorCode);
-                  formData.append("departmentName", departmentName);
-                  formData.append("departmentCode", departmentCode);
-                  formData.append("designation", designation);
-                  formData.append("experties", expertiesName);
-                  formData.append("specialities", JSON.stringify(specialities));
+                  console.log(image);
+                  
 
-                  formData.append("location", location);
-                  formData.append("experienceInfo", experienceInfo);
-                  formData.append("description", description);
-                  formData.append("shortDescription", shortDescription);
-                  formData.append("awardAndAchivementsInfo", awardAndAchivementsInfo);
-                  formData.append("talkPublicationInfo", talkPublicationInfo);
-                  formData.append("languageInfo", languageInfo);
-                  formData.append("educationInfo", educationInfo);
-                  formData.append("fellowShipInfo", fellowShipInfo);
-                  formData.append("image", image);
-                  formData.append("availabileforappointment", availabileforappointment);
-                  formData.append("yearofexperience", yearofexperience);
-                  formData.append("status", status);
-                  formData.append("gender", gender);
-                  formData.append("price", price);
+                  // formData.append("doctorName", doctorName);
+                  // formData.append("doctorCode", doctorCode);
+                  // formData.append("departmentName", departmentName);
+                  // formData.append("departmentCode", departmentCode);
+                  // formData.append("designation", designation);
+                  // formData.append("experties", JSON.stringify(expertiesName));
+                  // formData.append("specialities", specialities);
 
-                  dispatch(doctorProfileUpdate(formData));
+                  // formData.append("location", location);
+                  // formData.append("experienceInfo", experienceInfo);
+                  // formData.append("description", description);
+                  // formData.append("shortDescription", shortDescription);
+                  // formData.append(
+                  //   "awardAndAchivementsInfo",
+                  //   awardAndAchivementsInfo
+                  // );
+                  // formData.append("talkPublicationInfo", talkPublicationInfo);
+                  // formData.append("languageInfo", languageInfo);
+                  // formData.append("educationInfo", educationInfo);
+                  // formData.append("fellowShipInfo", fellowShipInfo);
+                  // formData.append(
+                  //   "availabileforappointment",
+                  //   availabileforappointment
+                  // );
+                  // formData.append("yearofexperience", yearofexperience);
+                  // formData.append("status", status);
+                  // formData.append("gender", gender);
+                  // formData.append("price", price);=
+                  formData?.append('image',image)
+                
+                    const DATA = {
+                      id: DRdata?._id,
+                      formData: formData
+                    };
 
-                  setTimeout(() => {
-                    dispatch(resetState());
-                  }, 300);
+                    console.log(formData);
 
+
+
+                  dispatch(doctorProfileUpdate(DATA));
                 }}
               >
                 {(formik) => (
-
                   <div>
                     <h3 className="mb-4 title">
                       {/* {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor */}
@@ -189,10 +203,10 @@ const ProfileSetting = () => {
                       <form
                         onSubmit={formik.handleSubmit}
                         className="mb-4 "
-                        encType="multipart/form-data">
+                        encType="multipart/form-data"
+                      >
                         <div className="row align-items-center ">
                           <div className="col-6">
-
                             {/*doctorName -------------------------------------------------------- */}
                             <CustomInput
                               type="text"
@@ -203,7 +217,8 @@ const ProfileSetting = () => {
                               val={formik.values.doctorName}
                             />
                             <div className="error">
-                              {formik.touched.doctorName && formik.errors.doctorName}
+                              {formik.touched.doctorName &&
+                                formik.errors.doctorName}
                             </div>
                           </div>
 
@@ -218,10 +233,10 @@ const ProfileSetting = () => {
                               val={formik.values.doctorCode}
                             />
                             <div className="error">
-                              {formik.touched.doctorCode && formik.errors.doctorCode}
+                              {formik.touched.doctorCode &&
+                                formik.errors.doctorCode}
                             </div>
                           </div>
-
 
                           {/* departmentName -------------------------------------------------------- */}
                           <div className="col-6">
@@ -281,7 +296,9 @@ const ProfileSetting = () => {
                               labelField="name"
                               placeholder="Select Experties ..."
                               valueField="_id"
-                              onChange={(e) => formik.setFieldValue("experties", e)}
+                              onChange={(e) =>
+                                formik.setFieldValue("experties", e)
+                              }
                               className="form-control rounded p-3 mb-3"
                               multi
                               value={[
@@ -296,10 +313,10 @@ const ProfileSetting = () => {
                             />
 
                             <div className="error">
-                              {formik.touched.experties && formik.errors.experties}
+                              {formik.touched.experties &&
+                                formik.errors.experties}
                             </div>
                           </div>
-
 
                           {/* location -------------------------------------------------------- */}
                           <div className="col-6">
@@ -312,10 +329,10 @@ const ProfileSetting = () => {
                               val={formik.values.location}
                             />
                             <div className="error">
-                              {formik.touched.location && formik.errors.location}
+                              {formik.touched.location &&
+                                formik.errors.location}
                             </div>
                           </div>
-
 
                           {/* gender -------------------------------------------------------- */}
                           <div className="col-6">
@@ -360,7 +377,8 @@ const ProfileSetting = () => {
                           <div className="col-12 form-group mb-3">
                             <label
                               htmlFor="exampleFormControlTextarea2"
-                              className=" m-1 mt-3">
+                              className=" m-1 mt-3"
+                            >
                               Short Description
                             </label>
                             <textarea
@@ -380,7 +398,8 @@ const ProfileSetting = () => {
                           <div className="col-6">
                             <label
                               htmlFor="exampleFormControlTextarea2"
-                              className=" m-1 mt-3">
+                              className=" m-1 mt-3"
+                            >
                               Specialities
                             </label>
                             <select
@@ -390,16 +409,14 @@ const ProfileSetting = () => {
                               onBlur={formik.handleBlur("specialities")}
                               value={formik.values.specialities}
                               className="form-control form-select py-3 px-4 mb-3"
-                            // style={{fontSize:'small',fontWeight:'light'}}
+                              // style={{fontSize:'small',fontWeight:'light'}}
                             >
                               <option value="">Select specialities</option>
                               {DoctorCategory?.map((e, i) => {
                                 return (
-
                                   <option key={i} value={e?.name}>
                                     {e?.name}
                                   </option>
-
                                 );
                               })}
                             </select>
@@ -436,38 +453,44 @@ const ProfileSetting = () => {
                                 return (
                                   <>
                                     <div className="row">
-                                      {formik.values.experienceInfo?.map((e, i) => {
-                                        return (
-                                          <>
-                                            <div key={i}>
-                                              {i > 0 && (
-                                                <div className="float-end" key={i}>
-                                                  <button
-                                                    type="button"
-                                                    className="btn btn-danger"
-                                                    onClick={() =>
-                                                      arrayHelpers.remove(i)
-                                                    }
+                                      {formik.values.experienceInfo?.map(
+                                        (e, i) => {
+                                          return (
+                                            <>
+                                              <div key={i}>
+                                                {i > 0 && (
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
                                                   >
-                                                    X
-                                                  </button>
-                                                </div>
-                                              )}
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-danger"
+                                                      onClick={() =>
+                                                        arrayHelpers.remove(i)
+                                                      }
+                                                    >
+                                                      X
+                                                    </button>
+                                                  </div>
+                                                )}
 
-                                              <div className="form-group  ">
-                                                <Field
-                                                  type="text"
-                                                  placeholder={`experienceInfo-${i + 1
+                                                <div className="form-group  ">
+                                                  <Field
+                                                    type="text"
+                                                    placeholder={`experienceInfo-${
+                                                      i + 1
                                                     }`}
-                                                  className="form-control  mb-2"
-                                                  style={{ width: "95%" }}
-                                                  name={`experienceInfo.${i}`}
-                                                />
+                                                    className="form-control  mb-2"
+                                                    style={{ width: "95%" }}
+                                                    name={`experienceInfo.${i}`}
+                                                  />
+                                                </div>
                                               </div>
-                                            </div>
-                                          </>
-                                        );
-                                      })}
+                                            </>
+                                          );
+                                        }
+                                      )}
                                     </div>
                                     <div className="form-group  float-end">
                                       <button
@@ -475,7 +498,8 @@ const ProfileSetting = () => {
                                         className="btn btn-primary"
                                         onClick={() =>
                                           arrayHelpers.insert(
-                                            formik.values.experienceInfo?.length + 1,
+                                            formik.values.experienceInfo
+                                              ?.length + 1,
                                             []
                                           )
                                         }
@@ -498,7 +522,9 @@ const ProfileSetting = () => {
                             className="col-12 p-3 rounded mb-3 "
                             style={{ background: " rgba(0, 0, 0, 0.1)" }}
                           >
-                            <div className="my-3">Add Award And AchivementsInfo</div>
+                            <div className="my-3">
+                              Add Award And AchivementsInfo
+                            </div>
                             <FieldArray
                               name="awardAndAchivementsInfo"
                               render={(arrayHelpers) => {
@@ -511,7 +537,10 @@ const ProfileSetting = () => {
                                             <>
                                               <div key={i}>
                                                 {i > 0 && (
-                                                  <div className="float-end" key={i}>
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
+                                                  >
                                                     <button
                                                       type="button"
                                                       className="btn btn-danger"
@@ -527,8 +556,9 @@ const ProfileSetting = () => {
                                                 <div className="form-group  ">
                                                   <Field
                                                     type="text"
-                                                    placeholder={`awardAndAchivementsInfo-${i + 1
-                                                      }`}
+                                                    placeholder={`awardAndAchivementsInfo-${
+                                                      i + 1
+                                                    }`}
                                                     className="form-control  mb-2"
                                                     style={{ width: "95%" }}
                                                     name={`awardAndAchivementsInfo.${i}`}
@@ -546,8 +576,9 @@ const ProfileSetting = () => {
                                         type="button"
                                         onClick={() =>
                                           arrayHelpers.insert(
-                                            formik.values.awardAndAchivementsInfo
-                                              ?.length + 1,
+                                            formik.values
+                                              .awardAndAchivementsInfo?.length +
+                                              1,
                                             []
                                           )
                                         }
@@ -582,7 +613,10 @@ const ProfileSetting = () => {
                                             <>
                                               <div key={i}>
                                                 {i > 0 && (
-                                                  <div className="float-end" key={i}>
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
+                                                  >
                                                     <button
                                                       type="button"
                                                       className="btn btn-danger"
@@ -598,8 +632,9 @@ const ProfileSetting = () => {
                                                 <div className="form-group  ">
                                                   <Field
                                                     type="text"
-                                                    placeholder={`Talk Publication Info-${i + 1
-                                                      }`}
+                                                    placeholder={`Talk Publication Info-${
+                                                      i + 1
+                                                    }`}
                                                     className="form-control  mb-2"
                                                     style={{ width: "95%" }}
                                                     name={`talkPublicationInfo.${i}`}
@@ -647,38 +682,44 @@ const ProfileSetting = () => {
                                 return (
                                   <>
                                     <div className="row">
-                                      {formik.values.languageInfo?.map((e, i) => {
-                                        return (
-                                          <>
-                                            <div key={i}>
-                                              {i > 0 && (
-                                                <div className="float-end" key={i}>
-                                                  <button
-                                                    type="button"
-                                                    className="btn btn-danger"
-                                                    onClick={() =>
-                                                      arrayHelpers.remove(i)
-                                                    }
+                                      {formik.values.languageInfo?.map(
+                                        (e, i) => {
+                                          return (
+                                            <>
+                                              <div key={i}>
+                                                {i > 0 && (
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
                                                   >
-                                                    X
-                                                  </button>
-                                                </div>
-                                              )}
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-danger"
+                                                      onClick={() =>
+                                                        arrayHelpers.remove(i)
+                                                      }
+                                                    >
+                                                      X
+                                                    </button>
+                                                  </div>
+                                                )}
 
-                                              <div className="form-group  ">
-                                                <Field
-                                                  type="text"
-                                                  placeholder={`Talk Language Info-${i + 1
+                                                <div className="form-group  ">
+                                                  <Field
+                                                    type="text"
+                                                    placeholder={`Talk Language Info-${
+                                                      i + 1
                                                     }`}
-                                                  className="form-control  mb-2"
-                                                  style={{ width: "95%" }}
-                                                  name={`languageInfo.${i}`}
-                                                />
+                                                    className="form-control  mb-2"
+                                                    style={{ width: "95%" }}
+                                                    name={`languageInfo.${i}`}
+                                                  />
+                                                </div>
                                               </div>
-                                            </div>
-                                          </>
-                                        );
-                                      })}
+                                            </>
+                                          );
+                                        }
+                                      )}
                                     </div>
 
                                     <div className="form-group  float-end">
@@ -687,7 +728,8 @@ const ProfileSetting = () => {
                                         className="btn btn-primary"
                                         onClick={() =>
                                           arrayHelpers.insert(
-                                            formik.values.languageInfo?.length + 1,
+                                            formik.values.languageInfo?.length +
+                                              1,
                                             []
                                           )
                                         }
@@ -715,38 +757,44 @@ const ProfileSetting = () => {
                                 return (
                                   <>
                                     <div className="row">
-                                      {formik.values.educationInfo?.map((e, i) => {
-                                        return (
-                                          <>
-                                            <div key={i}>
-                                              {i > 0 && (
-                                                <div className="float-end" key={i}>
-                                                  <button
-                                                    type="button"
-                                                    className="btn btn-danger"
-                                                    onClick={() =>
-                                                      arrayHelpers.remove(i)
-                                                    }
+                                      {formik.values.educationInfo?.map(
+                                        (e, i) => {
+                                          return (
+                                            <>
+                                              <div key={i}>
+                                                {i > 0 && (
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
                                                   >
-                                                    X
-                                                  </button>
-                                                </div>
-                                              )}
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-danger"
+                                                      onClick={() =>
+                                                        arrayHelpers.remove(i)
+                                                      }
+                                                    >
+                                                      X
+                                                    </button>
+                                                  </div>
+                                                )}
 
-                                              <div className="form-group  ">
-                                                <Field
-                                                  type="text"
-                                                  placeholder={`Education Info-${i + 1
+                                                <div className="form-group  ">
+                                                  <Field
+                                                    type="text"
+                                                    placeholder={`Education Info-${
+                                                      i + 1
                                                     }`}
-                                                  className="form-control  mb-2"
-                                                  style={{ width: "95%" }}
-                                                  name={`educationInfo.${i}`}
-                                                />
+                                                    className="form-control  mb-2"
+                                                    style={{ width: "95%" }}
+                                                    name={`educationInfo.${i}`}
+                                                  />
+                                                </div>
                                               </div>
-                                            </div>
-                                          </>
-                                        );
-                                      })}
+                                            </>
+                                          );
+                                        }
+                                      )}
                                     </div>
                                     <div className="form-group  float-end">
                                       <button
@@ -754,7 +802,8 @@ const ProfileSetting = () => {
                                         className="btn btn-primary"
                                         onClick={() =>
                                           arrayHelpers.insert(
-                                            formik.values.educationInfo?.length + 1,
+                                            formik.values.educationInfo
+                                              ?.length + 1,
                                             []
                                           )
                                         }
@@ -782,38 +831,44 @@ const ProfileSetting = () => {
                                 return (
                                   <>
                                     <div className="row">
-                                      {formik.values.fellowShipInfo?.map((e, i) => {
-                                        return (
-                                          <>
-                                            <div key={i}>
-                                              {i > 0 && (
-                                                <div className="float-end" key={i}>
-                                                  <button
-                                                    type="button"
-                                                    className="btn btn-danger"
-                                                    onClick={() =>
-                                                      arrayHelpers.remove(i)
-                                                    }
+                                      {formik.values.fellowShipInfo?.map(
+                                        (e, i) => {
+                                          return (
+                                            <>
+                                              <div key={i}>
+                                                {i > 0 && (
+                                                  <div
+                                                    className="float-end"
+                                                    key={i}
                                                   >
-                                                    X
-                                                  </button>
-                                                </div>
-                                              )}
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-danger"
+                                                      onClick={() =>
+                                                        arrayHelpers.remove(i)
+                                                      }
+                                                    >
+                                                      X
+                                                    </button>
+                                                  </div>
+                                                )}
 
-                                              <div className="form-group  ">
-                                                <Field
-                                                  type="text"
-                                                  placeholder={`FellowShip Info-${i + 1
+                                                <div className="form-group  ">
+                                                  <Field
+                                                    type="text"
+                                                    placeholder={`FellowShip Info-${
+                                                      i + 1
                                                     }`}
-                                                  className="form-control  mb-2"
-                                                  style={{ width: "95%" }}
-                                                  name={`fellowShipInfo.${i}`}
-                                                />
+                                                    className="form-control  mb-2"
+                                                    style={{ width: "95%" }}
+                                                    name={`fellowShipInfo.${i}`}
+                                                  />
+                                                </div>
                                               </div>
-                                            </div>
-                                          </>
-                                        );
-                                      })}
+                                            </>
+                                          );
+                                        }
+                                      )}
                                     </div>
                                     <div className="form-group  float-end">
                                       <button
@@ -821,7 +876,8 @@ const ProfileSetting = () => {
                                         type="button"
                                         onClick={() =>
                                           arrayHelpers.insert(
-                                            formik.values.fellowShipInfo?.length + 1,
+                                            formik.values.fellowShipInfo
+                                              ?.length + 1,
                                             []
                                           )
                                         }
@@ -869,7 +925,6 @@ const ProfileSetting = () => {
                             </div>
                           </div>
 
-
                           <div className="col-6 m-4 d-flex">
                             <div className="form-check-inline visits ">
                               <label className="">
@@ -908,7 +963,6 @@ const ProfileSetting = () => {
                       </form>
                     </div>
                   </div>
-
                 )}
               </Formik>
             </div>

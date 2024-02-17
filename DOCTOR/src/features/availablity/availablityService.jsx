@@ -12,8 +12,41 @@ const getavailablity = async (DATA) => {
 
   return res.data;
 };
+const allTime = async () => {
+
+  const res = await axios.get(`${baseUrl}time/alltime`);
+
+
+  return res.data;
+};
+
+const addAvail = async (DATA) => {
+  console.log(DATA);
+  // const res = await axios.post(`${baseUrl}available/time`, DATA, config);
+  // return res.data;
+};
+
+const getAavail = async (id) => {
+  const res = await axios.get(`${baseUrl}available/doctortime/${id}`, config);
+  return res.data;
+};
+const editAvail = async (DATA) => {
+  console.log(DATA);
+
+  const res = await axios.put(
+    `${baseUrl}available/updatetime/${DATA.id}`,
+    DATA.formData,
+    config
+  );
+  return res.data;
+};
+
 
 const availableService = {
   getavailablity,
+  allTime,
+  addAvail,
+  editAvail,
+  getAavail,
 };
 export default availableService;

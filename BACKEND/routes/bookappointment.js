@@ -18,9 +18,39 @@ router.get(
   isAdmin,
   bookappointmentController.allAppointment
 );
-// appointment by ID
 
 
+// bookings by user id
+
+
+router.get(
+  "/appointmentsbyuser/:id",
+  userController.CHECKJWT,
+  
+  bookappointmentController.bookingsBYuserList
+);
+
+// bookings by doctor id
+
+
+// router.get(
+//   "/appointmentsbydoctor/:id",
+//   userController.CHECKJWT,
+
+//   bookappointmentController.bookingsBYdoctorList
+// );
+
+
+
+
+
+
+
+
+
+
+
+// appointment by BOOKING ID
 router.get(
   "/appointment/:id",
   userController.CHECKJWT,
@@ -33,12 +63,9 @@ router.get(
 
   bookappointmentController.ApponmentByDoctorID
 );
-router.get(
-  "/appointment/:id",
-  // userController.CHECKJWT,
 
-  bookappointmentController.ApponmentByID
-);
+
+
 router.put(
   "/reschedulebooking/:id",
   userController.CHECKJWT,

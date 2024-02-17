@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-import LOGO from "../../assets/p2care.png";
+import LOGO from "../../assets/images/p2Care.png";
 import { Rate } from "antd";
 const CheckOut = () => {
   const { BOOKSTATE } = useSelector((state) => state.doctor);
@@ -151,8 +151,9 @@ const CheckOut = () => {
                                   type="radio"
                                   name="gender"
                                   // id="inli neRadio1"
-                                  value={formik.values.gender}
+                                  value={"Male"}
                                   onChange={formik.handleChange("gender")}
+                                  // checked={formik.values.gender}
                                 />
                                 <label
                                   className="form-check-label"
@@ -168,7 +169,8 @@ const CheckOut = () => {
                                   name="gender"
                                   // id="inlineRadio2"
                                   onChange={formik.handleChange("gender")}
-                                  value={formik.values.gender}
+                                  value={"Female"}
+                                  // checked={formik.values.gender}
                                 />
                                 <label
                                   className="form-check-label"

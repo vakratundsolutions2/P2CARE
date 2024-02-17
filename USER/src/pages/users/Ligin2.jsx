@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { baseUrl } from "../../utils/baseUrl";
 import axios from "axios";
 import toast from "react-hot-toast";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 let schema = yup.object().shape({
   phoneNumber: yup
@@ -68,15 +70,23 @@ const Login2 = () => {
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
-                        <input
+                        {/* <input
                           type="text"
                           name="phoneNumber"
                           onChange={formik.handleChange("phoneNumber")}
                           value={formik.values.phoneNumber}
                           className="form-control floating"
                         />
-                        <label className="focus-label">Phone Number</label>
-
+                        <label className="focus-label">Phone Number</label> */}
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
+                          value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
+                        />
                         <div className="text-danger">
                           {formik.touched.phoneNumber &&
                             formik.errors.phoneNumber}

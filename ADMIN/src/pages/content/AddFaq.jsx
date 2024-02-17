@@ -35,12 +35,14 @@ const AddFaq = () => {
     initialValues: {
       answer: FAQ?.answer || "",
       question: FAQ?.question || "",
-      date: dayjs().format("DD/MM/YYYY"),
+      
     },
     validationSchema: schema,
 
     onSubmit: (values) => {
+      values.date = dayjs();
       console.log(values);
+
       if (ID === undefined || ID === "") {
         dispatch(AddFAQ(values));
         setTimeout(() => {
@@ -54,15 +56,15 @@ const AddFaq = () => {
       }
     },
   });
-  
-  if (
-    (isSuccess === true && addFAQ !== null) ||
-    (isSuccess === true && updateFAQ !== null)
-  ) {
-    setTimeout(() => {
-      navigate("/admin/faq-list");
-    }, 350);
-  }
+
+  // if (
+  //   (isSuccess === true && addFAQ !== null) ||
+  //   (isSuccess === true && updateFAQ !== null)
+  // ) {
+  //   setTimeout(() => {
+  //     navigate("/admin/faq-list");
+  //   }, 350);
+  // }
   return (
     <>
       <div className="my-3 mb-4 justify-content-center d-flex">

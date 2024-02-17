@@ -1,10 +1,12 @@
 const DOCTOR = require("../model/doctor");
+const DOCTORAVAILABILITY = require("../model/doctoravailability");
 const DOCTORCATEGORY = require("../model/doctorcategory");
 const HOSPITAL = require("../model/hospital");
+const USER = require("../model/user");
+const bcrypt = require("bcrypt");
 
 //==========================addDoctor=========================
 exports.addDoctor = async function (req, res, next) {
-  
   try {
     req.body.image = req?.file?.filename;
     if (
@@ -32,11 +34,16 @@ exports.addDoctor = async function (req, res, next) {
       !req.body.price ||
       !req.body.image ||
       !req.body.status ||
-      !req.body.availabileforappointment
+      !req.body.availabileforappointment ||
+      !req.body.Username ||
+      !req.body.Email ||
+      !req.body.Password ||
+      !req.body.phoneNumber
     ) {
       throw new Error("Please Enter Valid Feild");
     }
 
+    
     const experties = JSON.parse(req.body.experties);
     console.log(experties);
     const cate = experties.map((el) => el);
@@ -45,7 +52,6 @@ exports.addDoctor = async function (req, res, next) {
       const cat = await DOCTORCATEGORY.find({ name: el });
       return cat.length > 0;
     };
-
 
     const isValidName = await Promise.all(
       cate.flat().map(async (el) => await checkCategory(el))
@@ -60,11 +66,30 @@ exports.addDoctor = async function (req, res, next) {
     if (chekspecialist === false) {
       throw new Error("Invalid add value");
     }
-    
+
+
+
 
     console.log(req.body);
+    req.body.experienceInfo = JSON.parse(req.body.experienceInfo);
+    req.body.talkPublicationInfo = JSON.parse(req.body.talkPublicationInfo);
+    req.body.languageInfo = JSON.parse(req.body.languageInfo);
+    req.body.educationInfo = JSON.parse(req.body.educationInfo);
+    req.body.fellowShipInfo = JSON.parse(req.body.fellowShipInfo);
+    req.body.awardAndAchivementsInfo = JSON.parse(
+      req.body.awardAndAchivementsInfo
+    );
     req.body.experties = JSON.parse(req.body.experties);
-    
+    const userDATA = {
+      Username: req.body.Username,
+      Password: await bcrypt.hash(req.body.Password, 10),
+      Name: req.body.doctorName,
+      Email: req.body.Email,
+      phoneNumber: req.body.phoneNumber,
+      Role: "DOCTOR",
+    };
+    const userdata = await USER.create(userDATA);
+    req.body.userId = await userdata?._id;
     const data = await DOCTOR.create(req.body);
     res.status(201).json({
       status: "Successful",
@@ -82,11 +107,7 @@ exports.addDoctor = async function (req, res, next) {
 //=============================allDoctor===========================
 exports.allDoctor = async function (req, res, next) {
   try {
-    const data = await DOCTOR.find(
-    //   {
-    //   isVarified: true,
-    // }
-    )
+    const data = await DOCTOR.find()
       .populate("ratings.postedby")
       .populate("assign.hospitals");
 
@@ -103,12 +124,11 @@ exports.allDoctor = async function (req, res, next) {
   }
 };
 
-
-
-
 //===========================update doctor=========================
 
 exports.updateDoctor = async function (req, res, next) {
+  console.log("update Doctor", req.body);
+
   try {
     const getData = await DOCTOR.findById(req.params.id);
     var data = { ...getData._doc, ...req.body };
@@ -139,17 +159,37 @@ exports.updateDoctor = async function (req, res, next) {
       let experties = data.experties;
       const chekspecialist = experties.includes(data.specialities);
       if (chekspecialist === false) {
-        throw new Error("Invalid add value");
+        throw new Error("specialities dose not matched");
       }
     }
-    
+
     if (data.status) {
       if (data.status && !["publish", "draft"].includes(data.status)) {
         throw new Error("Invalid status value");
       }
     }
 
-    data.experties = JSON.parse(data.experties); 
+    data.experties = JSON.parse(data.experties);
+    data.experienceInfo = JSON.parse(req.body.experienceInfo);
+    data.talkPublicationInfo = JSON.parse(req.body.talkPublicationInfo);
+    data.languageInfo = JSON.parse(req.body.languageInfo);
+    data.educationInfo = JSON.parse(req.body.educationInfo);
+    data.fellowShipInfo = JSON.parse(req.body.fellowShipInfo);
+    data.awardAndAchivementsInfo = JSON.parse(req.body.awardAndAchivementsInfo);
+
+
+    const userData = {
+      Name: req.body.doctorName,
+      Username: req.body.Username,
+      phoneNumber: req.body.phoneNumber,
+      Email: req.body.Email,
+      
+      Password: await bcrypt.hash(req.body.Password, 10),
+    };
+
+    const UpdateUser = await USER.findByIdAndUpdate(getData?.userId, userData,{new:true});
+
+
     const udata = await DOCTOR.findByIdAndUpdate(req.params.id, data);
     res.status(200).json({
       status: "Sucessfull",
@@ -168,6 +208,8 @@ exports.updateDoctor = async function (req, res, next) {
 exports.deleteDoctor = async function (req, res, next) {
   try {
     await DOCTOR.findByIdAndDelete(req.params.id);
+    await DOCTORAVAILABILITY.deleteOne({ doctorid: req.params.id });
+    await USER.deleteOne({ userId: req.params.id });
     res.status(200).json({
       status: "SuccessFul",
       message: "Data is deleted",
@@ -205,10 +247,10 @@ exports.searchDoctor = async function (req, res, next) {
 exports.searchDoctorById = async function (req, res, next) {
   try {
     const data = await DOCTOR.findById(req.params.id)
+      .populate("userId")
       .populate("ratings.postedby")
       .populate("assign.hospitals");
 
-      console.log(data);
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
@@ -283,7 +325,6 @@ exports.rating = async (req, res) => {
   }
 };
 
-//=====================searchDoctorFilters=====================
 exports.searchDoctorByFiltets = async function (req, res, next) {
   try {
     const currentpage = parseInt(req.query.page) - 1 || 0;
@@ -293,14 +334,17 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
     const sort = req.query.sort || 1;
     const minAMT = req.query.minAmount || 0;
     const maxAMT = req.query.maxAmount || 2000;
-    const Star = req.query.rating||'';
+    const Star = req.query.rating || "";
     const location = req.query.location || "";
     const Gender = req.query.gender || "";
+    const search = req.query.search || "";
+    const locality = req.query.locality || "";
+    const city = req.query.city || "";
+    const pincode = req.query.pincode || "";
     var { mydate, diff } = req.query;
 
     const notAvailableDoctorIds = [];
-    if(mydate!=0){
-
+    if (mydate != 0) {
       const currentDate = new Date(mydate);
 
       const nextSevenDays = new Date(mydate);
@@ -312,7 +356,6 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
         throw new Error("No doctors found or no availability for any doctor.");
       }
 
-      
       for (const doctor of allDoctors) {
         const hasNotAvailability = doctor.bookingavailabilityInformation.some(
           (availability) => {
@@ -342,18 +385,18 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
         }
         //check
       }
-
     }
 
-    var method = { doctorName: Number(sort) };
+    const method = { doctorName: Number(sort) };
 
     const data = await DOCTOR.find({
       _id: { $nin: notAvailableDoctorIds },
       gender: { $regex: Gender },
       doctorName: { $regex: name, $options: "i" },
+      // location: { $regex: location, $options: "i" },
       specialities: { $regex: specialities },
       totalratings: { $regex: Star },
-      // isVarified: true,
+
       price: { $gte: minAMT, $lte: maxAMT },
     })
       .sort(method)
@@ -365,6 +408,7 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
     const total = await DOCTOR.countDocuments({
       gender: { $regex: Gender },
       doctorName: { $regex: name, $options: "i" },
+      // location: { $regex: location, $options: "i" },
       specialities: { $regex: specialities },
       totalratings: { $regex: Star },
       price: { $gte: minAMT, $lte: maxAMT },
@@ -372,10 +416,225 @@ exports.searchDoctorByFiltets = async function (req, res, next) {
     });
     const totalPages = Math.ceil(total / limit);
 
+    // const regexPattern = new RegExp("\\b" + decodeURI(location) + "\\b", "i");
+    // console.log(regexPattern);
+
+    // let templocation = decodeURI(location);
+    // console.log(
+    //   "city locality ",
+    //   templocation.split(",")[0]?.trim(),
+    //   templocation.split(",")[1]?.trim()
+    // );
+    // const allDoctors = await DOCTOR.aggregate([
+    //   {
+    //     $unwind: { path: "$assign", preserveNullAndEmptyArrays: true },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "hospitals",
+    //       localField: "assign.hospitals",
+    //       foreignField: "_id",
+    //       as: "assign.hospital",
+    //     },
+    //   },
+
+    //   {
+    //     $match: {
+    //       $or: [
+    //         {
+    //           "assign.hospital.hospitalname": {
+    //             $regex: search,
+    //             $options: "i",
+    //           },
+    //         }, // Match hospital name
+    //         { doctorName: { $regex: search, $options: "i" } }, // Match doctor name
+    //         { experties: { $in: [search] } },
+    //         { specialities: { $regex: search, $options: "i" } },
+    //         // Match expertise
+    //       ],
+    //       $or: [
+    //         {
+    //           location: {
+    //             $regex: templocation.split(",")[0]?.trim(),
+    //             $options: "i",
+    //           },
+    //         },
+    //         {
+    //           location: {
+    //             $regex: templocation.split(",")[1]?.trim(),
+    //             $options: "i",
+    //           },
+    //         },
+    //       ],
+    //       // Match location
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$_id",
+    //       userId: { $first: "$userId" },
+    //       patients: { $first: "$patients" },
+    //       doctorName: { $first: "$doctorName" },
+    //       assign: { $first: "$assign" },
+    //       experties: { $first: "$experties" },
+    //       location: { $first: "$location" },
+    //       image: { $first: "$image" },
+    //       specialities: { $first: "$specialities" },
+    //       price: { $first: "$price" },
+    //       totalratings: { $first: "$totalratings" },
+    //       ratings: { $first: "$ratings" },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 1,
+    //       userId: 1,
+    //       patients: 1,
+    //       doctorName: 1,
+    //       assign: {
+    //         hospitals: "$assign.hospital", // Include hospital details in assign
+    //         amount: "$assign.amount", // Include other assign fields as needed
+    //         category: "$assign.category",
+    //         // Add other assign fields as needed
+    //       },
+    //       location: 1,
+    //       image: 1,
+    //       specialities: 1,
+    //       experties: 1,
+    //       price: 1,
+    //       totalratings: 1,
+    //       ratings: 1,
+    //     },
+    //   },
+    // ]);
+
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
-      data: { data, total, currentpage: currentpage + 1, limit, totalPages },
+      data: {
+        data,
+        total,
+        currentpage: currentpage + 1,
+        limit,
+        totalPages,
+        // allDoctors,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+exports.searchDoctorByFiltetsatHome = async function (req, res, next) {
+  try {
+    const currentpage = parseInt(req.query.page) - 1 || 0;
+    const limit = parseInt(req.query.limit) || 5;
+    const location = req.query.location || "";
+    const search = req.query.search || "";
+    const regexPattern = new RegExp("\\b" + decodeURI(location) + "\\b", "i");
+    console.log(regexPattern);
+
+    let templocation = decodeURI(location);
+    console.log(
+      "city locality ",
+      templocation.split(",")[0]?.trim(),
+      templocation.split(",")[1]?.trim()
+    );
+    const allDoctors = await DOCTOR.aggregate([
+      {
+        $unwind: { path: "$assign", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: "hospitals",
+          localField: "assign.hospitals",
+          foreignField: "_id",
+          as: "assign.hospital",
+        },
+      },
+
+      {
+        $match: {
+          $or: [
+            {
+              "assign.hospital.hospitalname": {
+                $regex: search,
+                $options: "i",
+              },
+            }, // Match hospital name
+            { doctorName: { $regex: search, $options: "i" } }, // Match doctor name
+            { experties: { $in: [search] } },
+            { specialities: { $regex: search, $options: "i" } },
+            // Match expertise
+          ],
+          $or: [
+            {
+              location: {
+                $regex: templocation.split(",")[0]?.trim(),
+                $options: "i",
+              },
+            },
+            {
+              location: {
+                $regex: templocation.split(",")[1]?.trim(),
+                $options: "i",
+              },
+            },
+          ],
+          // Match location
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          userId: { $first: "$userId" },
+          patients: { $first: "$patients" },
+          doctorName: { $first: "$doctorName" },
+          assign: { $first: "$assign" },
+          experties: { $first: "$experties" },
+          location: { $first: "$location" },
+          image: { $first: "$image" },
+          specialities: { $first: "$specialities" },
+          price: { $first: "$price" },
+          totalratings: { $first: "$totalratings" },
+          ratings: { $first: "$ratings" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          userId: 1,
+          patients: 1,
+          doctorName: 1,
+          assign: {
+            hospitals: "$assign.hospital", // Include hospital details in assign
+            amount: "$assign.amount", // Include other assign fields as needed
+            category: "$assign.category",
+            // Add other assign fields as needed
+          },
+          location: 1,
+          image: 1,
+          specialities: 1,
+          experties: 1,
+          price: 1,
+          totalratings: 1,
+          ratings: 1,
+        },
+      },
+    ]);
+
+    const data = await DOCTOR.find();
+
+    res.status(200).json({
+      status: "Successfull",
+      message: "Data is found",
+      data: {
+        allDoctors,
+        data,
+      },
     });
   } catch (error) {
     res.status(404).json({
@@ -426,12 +685,8 @@ exports.unblockDoctor = async (req, res) => {
   }
 };
 
-
-
-exports.acceptdoctor = async (req,res)=>{
-
+exports.acceptdoctor = async (req, res) => {
   try {
-
     const data = await DOCTOR.findByIdAndUpdate(
       req.params.id,
       {
@@ -441,43 +696,41 @@ exports.acceptdoctor = async (req,res)=>{
         new: true,
       }
     );
- res.status(200).json({
-   status: "Successfull",
-   message: "accept is found",
-   data,
- });
-
+    res.status(200).json({
+      status: "Successfull",
+      message: "accept is found",
+      data,
+    });
   } catch (error) {
     throw new Error(error);
   }
-}
+};
 
-
-
-
-
-
-exports.verifiedDoctor = async (req,res)=>{
-
+exports.verifiedDoctor = async (req, res) => {
   try {
-
     const data = await DOCTOR.find({
-
-      isVarified: true
-    }
-    );
- res.status(200).json({
-   status: "Successfull",
-   message: "accept is found",
-   data,
- });
-
+      isVarified: true,
+    });
+    res.status(200).json({
+      status: "Successfull",
+      message: "accept is found",
+      data,
+    });
   } catch (error) {
     throw new Error(error);
   }
-}
-
-
-
-
-
+};
+exports.newRequestDoctor = async (req, res) => {
+  try {
+    const data = await DOCTOR.find({
+      isVarified: false,
+    });
+    res.status(200).json({
+      status: "Successfull",
+      message: "accept is found",
+      data,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};

@@ -235,10 +235,17 @@ export const doctorSlice = createSlice({
           toast.success(action.payload?.message);
         }
       }),
-      builder.addCase(AddManyDoctors.rejected, (state) => {
+      builder.addCase(AddManyDoctors.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+        if (state.isError === true) {
+          toast.error(
+            action.payload?.response?.data?.message
+              ? action.payload?.response?.data?.message
+              : "Internal Server Error"
+          );
+        }
       });
 
     builder.addCase(resetState, () => initialState);

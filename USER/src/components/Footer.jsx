@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LIGO from "../assets/images/p2Care.png";
 import { useEffect } from "react";
 import { GetContact } from "../features/content/ContentSlice";
@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 const Footer = () => {
   const dispatch = useDispatch();
 
+  const location = useLocation();
+
   useEffect(() => {
     dispatch(GetContact());
-  }, []);
+  }, [location]);
   const { contact } = useSelector((state) => state.content);
 
   return (
@@ -21,7 +23,7 @@ const Footer = () => {
               <div className="col-lg-3 col-md-4">
                 <div className="footer-widget footer-about">
                   <div className="footer-logo">
-                    <Link to="index.html">
+                    <Link to="/">
                       <img src={LIGO} className="w-50" alt="logo" />
                     </Link>
                   </div>
@@ -40,13 +42,13 @@ const Footer = () => {
                       <h2 className="footer-title">For Patients</h2>
                       <ul>
                         <li>
-                          <Link to="doctor-list">Search for Doctors</Link>
+                          <Link to="/doctor-list">Search for Doctors</Link>
                         </li>
                         <li>
-                          <Link to="login">Login</Link>
+                          <Link to="/login">Login</Link>
                         </li>
                         <li>
-                          <Link to="register">Register</Link>
+                          <Link to="/register">Register</Link>
                         </li>
                       </ul>
                     </div>
@@ -55,14 +57,14 @@ const Footer = () => {
                     <div className="footer-widget footer-menu">
                       <h2 className="footer-title">For Doctors</h2>
                       <ul>
-                        <li>
+                        {/* <li>
                           <Link to="appointments">Appointments</Link>
+                        </li> */}
+                        <li>
+                          <Link to="/blogs">Blog</Link>
                         </li>
                         <li>
-                          <Link to="blogs">Blog</Link>
-                        </li>
-                        <li>
-                          <Link to="login">Login</Link>
+                          <Link to="/login">Login</Link>
                         </li>
                       </ul>
                     </div>
@@ -100,26 +102,66 @@ const Footer = () => {
 
                   <div className="social-icon">
                     <ul>
-                      <li>
-                        <Link to="#">
-                          <i className="fab fa-facebook"></i>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <i className="fab fa-instagram"></i>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <i className="fab fa-twitter"></i>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <i className="fab fa-linkedin-in"></i>
-                        </Link>
-                      </li>
+                      {contact?.facebook ? (
+                        <>
+                          {" "}
+                          <li>
+                            <Link
+                              to={contact?.facebook ? contact?.facebook : ""}
+                            >
+                              <i className="fab fa-facebook"></i>
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      
+
+                      {contact?.instagram ? (
+                        <>
+                          <li>
+                            <Link
+                              to={contact?.instagram ? contact?.instagram : ""}
+                            >
+                              <i className="fab fa-instagram"></i>
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        ""
+                      )}
+
+
+
+                      {contact?.twitter ? (
+                        <>
+                          <li>
+                            <Link to={contact?.twitter ? contact?.twitter : ""}>
+                              <i className="fab fa-twitter"></i>
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        ""
+                      )}
+
+
+
+
+                      {contact?.linkedin ? (
+                        <>
+                          <li>
+                            <Link
+                              to={contact?.linkedin ? contact?.linkedin : ""}
+                            >
+                              <i className="fab fa-linkedin-in"></i>
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        ""
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -143,12 +185,10 @@ const Footer = () => {
                   <div className="copyright-menu">
                     <ul className="policy-menu">
                       <li>
-                        <Link to="privacy-policy">Privacy Policy</Link>
+                        <Link >Privacy Policy</Link>
                       </li>
                       <li>
-                        <Link to="terms-condition.html">
-                          Terms and Conditions
-                        </Link>
+                        <Link>Terms and Conditions</Link>
                       </li>
                     </ul>
                   </div>
