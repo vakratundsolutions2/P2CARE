@@ -25,7 +25,7 @@ cd ..
 
 cd DOCTOR
 npm install --yes
-pm2 start 0
+npm run build
 cd ..
 
 

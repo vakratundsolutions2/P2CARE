@@ -149,18 +149,21 @@ const ProfileSetting = () => {
 
                   const formData = new FormData();
 
-                  console.log(image);
-                  
-
-                  // formData.append("doctorName", doctorName);
+                  formData.append("doctorName", doctorName);
+                  formData.append("doctorCode", doctorCode);
+                  formData.append("departmentName", departmentName);
+                  formData.append("departmentCode", departmentCode);
+                  formData.append("designation", designation);
+                  formData.append("experties", JSON.stringify(expertiesName));
+                  formData.append("specialities", specialities);
+   ppend("doctorName", doctorName);
                   // formData.append("doctorCode", doctorCode);
                   // formData.append("departmentName", departmentName);
                   // formData.append("departmentCode", departmentCode);
                   // formData.append("designation", designation);
                   // formData.append("experties", JSON.stringify(expertiesName));
                   // formData.append("specialities", specialities);
-
-                  // formData.append("location", location);
+                 // formData.append("location", location);
                   // formData.append("experienceInfo", experienceInfo);
                   // formData.append("description", description);
                   // formData.append("shortDescription", shortDescription);
@@ -179,8 +182,7 @@ const ProfileSetting = () => {
                   // formData.append("yearofexperience", yearofexperience);
                   // formData.append("status", status);
                   // formData.append("gender", gender);
-                  // formData.append("price", price);=
-                  formData?.append('image',image)
+                  // formData.append("price", price);                  formData?.append('image',image)
                 
                     const DATA = {
                       id: DRdata?._id,

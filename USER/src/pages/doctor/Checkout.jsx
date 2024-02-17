@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+   import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 const key = import.meta.env.TEST_ID;
 
-import LOGO from "../../assets/images/P2CARE.png";
+import LOGO from "../../assets/images/P2Care.png";
 import { Rate } from "antd";
 const CheckOut = () => {
   const { BOOKSTATE } = useSelector((state) => state.doctor);
@@ -97,7 +97,9 @@ const CheckOut = () => {
   return (
     <div>
       <div className="main-wrapper">
-        <BreadCrum location={"Checkout "} heading={"Checkout"} />
+        <BreadCrum location={"Checkout "} 
+
+heading={"Checkout"} />
 
         {/* <!-- Page Content --> */}
         <div className="content">

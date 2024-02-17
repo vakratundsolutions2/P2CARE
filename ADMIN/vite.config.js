@@ -7,4 +7,9 @@ export default defineConfig({
   server: {
     port: 3003,
   },
+  esbuild: {
+    supported: {
+      'top-level-await': true //browsers can handle top-level-await features
+    },
+  },
 })

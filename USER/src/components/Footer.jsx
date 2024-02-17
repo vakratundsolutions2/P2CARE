@@ -1,8 +1,11 @@
+import LIGO from "../assets/images/P2CARE.png";
+
 import { Link, useLocation } from "react-router-dom";
-import LIGO from "../assets/images/p2Care.png";
+
 import { useEffect } from "react";
 import { GetContact } from "../features/content/ContentSlice";
 import { useDispatch, useSelector } from "react-redux";
+
 
 const Footer = () => {
   const dispatch = useDispatch();
