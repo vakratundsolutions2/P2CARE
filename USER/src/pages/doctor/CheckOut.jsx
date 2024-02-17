@@ -1,11 +1,5 @@
+
 import { Link } from "react-router-dom";
-import BreadCrum from "../../components/BreadCrum";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import {
-  bookingDetails,
-  getADoctor,
-   import { Link } from "react-router-dom";
 import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
