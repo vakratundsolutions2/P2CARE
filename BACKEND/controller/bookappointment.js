@@ -48,6 +48,10 @@ exports.book = async function (req, res, next) {
 
     const data = await BOOKAPPOINTMENT.create(req.body);
     
+
+    
+
+
     res.status(201).json({
       status: "sucessfull",
       messgae: "appointment booked sucessfully",

@@ -1,20 +1,31 @@
 import img2 from "../assets/img/about-img2.jpg";
 import img1 from "../assets/img/about-img1.jpg";
+import img3 from "../assets/img/about-img3.jpg";
+import icon1 from "../assets/img/icons/phone-icon.svg";
+import shape6 from "../assets/img/shape-06.png";
+import shape7 from "../assets/img/shape-07.png";
+import wayImg from "../assets/img/way-img.png";
+import faqImg from "../assets/img/faq-img.png";
+import icon2 from "../assets/img/icons/smiling-icon.svg";
+
+
+
 import BreadCrum from "../components/BreadCrum";
 import { Link } from "react-router-dom";
 import BestDoctor from "../components/BestDoctor";
 import Testimonial from "../components/Testimonial";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { GetAllAbout, GetAllFAQ } from "../features/content/ContentSlice";
+import { GetAllAbout, GetAllFAQ, GetContact } from "../features/content/ContentSlice";
 import { baseUrl } from "../utils/baseUrl";
 const About = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetAllFAQ());
     dispatch(GetAllAbout());
+    dispatch(GetContact());
   }, []);
-  const { FAQList, about } = useSelector((state) => state.content);
+  const { FAQList, about ,contact } = useSelector((state) => state.content);
   return (
     <>
       <div className="main-wrapper">
@@ -39,7 +50,7 @@ const About = () => {
                           <img
                             src={img2}
                             className="img-fluid"
-                            alt="about-image"
+                            alt="about-image2"
                           />
                         </div>
                       </div>
@@ -51,7 +62,7 @@ const About = () => {
                         </div>
                         <div className="about-img">
                           <img
-                            src="/src/assets/img/about-img3.jpg"
+                            src={img3}
                             className="img-fluid"
                             alt="about-image"
                           />
@@ -73,15 +84,12 @@ const About = () => {
                   <div className="about-contact">
                     <div className="about-contact-icon">
                       <span>
-                        <img
-                          src="/src/assets/img/icons/phone-icon.svg"
-                          alt="phone-image"
-                        />
+                        <img src={icon1} alt="phone-image" />
                       </span>
                     </div>
                     <div className="about-contact-text">
                       <p>Need Emergency?</p>
-                      <h4>+1 315 369 5943</h4>
+                      <h4>{contact?.phone}</h4>
                     </div>
                   </div>
                 </div>
@@ -132,10 +140,10 @@ const About = () => {
             <div className="way-bg">
               <div className="way-shapes-img">
                 <div className="way-shapes-left">
-                  <img src="/src/assets/img/shape-06.png" alt="shape-image" />
+                  <img src={shape6} alt="shape-image" />
                 </div>
                 <div className="way-shapes-right">
-                  <img src="/src/assets/img/shape-07.png" alt="shape-image" />
+                  <img src={shape7} alt="shape-image" />
                 </div>
               </div>
               <div className="row align-items-end">
@@ -151,7 +159,7 @@ const About = () => {
                 <div className="col-lg-5 col-md-12">
                   <div className="way-img">
                     <img
-                      src="/src/assets/img/way-img.png"
+                      src={wayImg}
                       className="img-fluid"
                       alt="doctor-way-image"
                     />
@@ -178,17 +186,10 @@ const About = () => {
             <div className="row align-items-center">
               <div className="col-lg-6 col-md-12">
                 <div className="faq-img">
-                  <img
-                    src="/src/assets/img/faq-img.png"
-                    className="img-fluid"
-                    alt="img"
-                  />
+                  <img src={faqImg} className="img-fluid" alt="img" />
                   <div className="faq-patients-count">
                     <div className="faq-smile-img">
-                      <img
-                        src="/src/assets/img/icons/smiling-icon.svg"
-                        alt="icon"
-                      />
+                      <img src={icon2} alt="icon" />
                     </div>
                     <div className="faq-patients-content">
                       <h4>

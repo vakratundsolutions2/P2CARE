@@ -29,6 +29,10 @@ body {
   background-color: white;
 }
 
+.quill-height {
+  height: 250px;
+}
+
 .form-control {
   box-shadow: none;
   border-color: var(--color-c3d4da);
@@ -171,23 +175,30 @@ main::-webkit-scrollbar {
   color: rgb(255, 255, 255);
 }
 
-.phoneINP>input[type="tel"] {
-  border: none !important;
-  padding: 8px 0;
-
-
+.PhoneInputInput {
+  border: none;
+  outline: none;
 }
 
-
-
-.PhoneInput :focus>input[type='tel'] {
-
-  border: none !important;
-
+.PhoneInputInput:focus-visible {
+  border: none;
+  outline: none;
 }
 
-.PhoneInputInput--focus>input[type='tel'] {
+.PhoneInputInput :focus>.PhoneInputInput {
+  outline: none;
+}
 
+.PhoneInput {
 
-  border: none !important;
+  border: 1px solid #dcdcdc;
+  height: 50px;
+  border-color: #dcdcdc;
+  color: #333333;
+  font-size: 15px;
+  min-height: 46px;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding: 11px 15px;
+  outline: none;
 }

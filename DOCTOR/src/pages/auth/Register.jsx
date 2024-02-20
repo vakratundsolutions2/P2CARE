@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, resetState } from "../../features/register/registerslice";
 import toast from "react-hot-toast";
 
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 const Register = () => {
 
   const { isSuccess, user, isLoading } = useSelector((state) => state.register);
@@ -46,7 +48,10 @@ const Register = () => {
 
 
   return (
-    <div className="main-wrapper d-flex align-items-center" style={{ height: "100vh" }}>
+    <div
+      className="main-wrapper d-flex align-items-center"
+      style={{ height: "100vh" }}
+    >
       <div className="content top-space w-100">
         <div className="container-fluid">
           <div className="row">
@@ -71,10 +76,12 @@ const Register = () => {
                     </div>
 
                     {/* <!-- Register Form --> */}
-                    <form  onSubmit={formik.handleSubmit}>
+                    <form onSubmit={formik.handleSubmit}>
                       {/* username */}
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating"
+                        <input
+                          type="text"
+                          className="form-control floating"
                           onChange={formik.handleChange("Username")}
                           value={formik.values.Username}
                         />
@@ -82,14 +89,15 @@ const Register = () => {
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
-                          {formik.touched.Username &&
-                            formik.errors.Username}
+                          {formik.touched.Username && formik.errors.Username}
                         </div>
                       </div>
 
                       {/* Name */}
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating"
+                        <input
+                          type="text"
+                          className="form-control floating"
                           onChange={formik.handleChange("Name")}
                           value={formik.values.Name}
                         />
@@ -97,14 +105,15 @@ const Register = () => {
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
-                          {formik.touched.Name &&
-                            formik.errors.Name}
+                          {formik.touched.Name && formik.errors.Name}
                         </div>
                       </div>
 
                       {/* Email address */}
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating"
+                        <input
+                          type="text"
+                          className="form-control floating"
                           onChange={formik.handleChange("Email")}
                           value={formik.values.Email}
                         />
@@ -112,18 +121,21 @@ const Register = () => {
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
-                          {formik.touched.Email &&
-                            formik.errors.Email}
+                          {formik.touched.Email && formik.errors.Email}
                         </div>
                       </div>
 
                       {/* phone Number */}
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating"
-                          onChange={formik.handleChange("phoneNumber")}
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
                           value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
                         />
-                        <label className="focus-label">Phone Number</label>
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
@@ -134,7 +146,9 @@ const Register = () => {
 
                       {/* password */}
                       <div className="mb-3 form-focus">
-                        <input type="password" className="form-control floating"
+                        <input
+                          type="password"
+                          className="form-control floating"
                           onChange={formik.handleChange("Password")}
                           value={formik.values.Password}
                         />
@@ -142,14 +156,9 @@ const Register = () => {
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
-                          {formik.touched.Password &&
-                            formik.errors.Password}
+                          {formik.touched.Password && formik.errors.Password}
                         </div>
                       </div>
-
-
-
-
 
                       <div className="text-end">
                         <Link className="forgot-link" to="/login">
@@ -160,9 +169,8 @@ const Register = () => {
                         className="btn btn-primary w-100 btn-lg login-btn"
                         type="submit"
                       >
-                       {isLoading ? "Loading .." :  "Signup" }
+                        {isLoading ? "Loading .." : "Signup"}
                       </button>
-                      
                     </form>
                     {/* <!-- /Register Form --> */}
                   </div>

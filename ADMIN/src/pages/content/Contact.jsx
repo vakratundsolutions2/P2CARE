@@ -29,6 +29,7 @@ const Contact = () => {
       instagram: contact?.instagram || "",
       twitter: contact?.twitter || "",
       facebook: contact?.facebook || "",
+      whatsapp: contact?.whatsapp || "",
     },
 
     // validationSchema: schema,
@@ -64,7 +65,9 @@ const Contact = () => {
               <div className="error">
                 {formik.touched.email && formik.errors.email}
               </div>
-
+              <label htmlFor="exampleFormControlTextarea3" className=" m-1 ">
+                Phone Number
+              </label>
               <PhoneInput
                 countrySelectProps={{ unicodeFlags: true }}
                 className="form-control phoneINP"
@@ -74,6 +77,20 @@ const Contact = () => {
 
               <div className="error">
                 {formik.touched.phone && formik.errors.phone}
+              </div>
+              <label htmlFor="exampleFormControlTextarea3" className=" m-1   ">
+                Whatsapp
+              </label>
+
+              <PhoneInput
+                countrySelectProps={{ unicodeFlags: true }}
+                className="form-control phoneINP mb-3"
+                value={formik.values.whatsapp}
+                onChange={(el) => formik.setFieldValue("whatsapp", el)}
+              />
+
+              <div className="error">
+                {formik.touched.whatsapp && formik.errors.whatsapp}
               </div>
 
               <CustomInput

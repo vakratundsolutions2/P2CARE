@@ -1134,6 +1134,11 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+country-flag-icons@^1.5.4:
+  version "1.5.9"
+  resolved "https://registry.npmjs.org/country-flag-icons/-/country-flag-icons-1.5.9.tgz"
+  integrity sha512-9jrjv2w7kRbqNtdtMdK2j3gmDIZzd5l9L2pZiQjF9J0mUcB+NKIGDNADTDHBEp8EQtjOkCOcciJGGSOpERdXPQ==
+
 cross-spawn@^7.0.2:
   version "7.0.3"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.3.tgz"
@@ -1852,6 +1857,13 @@ inherits@2:
   resolved "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
+input-format@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.npmjs.org/input-format/-/input-format-0.3.9.tgz"
+  integrity sha512-99Gew2huiuYpNsyZoucauy5OT3oXEoWUeINGES4SlU74eFxbtYqNO+yEP6uKFhfB0UKTvq4gOC+6/3Oskru+IQ==
+  dependencies:
+    prop-types "^15.8.1"
+
 internal-slot@^1.0.4, internal-slot@^1.0.5:
   version "1.0.6"
   resolved "https://registry.npmjs.org/internal-slot/-/internal-slot-1.0.6.tgz"
@@ -2134,6 +2146,11 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
+
+libphonenumber-js@^1.10.53:
+  version "1.10.56"
+  resolved "https://registry.npmjs.org/libphonenumber-js/-/libphonenumber-js-1.10.56.tgz"
+  integrity sha512-d0GdKshNnyfl5gM7kZ9rXjGiAbxT/zCXp0k+EAzh8H4zrb2R7GXtMCrULrX7UQxtfx6CLy/vz/lomvW79FAFdA==
 
 lines-and-columns@^1.1.6:
   version "1.2.4"
@@ -2878,6 +2895,17 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-phone-number-input@^3.3.9:
+  version "3.3.9"
+  resolved "https://registry.npmjs.org/react-phone-number-input/-/react-phone-number-input-3.3.9.tgz"
+  integrity sha512-TKK8VoFWR9RfPi90j/3Rr6j/S9V8/eovqUgNNNSyD0+WtaeLTlJVWb8DD7P57eZqkLv303sL8JMiZoExwKICxw==
+  dependencies:
+    classnames "^2.3.1"
+    country-flag-icons "^1.5.4"
+    input-format "^0.3.9"
+    libphonenumber-js "^1.10.53"
+    prop-types "^15.8.1"
 
 react-quill@^2.0.0:
   version "2.0.0"

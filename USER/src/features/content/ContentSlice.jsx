@@ -6,6 +6,8 @@ const initialState = {
   FAQList: [],
   about: [],
   home: [],
+  termsandconditions: [],
+  privacypolicy: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -19,6 +21,32 @@ export const GetContact = createAsyncThunk(
     //  console.log(catData);
     try {
       return await ContentService.getcontact();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+// =====================================getprivacypolicy===============
+
+export const GetPrivacyPolicy = createAsyncThunk(
+  "content/getall-privacypolicy",
+  async (thunkAPI) => {
+    //  console.log(catData);
+    try {
+      return await ContentService.getprivacypolicy();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+// =====================================TermsAndConditions===============
+
+export const GetTermsAndConditions = createAsyncThunk(
+  "content/getall-TandC",
+  async (thunkAPI) => {
+    //  console.log(catData);
+    try {
+      return await ContentService.gettandc();
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -87,53 +115,82 @@ export const ContentSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
       });
-      // =================================FAQ=============================
-          builder.addCase(GetAllFAQ.pending, (state) => {
-            state.isLoading = true;
-          }),
-            builder.addCase(GetAllFAQ.fulfilled, (state, action) => {
-              state.isLoading = false;
-              state.isSuccess = true;
-              state.isError = false;
-              state.FAQList = action.payload.data;
-            }),
-            builder.addCase(GetAllFAQ.rejected, (state) => {
-              state.isLoading = false;
-              state.isError = true;
-              state.isSuccess = false;
-            });
+    // =================================FAQ=============================
+    builder.addCase(GetAllFAQ.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetAllFAQ.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.FAQList = action.payload.data;
+      }),
+      builder.addCase(GetAllFAQ.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
 
-
-            // ================== ABOUT====================
-          builder.addCase(GetAllAbout.pending, (state) => {
-            state.isLoading = true;
-          }),
-            builder.addCase(GetAllAbout.fulfilled, (state, action) => {
-              state.isLoading = false;
-              state.isSuccess = true;
-              state.isError = false;
-              state.about = action.payload.data;
-            }),
-            builder.addCase(GetAllAbout.rejected, (state) => {
-              state.isLoading = false;
-              state.isError = true;
-              state.isSuccess = false;
-            });
-            // ================== HOME====================
-          builder.addCase(GetAllHome.pending, (state) => {
-            state.isLoading = true;
-          }),
-            builder.addCase(GetAllHome.fulfilled, (state, action) => {
-              state.isLoading = false;
-              state.isSuccess = true;
-              state.isError = false;
-              state.home = action.payload.data;
-            }),
-            builder.addCase(GetAllHome.rejected, (state) => {
-              state.isLoading = false;
-              state.isError = true;
-              state.isSuccess = false;
-            });
+    // ================== ABOUT====================
+    builder.addCase(GetAllAbout.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetAllAbout.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.about = action.payload.data;
+      }),
+      builder.addCase(GetAllAbout.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    // ================== HOME====================
+    builder.addCase(GetAllHome.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetAllHome.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.home = action.payload.data;
+      }),
+      builder.addCase(GetAllHome.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    // ================== GetTermsAndConditions====================
+    builder.addCase(GetTermsAndConditions.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetTermsAndConditions.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.termsandconditions = action.payload.data;
+      }),
+      builder.addCase(GetTermsAndConditions.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    // ================== Privacy Policy====================
+    builder.addCase(GetPrivacyPolicy.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetPrivacyPolicy.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.privacypolicy = action.payload.data;
+      }),
+      builder.addCase(GetPrivacyPolicy.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
 
     builder.addCase(ResetState, () => initialState);
   },

@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import MyAppoinments from "./pages/users/MyAppoinments";
 
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/users/Login"));
 
@@ -58,9 +60,13 @@ function App() {
 
               <Route path="profile-setting" element={<ProfileSetting />} />
               <Route path="appointments" element={<MyAppoinments />} />
+              <Route path="privacypolicy" element={<PrivacyPolicy />} />
+              <Route
+                path="termsandconditions"
+                element={<TermsAndConditions />}
+              />
 
               <Route path="*" element={<Error />} />
-              
             </Route>
           </Routes>
           <Toaster />

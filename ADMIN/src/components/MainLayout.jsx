@@ -221,6 +221,14 @@ const MainLayout = () => {
                     key: "faq-list",
                     label: "Faq ",
                   },
+                  {
+                    key: "privacypolicy",
+                    label: "Privacy Policy",
+                  },
+                  {
+                    key: "termsandconditions",
+                    label: "Terms and Conditions",
+                  },
                 ],
               },
               {

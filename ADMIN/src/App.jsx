@@ -8,6 +8,8 @@ import Faq from "./pages/content/Faq";
 import AddFaq from "./pages/content/AddFaq";
 import AddDoctor from "./pages/doctor/AddDoctor";
 import EditProfile from "./pages/users/EditProfile";
+import PrivacyPolicy from "./pages/content/PrivacyPolicy";
+import TermsAndConditions from "./pages/content/TermsAndConditions";
 
 const Login = lazy(() => import("./pages/Login"));
 const MainLayout = lazy(() => import("./components/MainLayout"));
@@ -175,6 +177,11 @@ function App() {
               <Route path="faq-list" element={<Faq />} />
               <Route path="faq" element={<AddFaq />} />
               <Route path="faq/:id" element={<AddFaq />} />
+              <Route path="privacypolicy" element={<PrivacyPolicy />} />
+              <Route
+                path="termsandconditions"
+                element={<TermsAndConditions />}
+              />
               <Route path="profile-settings" element={<EditProfile />} />
             </Route>
           </Routes>

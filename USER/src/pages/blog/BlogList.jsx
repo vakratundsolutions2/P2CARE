@@ -1,54 +1,52 @@
 import { Link } from "react-router-dom";
-import BreadCrum from "../../components/BreadCrum"
+import BreadCrum from "../../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { FilterData, GetAllBlogs, resetState } from "../../features/blog/blogSlice";
+import {
+  FilterData,
+  GetAllBlogs,
+  resetState,
+} from "../../features/blog/blogSlice";
 import { baseUrl } from "../../utils/baseUrl";
 import { Pagination } from "antd";
 import { GetAllBlogCategory } from "../../features/blogCategory/BlogCategorySlice";
 
 const BlogList = () => {
-
-  const dispatch = useDispatch()
-    const [category, setcatagory] = useState("");
-    const [title, settitle] = useState("");
-    const [page, setPage] = useState("");
-    const [limit, setLimit] = useState("");
+  const dispatch = useDispatch();
+  const [category, setcatagory] = useState("");
+  const [title, settitle] = useState("");
+  const [page, setPage] = useState("");
+  const [limit, setLimit] = useState("");
 
   useEffect(() => {
     dispatch(GetAllBlogs());
     dispatch(GetAllBlogCategory());
     dispatch(resetState());
+  }, []);
 
-  }, [])
-  
- useEffect(() => {
-   if (
-     name !== undefined ||
-     category !== undefined ||
-     page !== undefined ||
-     limit !== undefined 
-     
-   ) {
-     dispatch(
-       FilterData({
-         title,
-         category,
-         
-         page,
-         limit,
-         
-       })
-     );
-   } else {
-     dispatch(GetAllBlogs());
-   }
- }, [dispatch, title, category,  page, limit]);
+  useEffect(() => {
+    if (
+      name !== undefined ||
+      category !== undefined ||
+      page !== undefined ||
+      limit !== undefined
+    ) {
+      dispatch(
+        FilterData({
+          title,
+          category,
 
-const { blogs, blogFilter } = useSelector((state) => state.blog);
-const {BlogCategories} = useSelector(
-  (state) => state.blogcategory);
+          page,
+          limit,
+        })
+      );
+    } else {
+      dispatch(GetAllBlogs());
+    }
+  }, [dispatch, title, category, page, limit]);
 
+  const { blogs, blogFilter } = useSelector((state) => state.blog);
+  const { BlogCategories } = useSelector((state) => state.blogcategory);
 
   return (
     <>
@@ -138,118 +136,13 @@ const {BlogCategories} = useSelector(
                 </div>
               </div>
 
-              {/* <div className="card post-widget">
-                <div className="card-header">
-                  <h4 className="card-title">Latest Posts</h4>
-                </div>
-                <div className="card-body">
-                  <ul className="latest-posts">
-                    <li>
-                      <div className="post-thumb">
-                        <Link to="/blog-details">
-                          <img
-                            className="img-fluid"
-                            src="/src/assets/img/blog/blog-thumb-01.jpg"
-                            alt="blog-image"
-                          />
-                        </Link>
-                      </div>
-                      <div className="post-info">
-                        <h4>
-                          <Link to="/blog-details">
-                            p2Care – Making your clinic painless visit?
-                          </Link>
-                        </h4>
-                        <p>4 Dec 2023</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="post-thumb">
-                        <a to="/blog-details">
-                          <img
-                            className="img-fluid"
-                            src="/src/assets/img/blog/blog-thumb-02.jpg"
-                            alt="blog-image"
-                          />
-                        </a>
-                      </div>
-                      <div className="post-info">
-                        <h4>
-                          <Link to="/blog-details">
-                            What are the benefits of Online Doctor Booking?
-                          </Link>
-                        </h4>
-                        <p>3 Dec 2023</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="post-thumb">
-                        <Link to="/blog-details">
-                          <img
-                            className="img-fluid"
-                            src="/src/assets/img/blog/blog-thumb-03.jpg"
-                            alt="blog-image"
-                          />
-                        </Link>
-                      </div>
-                      <div className="post-info">
-                        <h4>
-                          <Link to="/blog-details">
-                            Benefits of consulting with an Online Doctor
-                          </Link>
-                        </h4>
-                        <p>3 Dec 2023</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="post-thumb">
-                        <Link to="/blog-details">
-                          <img
-                            className="img-fluid"
-                            src="/src/assets/img/blog/blog-thumb-04.jpg"
-                            alt="blog-image"
-                          />
-                        </Link>
-                      </div>
-                      <div className="post-info">
-                        <h4>
-                          <Link to="/blog-details">
-                            5 Great reasons to use an Online Doctor
-                          </Link>
-                        </h4>
-                        <p>2 Dec 2023</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="post-thumb">
-                        <Link to="/blog-details">
-                          <img
-                            className="img-fluid"
-                            src="/src/assets/img/blog/blog-thumb-05.jpg"
-                            alt="blog-image"
-                          />
-                        </Link>
-                      </div>
-                      <div className="post-info">
-                        <h4>
-                          <Link to="/blog-details">
-                            Online Doctor Appointment Scheduling
-                          </Link>
-                        </h4>
-                        <p>1 Dec 2023</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div> */}
-
               <div className="card category-widget">
                 <div className="card-header">
                   <h4 className="card-title">Blog Categories</h4>
                 </div>
                 <div className="card-body">
                   <ul className="categories">
-                    {BlogCategories?.map((el)=>{
+                    {BlogCategories?.map((el) => {
                       return (
                         <>
                           <li>
@@ -269,8 +162,6 @@ const {BlogCategories} = useSelector(
                         </>
                       );
                     })}
-
-                    
                   </ul>
                 </div>
               </div>
@@ -390,6 +281,6 @@ const {BlogCategories} = useSelector(
       </div>
     </>
   );
-}
+};
 
-export default BlogList
+export default BlogList;

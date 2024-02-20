@@ -27,12 +27,28 @@ const gethome = async () => {
 
   return res.data;
 };
+const gettandc = async () => {
+  const data = "65d48541b6b6ef774eb170b9";
+
+  const res = await axios.get(`${baseUrl}content/termsandconditions/${data}`);
+
+  return res.data;
+};
+const getprivacypolicy = async () => {
+  const data = "65d47a69bec33d8dfa5f34b0";
+
+  const res = await axios.get(`${baseUrl}content/privacypolicy/${data}`);
+
+  return res.data;
+};
 
 const ContentService = {
   getcontact,
   getAllFaq,
   getabout,
   gethome,
+  gettandc,
+  getprivacypolicy,
 };
 
 export default ContentService;

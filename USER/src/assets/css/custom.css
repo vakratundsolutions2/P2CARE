@@ -5569,7 +5569,7 @@ th.table-head-days {
 
 @media (max-width: 575.98px) {
   .header .header-nav .header-navbar-rht {
-    display: none;
+    /* display: none; */
   }
 }
 
@@ -5591,7 +5591,7 @@ th.table-head-days {
 @media (min-width: 992px) {
   .header .header-nav .header-navbar-rht li .dropdown-menu {
     min-width: 200px;
-    visibility: hidden;
+    /* visibility: hidden; */
     opacity: 0;
     display: block;
     margin: 0;
@@ -5715,7 +5715,7 @@ th.table-head-days {
 @media (min-width: 992px) {
   .header .header-nav .header-navbar-rht li .dropdown-menu {
     min-width: 200px;
-    visibility: hidden;
+    /* visibility: hidden; */
     opacity: 0;
     display: block;
     transform: translateY(20px);
@@ -5729,18 +5729,18 @@ th.table-head-days {
 
 @media (max-width: 991.98px) {
   .header .header-nav .header-navbar-rht li.contact-item {
-    display: none;
+    /* display: none; */
   }
 }
 
 @media (max-width: 1199.98px) {
   .header .header-nav .header-navbar-rht li.contact-item {
-    display: none;
+    /* display: none; */
   }
 }
 
 .header .header-nav .header-navbar-rht .dropdown-toggle::after {
-  display: none;
+  /* display: none; */
 }
 
 .header .header-nav .header-navbar-rht .dropdown-menu {

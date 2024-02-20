@@ -2,6 +2,8 @@ const ABOUT = require("../../model/content/About");
 const CONTACT = require("../../model/content/Contact");
 const FAQ = require("../../model/content/Faq");
 const HOME = require("../../model/content/Home");
+const PRIVACYPOLICY = require("../../model/content/PrivacyPolicy");
+const TANDC = require("../../model/content/T&C");
 
 // add contact page details
 exports.addContactPage = async (req, res) => {
@@ -257,12 +259,13 @@ exports.deleteAllAboutPage = async (req, res) => {
     });
   }
 };
+
+
 // =======================================HOME================================
 
 // add contact page details
 exports.addHomePage = async (req, res) => {
-  console.log('add  home page ', req.body)
-  console.log('add  home page files ', req.files)
+  
   try {
     if (
       
@@ -347,6 +350,194 @@ exports.getAllHomePage = async (req, res) => {
 exports.deleteAllHomePage = async (req, res) => {
   try {
     const data = await HOME.deleteMany();
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+
+
+
+
+// =======================================PRIVACYPOLICY================================
+
+// add contact page details
+exports.addPRIVACYPOLICY = async (req, res) => {
+  try {
+    if (
+      !req.body.description
+    ) {
+      throw new Error("Please Enter Valid Feild");
+    }
+
+    
+    const data = await PRIVACYPOLICY.create(req.body);
+    res.status(201).json({
+      status: "Successful",
+      message: "Data Sucessfully Added",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// edit contact page details
+exports.editPRIVACYPOLICY = async (req, res) => {
+
+  try {
+    const data = await PRIVACYPOLICY.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(201).json({
+      status: "Successful",
+      message: "Data Sucessfully Updated",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// get contact page details
+exports.getPRIVACYPOLICY = async (req, res) => {
+  try {
+    const data = await PRIVACYPOLICY.findById(req.params.id);
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+exports.getAllPRIVACYPOLICY = async (req, res) => {
+  try {
+    const data = await PRIVACYPOLICY.find();
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// get about page details
+exports.deleteAllPRIVACYPOLICY = async (req, res) => {
+  try {
+    const data = await PRIVACYPOLICY.deleteMany();
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+// =======================================termsandconditions================================
+
+// add contact page details
+exports.addTANDC = async (req, res) => {
+  try {
+    if (!req.body.description) {
+      throw new Error("Please Enter Valid Feild");
+    }
+
+    const data = await TANDC.create(req.body);
+    res.status(201).json({
+      status: "Successful",
+      message: "Data Sucessfully Added",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// edit contact page details
+exports.editTANDC = async (req, res) => {
+  try {
+    const data = await TANDC.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(201).json({
+      status: "Successful",
+      message: "Data Sucessfully Updated",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// get contact page details
+exports.getTANDC = async (req, res) => {
+  try {
+    const data = await TANDC.findById(req.params.id);
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+exports.getAllTANDC = async (req, res) => {
+  try {
+    const data = await TANDC.find();
+    res.status(201).json({
+      status: "Successful",
+      message: "Data getting Success",
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+// get about page details
+exports.deleteAllTANDC = async (req, res) => {
+  try {
+    const data = await TANDC.deleteMany();
     res.status(201).json({
       status: "Successful",
       message: "Data getting Success",

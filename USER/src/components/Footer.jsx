@@ -98,7 +98,7 @@ const Footer = () => {
               </div>
               <div className="col-lg-3 col-md-7">
                 <div className="footer-widget">
-                  <h2 className="footer-title">Join Our Newsletter</h2>
+                  <h2 className="footer-title">Follow us </h2>
 
                   <div className="social-icon">
                     <ul>
@@ -116,7 +116,6 @@ const Footer = () => {
                       ) : (
                         ""
                       )}
-                      
 
                       {contact?.instagram ? (
                         <>
@@ -132,8 +131,6 @@ const Footer = () => {
                         ""
                       )}
 
-
-
                       {contact?.twitter ? (
                         <>
                           <li>
@@ -145,9 +142,6 @@ const Footer = () => {
                       ) : (
                         ""
                       )}
-
-
-
 
                       {contact?.linkedin ? (
                         <>
@@ -185,10 +179,12 @@ const Footer = () => {
                   <div className="copyright-menu">
                     <ul className="policy-menu">
                       <li>
-                        <Link >Privacy Policy</Link>
+                        <Link to={"/privacypolicy"}>Privacy Policy</Link>
                       </li>
                       <li>
-                        <Link>Terms and Conditions</Link>
+                        <Link to={"/termsandconditions"}>
+                          Terms and Conditions
+                        </Link>
                       </li>
                     </ul>
                   </div>

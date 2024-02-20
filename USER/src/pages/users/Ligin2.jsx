@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import loginBanner from "../../assets/img/login-banner.png";
 
 let schema = yup.object().shape({
   phoneNumber: yup
@@ -57,7 +58,7 @@ const Login2 = () => {
                 <div className="row align-items-center justify-content-center">
                   <div className="col-md-7 col-lg-6 login-left">
                     <img
-                      src="/src/assets/img/login-banner.png"
+                      src={loginBanner}
                       className="img-fluid"
                       alt="p2Care Login"
                     />

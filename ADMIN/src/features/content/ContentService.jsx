@@ -100,6 +100,42 @@ const updateHome = async (data) => {
 
   return res.data;
 };
+// ============================privacypolicy==========================
+const getprivacypolicy = async (data) => {
+  const res = await axios.get(`${baseUrl}content/privacypolicy/${data}`);
+
+  return res.data;
+};
+
+const updateprivacypolicy = async (data) => {
+  const res = await axios.put(
+    `${baseUrl}content/privacypolicy/${data.id}`,
+    data.formData,
+    config
+  );
+
+  return res.data;
+};
+// ============================termsandconditions==========================
+const gettermsandconditions = async (data) => {
+  const res = await axios.get(`${baseUrl}content/termsandconditions/${data}`);
+
+  return res.data;
+};
+
+const updatetermsandconditions = async (data) => {
+  const res = await axios.put(
+    `${baseUrl}content/termsandconditions/${data.id}`,
+    data.formData,
+    config
+  );
+
+  return res.data;
+};
+
+
+
+
 
 
 
@@ -117,6 +153,10 @@ const ContentService = {
   updateHome,
   addHome,
   getHome,
+  getprivacypolicy,
+  updateprivacypolicy,
+  gettermsandconditions,
+  updatetermsandconditions,
 };
 
 export default ContentService;

@@ -5,7 +5,10 @@ const initialState = {
   contact: [],
   about: [],
   home: [],
+  privacypolicy: [],
+  termsandconditions: [],
   FAQList: [],
+
   updateFAQ: null,
   addFAQ: null,
   addAbout: null,
@@ -168,6 +171,48 @@ export const UpdateHome = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       return await ContentService.updateHome(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const GetPrivacyPolicy = createAsyncThunk(
+  "content/get-privacypolicy",
+  async (data, thunkAPI) => {
+    try {
+      return await ContentService.getprivacypolicy(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const UpdatePrivacyPolicy = createAsyncThunk(
+  "content/update-privacypolicy",
+  async (data, thunkAPI) => {
+    try {
+      return await ContentService.updateprivacypolicy(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const GetTermsAndConditions = createAsyncThunk(
+  "content/get-termsandconditions",
+  async (data, thunkAPI) => {
+    try {
+      return await ContentService.gettermsandconditions(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const UpdateTermsAndConditions = createAsyncThunk(
+  "content/update-termsandconditions",
+  async (data, thunkAPI) => {
+    try {
+      return await ContentService.updatetermsandconditions(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -410,6 +455,73 @@ export const ContentSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
       });
+    builder.addCase(GetPrivacyPolicy.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(GetPrivacyPolicy.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.privacypolicy = action.payload.data;
+      }),
+      builder.addCase(GetPrivacyPolicy.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(UpdatePrivacyPolicy.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(UpdatePrivacyPolicy.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.updateprivacypolicy = action.payload.data;
+        if (state.isSuccess === true) {
+          toast.success(action.payload.message);
+        }
+      }),
+      builder.addCase(UpdatePrivacyPolicy.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+    builder.addCase(UpdateTermsAndConditions.pending, (state) => {
+      state.isLoading = true;
+    }),
+      builder.addCase(UpdateTermsAndConditions.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.updatetermsandconditions = action.payload.data;
+        if (state.isSuccess === true) {
+          toast.success(action.payload.message);
+        }
+      }),
+      builder.addCase(UpdateTermsAndConditions.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+      });
+
+
+          builder.addCase(GetTermsAndConditions.pending, (state) => {
+            state.isLoading = true;
+          }),
+            builder.addCase(
+              GetTermsAndConditions.fulfilled,
+              (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+                state.termsandconditions = action.payload.data;
+              }
+            ),
+            builder.addCase(GetTermsAndConditions.rejected, (state, action) => {
+              state.isLoading = false;
+              state.isError = true;
+              state.isSuccess = false;
+            });
 
     builder.addCase(ResetState, () => initialState);
   },

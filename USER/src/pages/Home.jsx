@@ -46,6 +46,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
 import { useFormik } from "formik";
+
 import {
   FilterDoctor,
   FilterDoctor2,
@@ -59,7 +60,7 @@ const Home = () => {
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState("");
-  
+
   const [query, setQuery] = useState("");
   const autoCompleteRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState({
@@ -226,7 +227,7 @@ const Home = () => {
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
                         className="form-control"
-                        placeholder="Search doctors, clinics, hospitals, etc"
+                        placeholder="Search doctors "
                       />
                     </div>
                   </div>

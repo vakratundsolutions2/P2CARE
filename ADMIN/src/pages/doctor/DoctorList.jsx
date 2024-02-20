@@ -311,17 +311,17 @@ const DoctorList = () => {
         AvailByDocId?.bookingavailabilityInformation[6]?.bookingtime
       );
     }
-  }, [AvailByDocId]);
+  });
 
-  console.log("sundsay", Sunday);
-  console.log("Monday", Monday);
-  console.log("Tuesday", Tuesday);
-  console.log("Wednesday", Wednesday);
-  console.log("Thursday", Thursday);
-  console.log("Friday", Friday);
-  console.log("saturday", Saturday);
+  // console.log("sundsay", Sunday);
+  // console.log("Monday", Monday);
+  // console.log("Tuesday", Tuesday);
+  // console.log("Wednesday", Wednesday);
+  // console.log("Thursday", Thursday);
+  // console.log("Friday", Friday);
+  // console.log("saturday", Saturday);
 
-  console.log("finalAvailable", finalAvailable);
+  // console.log("finalAvailable", finalAvailable);
 
   const searchResult = useSelector((state) => state.doctor.doctors);
 
@@ -717,12 +717,9 @@ const DoctorList = () => {
         setTimeout(() => {
           dispatch(getAllDoctors());
         }, 600);
-
       });
-      
     },
   });
-
 
   return (
     <div>

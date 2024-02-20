@@ -1,42 +1,71 @@
 .doctor-aos {
-    display: flex;
+  display: flex;
 }
 
 .icon {
-    height: 500px;
-    width: 500px;
+  height: 500px;
+  width: 500px;
 }
 
 .wpImage {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
 
-    z-index: 300;
-    width: 7rem;
-
+  z-index: 300;
+  width: 7rem;
 }
 
-.PhoneInputInput,
+@media screen and (max-width: 575.5px) {
+  .wpImage {
+    /* position: fixed; */
+    bottom: 1rem;
+    left: 0rem;
+
+    /* z-index: 300; */
+    width: 5rem;
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  .wpImage {
+    /* position: fixed; */
+    bottom: 1.5rem;
+    left: 0.5rem;
+
+    /* z-index: 300; */
+    width: 6rem;
+  }
+
+  .rating-1 {
+    justify-content: center;
+  }
+}
+
+.PhoneInputInput {
+  border: none;
+  outline: none;
+}
 
 .PhoneInputInput:focus-visible {
-    flex: 1;
-    border: none;
+  border: none;
+  outline: none;
 }
 
-.PhoneInputInput--focus {
-    border: 5px solid red;
+.PhoneInputInput :focus>.PhoneInputInput {
+  outline: none;
 }
 
 .PhoneInput {
-    color: blue;
-    border: 1px solid #dee2e6;
-    height: 50px;
-    border-color: #dcdcdc;
-    color: #333333;
-    font-size: 15px;
-    min-height: 46px;
-    border-radius: .375rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    padding: 11px 15px
+
+  border: 1px solid #dcdcdc;
+  height: 50px;
+  border-color: #dcdcdc;
+  color: #333333;
+  font-size: 15px;
+  min-height: 46px;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding: 11px 15px;
+  outline: none;
 }

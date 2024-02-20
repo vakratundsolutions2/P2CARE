@@ -78,6 +78,7 @@ const Header = () => {
                 <li className="has-submenu">
                   <NavLink to="/contact">Contact Us</NavLink>
                 </li>
+
                 {user === null ? (
                   <>
                     <li className="login-link">
@@ -96,8 +97,18 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    {/* <nav className="navbar navbar-expand-lg header-nav"> */}
-                    <ul className="nav header-navbar-rht">
+                    {/* <div className={`${isMobile ? "mobile" : ""}`}> */}
+                    <li className="login-link">
+                      <NavLink to="/profile-setting">Profile Settings</NavLink>
+                    </li>
+                    <li className="login-link">
+                      <NavLink to="/appointments">Appointment</NavLink>
+                    </li>
+                    <li className="login-link">
+                      <Link onClick={handleLogout}>Logout</Link>
+                    </li>
+                    {/* </div> */}
+                    <ul className="  nav header-navbar-rht">
                       {/* <!-- User Menu --> */}
                       <li className="nav-item dropdown has-arrow logged-item">
                         <Link
@@ -148,7 +159,7 @@ const Header = () => {
                               onClick={handleLogout}
                               className="btn btn-primary log-btn"
                             >
-                              <i className="feather-lock"></i>Logout
+                              <i className="fa fa-lock"></i>Logout
                             </Link>
                             {/* </li> */}
                           </Link>
@@ -156,7 +167,6 @@ const Header = () => {
                       </li>
                       {/* <!-- /User Menu --> */}
                     </ul>
-                    {/* </nav> */}
                   </>
                 )}
               </ul>
@@ -165,11 +175,11 @@ const Header = () => {
         </div>
       </header>
 
-      <div className="wpImage">
-        <Link to={`https://wa.me/${contact?.phone}`}>
+      <span className="wpImage">
+        <Link to={`https://wa.me/${contact?.whatsapp}`}>
           <img src={WP} alt="" />
         </Link>
-      </div>
+      </span>
     </>
   );
 };

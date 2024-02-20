@@ -10,7 +10,8 @@ const contactSchema = new Schema(
     instagram: String,
     facebook: String,
     twitter: String,
-    linkedin: String
+    linkedin: String,
+    whatsapp: String
   },
   { timeseries: true }
 );

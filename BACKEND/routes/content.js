@@ -139,3 +139,81 @@ router.delete(
 
   contentController.deleteAllHomePage
 );
+
+
+
+
+
+
+
+
+// ================================/// PRIVACYPOLICY//////================================
+
+router.post(
+  "/privacypolicy",
+
+  userController.CHECKJWT,
+  isAdmin,
+  contentController.addPRIVACYPOLICY
+);
+
+router.put(
+  "/privacypolicy/:id",
+  userController.CHECKJWT,
+  isAdmin,
+  contentController.editPRIVACYPOLICY
+);
+router.get(
+  "/privacypolicy/:id",
+
+  contentController.getPRIVACYPOLICY
+);
+router.get(
+  "/privacypolicy",
+
+  contentController.getAllPRIVACYPOLICY
+);
+router.delete(
+  "/privacypolicy",
+
+  contentController.deleteAllPRIVACYPOLICY
+);
+
+// ================================/// TANDC//////================================
+
+router.post(
+  "/termsandconditions",
+
+  userController.CHECKJWT,
+  isAdmin,
+  contentController.addTANDC
+);
+
+router.put(
+  "/termsandconditions/:id",
+  userController.CHECKJWT,
+  isAdmin,
+  contentController.editTANDC
+);
+router.get(
+  "/termsandconditions/:id",
+
+  contentController.getTANDC
+);
+router.get(
+  "/termsandconditions",
+
+  contentController.getAllTANDC
+);
+router.delete(
+  "/termsandconditions",
+
+  contentController.deleteAllTANDC
+);
+
+
+
+
+
+
+

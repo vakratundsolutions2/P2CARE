@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import * as yup from "yup";
+import { FaUser } from "react-icons/fa";
 let schema = yup.object().shape({
   // postedby: yup
   //   .string()
@@ -239,7 +240,7 @@ function Hospitalprofile() {
                         ></p>
                       </div>
 
-                      <div className="widget awards-widget">
+                      {/* <div className="widget awards-widget">
                         <h4 className="widget-title">Awards</h4>
                         <div className="experience-box">
                           <ul className="experience-list">
@@ -327,7 +328,7 @@ function Hospitalprofile() {
                           <li>Periodontist</li>
                           <li>Prosthodontics</li>
                         </ul>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -429,11 +430,21 @@ function Hospitalprofile() {
                             <>
                               <div className="comment" key={i}>
                                 <div className="d-flex w-25 flex-column">
-                                  <img
-                                    className="avatar avatar-sm rounded-circle"
-                                    alt="User Image"
-                                    src="/src/assets/img/patients/patient.jpg"
-                                  />
+                                  {e?.postedby?.Profile ? (
+                                    <>
+                                      <img
+                                        className="avatar avatar-sm rounded-circle"
+                                        alt={e?.postedby?.Profile}
+                                        src={`${baseUrl}user/${e?.postedby?.Profile}`}
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      {" "}
+                                      <FaUser className="fs-4 rounded-circle" />
+                                    </>
+                                  )}
+
                                   <span className="review-count rating">
                                     <Rate
                                       style={{ color: "#f2b600" }}

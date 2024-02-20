@@ -8,6 +8,8 @@ import { login, resetState } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 // import { useEffect } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const Login = () => {
 
@@ -64,13 +66,15 @@ const Login = () => {
                     </div>
                     <form action="doctor" onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
-                        <input
-                          type="text"
-                          className="form-control floating"
-                          onChange={formik.handleChange("phoneNumber")}
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
                           value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
                         />
-                        <label className="focus-label">Phone Number</label>
                       </div>
                       <div className="mb-1">
                         <div className="text-danger">
