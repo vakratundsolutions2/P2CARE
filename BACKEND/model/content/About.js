@@ -14,6 +14,10 @@ const aboutSchema = new Schema({
   ],
   bennertitle: String,
   bennerdescription: String, // 20 words
+  
+  metaTitle: String,
+  metaDescription: String,
+  metaTags: String,
 });
 
 const ABOUT = mongoose.model("about", aboutSchema);

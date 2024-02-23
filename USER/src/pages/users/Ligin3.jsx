@@ -10,6 +10,7 @@ import axios from "axios";
 import { useState } from "react";
 import { LoginOTP } from "../../features/auth/authSlice";
 import loginBanner from "../../assets/img/login-banner.png";
+import Seo from "../../components/seo/SEO";
 
 
 let schema = yup.object().shape({
@@ -47,6 +48,8 @@ const Login3 = () => {
 
   return (
     <>
+      <Seo metaTitle={"Login - P2CARE"} />
+
       <div className="content top-space m-5">
         <div className="container-fluid">
           <div className="row">

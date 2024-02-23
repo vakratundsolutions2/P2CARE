@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetABlog, resetState } from "../../features/blog/blogSlice";
 import { baseUrl } from "../../utils/baseUrl";
+import Seo from "../../components/seo/SEO";
 
 function BlogDetails() {
   const location = useLocation();
@@ -18,12 +19,19 @@ function BlogDetails() {
       dispatch(resetState());
     }
   }, [blogId]);
-  const BlogState = useSelector((state) => state.blog);
-  const { SingleBlog } = BlogState;
-  console.log(SingleBlog);
+  const { SingleBlog } = useSelector((state) => state.blog);
 
   return (
     <>
+      <Seo
+        metaTitle={SingleBlog?.metaTitle}
+        metaDescription={SingleBlog?.metaDescription}
+        metaTags={SingleBlog?.metaTags}
+        ogmetadescription={SingleBlog?.ogmetadescription}
+        ogmetatitle={SingleBlog?.ogmetatitle}
+        ogmetaimage={`${baseUrl}blog/${SingleBlog?.ogmetaimage}`}
+      />
+
       <BreadCrum location={"Blog Details "} heading={"Blog Details"} />
 
       <div className="content">

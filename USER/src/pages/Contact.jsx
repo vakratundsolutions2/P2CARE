@@ -3,6 +3,7 @@ import BreadCrum from "../components/BreadCrum";
 import { AddInquiry } from "../features/inquary/inquarySlice";
 import { GetContact } from "../features/content/ContentSlice";
 import { useEffect } from "react";
+import Seo from "../components/seo/SEO";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -19,6 +20,12 @@ function Contact() {
 
   return (
     <>
+      <Seo
+        metaTitle={contact?.metaTitle}
+        metaDescription={contact?.metaDescription}
+        metaTags={contact?.metaTags}
+      />
+
       <div className="main-wrapper">
         <BreadCrum location={"Contact"} heading={"Contact Us"} />
         <section className="contact-section">

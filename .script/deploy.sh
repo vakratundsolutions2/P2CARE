@@ -9,22 +9,22 @@ echo "New changes copied to server !"
 
 echo "Installing Dependencies..."
 cd USER
-npm install --yes
+npm install --f
 npm run build
 cd ..
 
 cd ADMIN
-npm install --yes
+npm install --f
 npm run build
 cd ..
 
 cd BACKEND
-npm install --yes
+npm install --f
 pm2 start 0
 cd ..
 
 cd DOCTOR
-npm install --yes
+npm install --f
 pm2 start 0
 cd ..
 

@@ -10,6 +10,7 @@ import {
 import { baseUrl } from "../../utils/baseUrl";
 import { Pagination } from "antd";
 import { GetAllBlogCategory } from "../../features/blogCategory/BlogCategorySlice";
+import Seo from "../../components/seo/SEO";
 
 const BlogList = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,10 @@ const BlogList = () => {
 
   return (
     <>
-      <BreadCrum location={"All Blogs  "} heading={"All Blogs"} />
+      <Seo
+        metaTitle={"All Blogs | P2CARE"}
+      />
+      <BreadCrum location={"All Blogs"} heading={"All Blogs"} />
 
       <div className="content">
         <div className="container">

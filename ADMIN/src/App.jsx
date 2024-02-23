@@ -30,9 +30,7 @@ const BlogCatList = lazy(() => import("./pages/blog/BlogCatList"));
 const AddBlogCategory = lazy(() => import("./pages/blog/AddBlogCategory"));
 
 const HospitalList = lazy(() => import("./pages/hospital/HospitalList"));
-const HospitalBlog = lazy(() => import("./pages/hospital/HospitalBlog"));
 const AddHospital = lazy(() => import("./pages/hospital/AddHospital"));
-// import HospitalReview = lazy(() => import "./pages/hospital/HospitalReview";
 const AssignDoctor = lazy(() => import("./pages/hospital/AssignDoctor"));
 
 const ServiceList = lazy(() => import("./pages/service/ServiceList"));
@@ -130,8 +128,6 @@ function App() {
               <Route path="all-hospital" element={<HospitalList />} />
               <Route path="hospital" element={<AddHospital />} />
               <Route path="hospital/:id" element={<AddHospital />} />
-              <Route path="blog-hospital" element={<HospitalBlog />} />
-              {/* <Route path="hospital/all-review" element={<HospitalReview />} /> */}
               <Route path="assign-doctor/:id" element={<AssignDoctor />} />
 
               {/* Service Routes */}

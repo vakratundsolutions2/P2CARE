@@ -3,6 +3,7 @@ import LIGO from "../assets/images/p2Care.png";
 import { useEffect } from "react";
 import { GetContact } from "../features/content/ContentSlice";
 import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -171,7 +172,7 @@ const Footer = () => {
                   <div className="copyright-text">
                     <p className="mb-0">
                       {" "}
-                      Copyright © 2023 All Rights Reserved
+                      Copyright &copy; {dayjs().year()} All Rights Reserved
                     </p>
                   </div>
                 </div>

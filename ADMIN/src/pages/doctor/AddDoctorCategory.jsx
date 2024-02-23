@@ -15,7 +15,8 @@ import Loding from "../../components/Loding.jsx";
 import * as yup from "yup";
 import { Modal } from "antd";
 import axios from "axios";
-import { IconPicker } from "react-fa-icon-picker";
+import ImageUploader from "../../components/ImageCropper.jsx";
+import Profile from "../../components/Profile.jsx";
 let schema = yup.object().shape({
   name: yup.string().required("Category Name is Required"),
   image: yup.string().required("Image is Required"),
@@ -43,7 +44,8 @@ const AddDoctorCategory = () => {
 
   useEffect(() => {
     if (search) {
-      console.log(search);}
+      console.log(search);
+    }
   }, [search]);
 
   const formik = useFormik({
@@ -151,6 +153,7 @@ const AddDoctorCategory = () => {
               <div className="error">
                 {formik.touched.status && formik.errors.status}
               </div>
+              <Profile />
               <button className="btn btn-primary" type="submit">
                 Submit
               </button>

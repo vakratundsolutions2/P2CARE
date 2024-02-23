@@ -16,6 +16,10 @@ const Home = () => {
   }, []);
   const { home } = useSelector((state) => state.content);
 
+
+
+
+
   return (
     <>
       <Formik
@@ -23,18 +27,32 @@ const Home = () => {
         initialValues={{
           bennertitle: home?.bennertitle || "",
           bennerdescription: home?.bennerdescription || "",
+          metaTitle: home?.metaTitle || "",
+          metaDescription: home?.metaDescription || "",
+          metaTags: home?.metaTags || "",
+
           howitworks: home?.howitworks || [
             { shorttitle: "", shortdescription: "", icon: "" },
           ],
         }}
         onSubmit={(values) => {
           console.log(values);
-          const { bennerdescription, bennertitle, howitworks } = values;
+          const {
+            bennerdescription,
+            bennertitle,
+            howitworks,
+            metaTitle,
+            metaDescription,
+            metaTags,
+          } = values;
 
           const formData = new FormData();
           formData.append("bennerdescription", bennerdescription);
           formData.append("bennertitle", bennertitle);
           formData.append("howitworks", JSON.stringify(howitworks));
+          formData.append("metaTitle", metaTitle);
+          formData.append("metaDescription", metaDescription);
+          formData.append("metaTags", metaTags);
 
           const data = { id: ID, formData: values };
           dispatch(UpdateHome(data));
@@ -174,6 +192,43 @@ const Home = () => {
                       <div className="error">
                         {formik.touched.howitworks && formik.errors.howitworks}
                       </div>
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Title"
+                      name="metaTitle"
+                      onChng={formik.handleChange("metaTitle")}
+                      onBlr={formik.handleBlur("metaTitle")}
+                      val={formik.values.metaTitle}
+                    />
+                    <div className="error">
+                      {formik.touched.metaTitle && formik.errors.metaTitle}
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Description"
+                      name="metaDescription"
+                      onChng={formik.handleChange("metaDescription")}
+                      onBlr={formik.handleBlur("metaDescription")}
+                      val={formik.values.metaDescription}
+                    />
+                    <div className="error">
+                      {formik.touched.metaDescription &&
+                        formik.errors.metaDescription}
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Tags"
+                      name="metaTags"
+                      onChng={formik.handleChange("metaTags")}
+                      onBlr={formik.handleBlur("metaTags")}
+                      val={formik.values.metaTags}
+                    />
+                    <div className="error">
+                      {formik.touched.metaTags && formik.errors.metaTags}
                     </div>
                   </div>
                   <button className="btn btn-primary" type="submit">

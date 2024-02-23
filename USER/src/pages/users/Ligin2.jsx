@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import loginBanner from "../../assets/img/login-banner.png";
+import Seo from "../../components/seo/SEO";
 
 let schema = yup.object().shape({
   phoneNumber: yup
@@ -50,6 +51,7 @@ const Login2 = () => {
 
   return (
     <>
+      <Seo metaTitle={"Login - P2CARE"} />
       <div className="content top-space m-5">
         <div className="container-fluid">
           <div className="row">

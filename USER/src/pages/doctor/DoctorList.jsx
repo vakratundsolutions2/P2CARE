@@ -13,6 +13,7 @@ import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
 import { Pagination, Rate, Slider } from "antd";
 import { GetAllAavailablity } from "../../features/availablity/availablitySlice";
 import dayjs from "dayjs";
+import Seo from "../../components/seo/SEO";
 
 const DoctorList = () => {
   const nowdate = dayjs().format("YY-M-D");
@@ -134,6 +135,8 @@ const DoctorList = () => {
   console.log("DoctorState", doctors);
   return (
     <>
+      <Seo metaTitle={"All Doctors - P2CARE"} />
+
       <div className="main-wrapper">
         <BreadCrum location={"All Doctors "} heading={"All Doctors "} />
 

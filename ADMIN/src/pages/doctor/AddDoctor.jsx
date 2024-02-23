@@ -3,7 +3,6 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import CustomInput from "../../components/CustomInput";
 import * as yup from "yup";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
@@ -19,6 +18,7 @@ import {
 import { Switch } from "antd";
 import Select from "react-dropdown-select";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../../utils/baseUrl";
 
 let schema = yup.object().shape({
   doctorName: yup.string().required("Doctor Name is Required"),
@@ -54,14 +54,6 @@ let schema = yup.object().shape({
 });
 
 const AddDoctor = () => {
-
-
-
-
-
-
-
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const doctorId = location.pathname.split("/")[3];
@@ -89,6 +81,7 @@ const AddDoctor = () => {
   if (isSuccess === true && updatedDoctor) {
     navigate("/admin/all-doctors");
   }
+
   return (
     <>
       <Formik
@@ -285,7 +278,6 @@ const AddDoctor = () => {
                       </div>
                     </div>
                     <div className="col-6">
-
                       <PhoneInput
                         countrySelectProps={{ unicodeFlags: true }}
                         className="form-control phoneINP"
@@ -313,7 +305,6 @@ const AddDoctor = () => {
                         {formik.touched.Password && formik.errors.Password}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="number"
@@ -327,7 +318,6 @@ const AddDoctor = () => {
                         {formik.touched.doctorCode && formik.errors.doctorCode}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -342,7 +332,6 @@ const AddDoctor = () => {
                           formik.errors.departmentName}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -357,7 +346,6 @@ const AddDoctor = () => {
                           formik.errors.departmentCode}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -373,12 +361,11 @@ const AddDoctor = () => {
                           formik.errors.designation}
                       </div>
                     </div>
-
                     <div className="col-6 mt-3">
                       <Select
                         name="experties"
-                        labelField="name"
                         placeholder="Select Experties ..."
+                        labelField="name"
                         valueField="_id"
                         onChange={(e) => formik.setFieldValue("experties", e)}
                         className="form-control rounded p-3 mb-3"
@@ -445,7 +432,6 @@ const AddDoctor = () => {
                         {formik.touched.gender && formik.errors.gender}
                       </div>
                     </div>
-
                     <div className="col-12 rounded my-3">
                       <label
                         htmlFor="exampleFormControlTextarea3"
@@ -466,7 +452,6 @@ const AddDoctor = () => {
                           formik.errors.description}
                       </div>
                     </div>
-
                     <div className="col-12 form-group mb-3">
                       <label
                         htmlFor="exampleFormControlTextarea2"
@@ -487,7 +472,6 @@ const AddDoctor = () => {
                           formik.errors.shortDescription}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <select
                         name="specialities"
@@ -514,7 +498,6 @@ const AddDoctor = () => {
                           formik.errors.specialities}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="number"
@@ -530,7 +513,6 @@ const AddDoctor = () => {
                           formik.errors.yearofexperience}
                       </div>
                     </div>
-
                     <div
                       className="col-12  p-3 rounded mb-3 mb-3"
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
@@ -670,7 +652,6 @@ const AddDoctor = () => {
                           formik.errors.awardAndAchivementsInfo}
                       </div>
                     </div>
-
                     <div
                       className="col-12 rounded p-3 mb-3 "
                       style={{ background: " rgba(0, 0, 0, 0.1)" }}
@@ -946,7 +927,6 @@ const AddDoctor = () => {
                           formik.errors.fellowShipInfo}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -960,7 +940,6 @@ const AddDoctor = () => {
                         {formik.touched.metaTitle && formik.errors.metaTitle}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -975,7 +954,6 @@ const AddDoctor = () => {
                           formik.errors.ogMetaTitle}
                       </div>
                     </div>
-
                     <div className="col-6 form-group">
                       <label
                         htmlFor="exampleFormControlTextarea"
@@ -996,7 +974,6 @@ const AddDoctor = () => {
                           formik.errors.metaDescription}
                       </div>
                     </div>
-
                     <div className="col-6 form-group">
                       <label
                         htmlFor="exampleFormControlTextarea1"
@@ -1017,7 +994,6 @@ const AddDoctor = () => {
                           formik.errors.ogMetaDescription}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="text"
@@ -1031,7 +1007,6 @@ const AddDoctor = () => {
                         {formik.touched.metaTags && formik.errors.metaTags}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="number"
@@ -1045,7 +1020,6 @@ const AddDoctor = () => {
                         {formik.touched.price && formik.errors.price}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <CustomInput
                         type="file"
@@ -1061,7 +1035,6 @@ const AddDoctor = () => {
                         {formik.touched.image && formik.errors.image}
                       </div>
                     </div>
-
                     <div className="col-6">
                       <select
                         name="status"
@@ -1079,7 +1052,13 @@ const AddDoctor = () => {
                         {formik.touched.status && formik.errors.status}
                       </div>
                     </div>
-
+                    <div className="col-6 ">
+                      <img
+                        src={`${baseUrl}doctor/${formik.values.image}`}
+                        alt={formik.values.doctorName}
+                        className="img-fluid"
+                      />
+                    </div>
                     <div className="col-6 m-4 d-flex">
                       <div className="form-check-inline visits ">
                         <label className="">
@@ -1108,7 +1087,6 @@ const AddDoctor = () => {
                           formik.errors.availabileforappointment}
                       </div>
                     </div>
-
                     <div className="p-3 w-full ">
                       <button type="submit" className="btn btn-primary ">
                         {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor

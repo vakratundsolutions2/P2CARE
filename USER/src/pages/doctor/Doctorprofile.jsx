@@ -16,6 +16,7 @@ import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import * as yup from "yup";
 import { FaUser } from "react-icons/fa";
+import Seo from "../../components/seo/SEO";
 let schema = yup.object().shape({
   // postedby: yup
   //   .string()
@@ -76,6 +77,14 @@ function Doctorprofile() {
   console.log("doctor", DOCTOR);
   return (
     <>
+      <Seo
+        metaTitle={DOCTOR?.metaTitle}
+        metaDescription={DOCTOR?.metaDescription}
+        metaTags={DOCTOR?.metaTags}
+        ogmetadescription={DOCTOR?.ogmetadescription}
+        ogmetatitle={DOCTOR?.ogmetatitle}
+      />
+
       <div className="main-wrapper">
         <BreadCrum location={`Doctor Profile`} heading={"Doctor Profile"} />
 

@@ -6,6 +6,8 @@ import img from "../assets/img/banner-img.png";
 import img1 from "../assets/img/banner-img1.png";
 import img2 from "../assets/img/banner-img2.png";
 import img3 from "../assets/img/banner-img3.png";
+import { AiOutlineSearch } from "react-icons/ai";
+
 import Specialities from "../components/Specialities";
 
 // locationsearch
@@ -53,11 +55,11 @@ import {
   getAllDoctors,
   resetState,
 } from "../features/doctor/doctorSlice";
-import { Modal, Pagination } from "antd";
+import { Modal, Pagination, Row } from "antd";
+import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
+import Seo from "../components/seo/SEO";
 
 const Home = () => {
-  const [valuePrice, setvaluePrice] = useState([0, 2000]);
-
   const [search, setSearch] = useState("");
   const [page, setPage] = useState("");
 
@@ -74,9 +76,25 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetAllHome());
+    dispatch(allDoctorCategory());
   }, []);
 
   const { home } = useSelector((state) => state.content);
+  const { dCategories } = useSelector((state) => state.dCategory);
+  console.log(dCategories);
+
+  const d1 = [];
+  dCategories?.forEach((element) => {
+    d1.push(element.name);
+  });
+
+  const onsearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+  const onSearch = (e) => {
+    setSearch(e);
+    console.log(e);
+  };
 
   // ======================google Map =============================
 
@@ -162,8 +180,6 @@ const Home = () => {
 
   const handleSubmit = (el) => {
     el.preventDefault();
-    console.log(query);
-    console.log(search);
 
     setOpen(true);
     dispatch(
@@ -181,186 +197,217 @@ const Home = () => {
     dispatch(getAllDoctors());
   };
 
-  console.log(Open);
   const { doctors, doctorsFilter, allDoctors } = useSelector(
     (state) => state.doctor
   );
-  console.log(doctors);
-  console.log("selectedLocation", selectedLocation);
 
   return (
-    <div className="main-wrapper">
-      {/* <!-- Home Banner --> */}
+    <>
+      <Seo  metaTitle={home?.metaTitle} metaDescription={home?.metaDescription} metaTags={home?.metaTags}  />
+      <div className="main-wrapper">
+        {/* <!-- Home Banner --> */}
 
-      <section className="banner-section">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <div className="banner-content aos" data-aos="fade-up">
-                <h1>
-                  {/* Consult <span>Best Doctors</span> Your Nearby Location. */}
-                  {home?.bennertitle}
-                </h1>
+        <section className="banner-section">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-lg-6">
+                <div className="banner-content aos" data-aos="fade-up">
+                  <h1>
+                    {/* Consult <span>Best Doctors</span> Your Nearby Location. */}
+                    {home?.bennertitle}
+                  </h1>
 
-                <img
-                  src={headerIcon}
-                  className="header-icon"
-                  alt="header-icon"
-                />
-                <p>{home?.bennerdescription},</p>
-                <Link to="/doctor-list" className="btn">
-                  Start a Consult
-                </Link>
-                <div className="banner-arrow-img">
-                  <img src={downArrow} className="img-fluid" alt="down-arrow" />
+                  <img
+                    src={headerIcon}
+                    className="header-icon"
+                    alt="header-icon"
+                  />
+                  <p>{home?.bennerdescription},</p>
+                  <Link to="/doctor-list" className="btn">
+                    Start a Consult
+                  </Link>
+                  <div className="banner-arrow-img">
+                    <img
+                      src={downArrow}
+                      className="img-fluid"
+                      alt="down-arrow"
+                    />
+                  </div>
+                </div>
+
+                <div className="search-box-one aos " data-aos="fade-up">
+                  <form onSubmit={handleSubmit}>
+                    <div className="search-input search-line  position-relative">
+                      <i className="feather-search bficon"></i>
+                      <div className="mb-0">
+                        <input
+                          type="text"
+                          name="search"
+                          value={search}
+                          onChange={onsearchChange}
+                          className="form-control"
+                          placeholder="Search doctors "
+                        />
+                      </div>
+                      <div className="dropdown1  ">
+                        {dCategories
+                          .filter((item) => {
+                            const searchterm = search.toLowerCase();
+                            const catname = item.name.toLowerCase();
+                            return (
+                              searchterm &&
+                              catname.startsWith(searchterm) &&
+                              catname !== searchterm
+                            );
+                          })
+
+                          ?.map((el, i) => {
+                            return (
+                              <>
+                                <div
+                                  key={i}
+                                  onClick={() => onSearch(el?.name)}
+                                  className="dropdown1-row px-4"
+                                >
+                                  {el?.name}
+                                </div>
+                              </>
+                            );
+                          })}
+                      </div>{" "}
+                    </div>
+                    <div className="search-input ">
+                      <i className="feather-map-pin"></i>
+                      <div className="mb-0">
+                        <input
+                          ref={autoCompleteRef}
+                          type="text"
+                          onChange={(event) => setQuery(event.target.value)}
+                          value={query}
+                          className="form-control"
+                          placeholder="Location"
+                          name="location"
+                        />
+
+                        <i className="feather-crosshair"></i>
+                      </div>
+                    </div>
+
+                    <div className="form-search-btn">
+                      <button
+                        className="btn"
+                        type={
+                          search !== "" && query !== "" ? "submit" : "button"
+                        }
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
 
-              <div className="search-box-one aos " data-aos="fade-up">
-                <form onSubmit={handleSubmit}>
-                  <div className="search-input search-line ">
-                    <i className="feather-search bficon"></i>
-                    <div className="mb-0">
-                      <input
-                        type="text"
-                        name="search"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        className="form-control"
-                        placeholder="Search doctors "
-                      />
-                    </div>
-                  </div>
-                  <div className="search-input ">
-                    <i className="feather-map-pin"></i>
-                    <div className="mb-0">
-                      <input
-                        ref={autoCompleteRef}
-                        type="text"
-                        onChange={(event) => setQuery(event.target.value)}
-                        value={query}
-                        className="form-control"
-                        placeholder="Location"
-                        name="location"
-                      />
-
-                      <i className="feather-crosshair"></i>
-                    </div>
-                  </div>
-
-                  <div className="form-search-btn">
-                    <button
-                      className="btn"
-                      type={search !== "" && query !== "" ? "submit" : "button"}
-                    >
-                      Search
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-            <Modal
-              title={`${allDoctors?.length} Doctors found`}
-              open={Open}
-              onOk={handleOK}
-              width={1000}
-              onCancel={handleOK}
-            >
-              <div className="my-3">
-                {allDoctors?.length === 0 ? (
-                  <>
-                    <div className="row justify-content-center py-5">
-                      no data available
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {allDoctors?.map((e, i) => {
-                      return (
-                        <>
-                          <div className="card doctor-card" key={i}>
-                            <div className="card-body">
-                              <div className="doctor-widget-one">
-                                <div className="doc-info-left">
-                                  <div className="doctor-img">
-                                    <Link to={`/doctor-profile/${e._id}`}>
-                                      <img
-                                        src={`${baseUrl}doctor/${e.image}`}
-                                        className="img-fluid"
-                                        alt="John Doe"
-                                      />
-                                    </Link>
-                                  </div>
-                                  <div className="doc-info-cont">
-                                    <h4 className="doc-name">
+              <Modal
+                title={`${allDoctors?.length} Doctors found`}
+                open={Open}
+                onOk={handleOK}
+                width={1000}
+                onCancel={handleOK}
+              >
+                <div className="my-3">
+                  {allDoctors?.length === 0 ? (
+                    <>
+                      <div className="row justify-content-center py-5">
+                        no data available
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {allDoctors?.map((e, i) => {
+                        return (
+                          <>
+                            <div className="card doctor-card" key={i}>
+                              <div className="card-body">
+                                <div className="doctor-widget-one">
+                                  <div className="doc-info-left">
+                                    <div className="doctor-img">
                                       <Link to={`/doctor-profile/${e._id}`}>
-                                        {e?.doctorName}
+                                        <img
+                                          src={`${baseUrl}doctor/${e.image}`}
+                                          className="img-fluid"
+                                          alt="John Doe"
+                                        />
                                       </Link>
-                                    </h4>
-                                    <p className="doc-speciality">
-                                      {e?.specialities}
-                                    </p>
-                                    <div className="clinic-details">
-                                      <p className="doc-location">
-                                        <i className="fa fa-location"></i>
-                                        {e.location}
-                                        <a href="">Get Direction</a>
-                                      </p>
                                     </div>
-                                    <div className="reviews-ratings">
-                                      <p>
-                                        <span>
-                                          <i className="fas fa-star"></i>{" "}
-                                          {e?.totalratings}
-                                        </span>{" "}
-                                        ({e.ratings?.length} Reviews)
+                                    <div className="doc-info-cont">
+                                      <h4 className="doc-name">
+                                        <Link to={`/doctor-profile/${e._id}`}>
+                                          {e?.doctorName}
+                                        </Link>
+                                      </h4>
+                                      <p className="doc-speciality">
+                                        {e?.specialities}
                                       </p>
+                                      <div className="clinic-details">
+                                        <p className="doc-location">
+                                          <i className="fa fa-location"></i>
+                                          {e.location}
+                                          <a href="">Get Direction</a>
+                                        </p>
+                                      </div>
+                                      <div className="reviews-ratings">
+                                        <p>
+                                          <span>
+                                            <i className="fas fa-star"></i>{" "}
+                                            {e?.totalratings}
+                                          </span>{" "}
+                                          ({e.ratings?.length} Reviews)
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                <div className="doc-info-right">
-                                  <div className="clini-infos">
-                                    <ul>
-                                      <li>
-                                        <i className="feather-clock available-icon"></i>
-                                        <span className="available-date available-today">
-                                          Available Today
-                                        </span>
-                                      </li>
+                                  <div className="doc-info-right">
+                                    <div className="clini-infos">
+                                      <ul>
+                                        <li>
+                                          <i className="feather-clock available-icon"></i>
+                                          <span className="available-date available-today">
+                                            Available Today
+                                          </span>
+                                        </li>
 
-                                      <li>
-                                        <i className="feather-dollar-sign available-icon"></i>{" "}
-                                        &#x20B9; {e?.price}{" "}
-                                        <i className="feather-info available-info-icon"></i>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div className="clinic-booking book-appoint">
-                                    <Link
-                                      className="btn btn-primary"
-                                      to={`/doctor-profile/${e?._id}`}
-                                    >
-                                      View Profile
-                                    </Link>
-                                    <Link
-                                      className="btn btn-primary-light"
-                                      to={`/bookappointment/${e?._id}`}
-                                    >
-                                      Book Appointment
-                                    </Link>
+                                        <li>
+                                          <i className="feather-dollar-sign available-icon"></i>{" "}
+                                          &#x20B9; {e?.price}{" "}
+                                          <i className="feather-info available-info-icon"></i>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div className="clinic-booking book-appoint">
+                                      <Link
+                                        className="btn btn-primary"
+                                        to={`/doctor-profile/${e?._id}`}
+                                      >
+                                        View Profile
+                                      </Link>
+                                      <Link
+                                        className="btn btn-primary-light"
+                                        to={`/bookappointment/${e?._id}`}
+                                      >
+                                        Book Appointment
+                                      </Link>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </>
-                      );
-                    })}
-                  </>
-                )}
+                          </>
+                        );
+                      })}
+                    </>
+                  )}
 
-                {/* <nav className="d-flex justify-content-end w-full px-5 py-2">
+                  {/* <nav className="d-flex justify-content-end w-full px-5 py-2">
                   <Pagination
                     current={page}
                     onChange={(e) => setPage(e)}
@@ -368,32 +415,32 @@ const Home = () => {
                     pageSize={doctorsFilter?.limit}
                   />
                 </nav> */}
-              </div>
-            </Modal>
-
-            <div className="col-lg-6">
-              <div className="banner-img aos" data-aos="fade-up">
-                <img src={img} className="img-fluid" alt="patient-image" />
-                <div className="banner-img1">
-                  <img src={img1} className="img-fluid" alt="checkup-image" />
                 </div>
-                {/* <div className="banner-img2">
+              </Modal>
+
+              <div className="col-lg-6">
+                <div className="banner-img aos" data-aos="fade-up">
+                  <img src={img} className="img-fluid" alt="patient-image" />
+                  <div className="banner-img1">
+                    <img src={img1} className="img-fluid" alt="checkup-image" />
+                  </div>
+                  {/* <div className="banner-img2">
                   <img src={img2} className="img-fluid" alt="doctor-slide" />
                 </div> */}
-                <Link to={"/doctor-list"} className="banner-img3">
-                  <img src={img3} className="img-fluid" alt="doctors-list" />
-                </Link>
+                  <Link to={"/doctor-list"} className="banner-img3">
+                    <img src={img3} className="img-fluid" alt="doctors-list" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <Specialities />
-      <BestDoctor />
+        <Specialities />
+        <BestDoctor />
 
-      {/* <!-- Pricing --> */}
-      {/* <section className="pricing-section">
+        {/* <!-- Pricing --> */}
+        {/* <section className="pricing-section">
         <div className="container">
           <div className="row">
             <div className="col-md-12 text-center aos" data-aos="fade-up">
@@ -550,56 +597,60 @@ const Home = () => {
           </div>
         </div>
       </section> */}
-      {/* <!-- /Pricing --> */}
+        {/* <!-- /Pricing --> */}
 
-      {/* <!-- Work Section --> */}
-      <section className="work-section">
-        <div className="container">
-          <div className="row">
-            <div
-              className="col-lg-4 col-md-12 work-img-info aos"
-              data-aos="fade-up"
-            >
-              <div className="work-img">
-                <img src={workImg1} className="img-fluid" alt="doctor-image" />
+        {/* <!-- Work Section --> */}
+        <section className="work-section">
+          <div className="container">
+            <div className="row">
+              <div
+                className="col-lg-4 col-md-12 work-img-info aos"
+                data-aos="fade-up"
+              >
+                <div className="work-img">
+                  <img
+                    src={workImg1}
+                    className="img-fluid"
+                    alt="doctor-image"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="col-lg-8 col-md-12 work-details">
-              <div className="section-header-one aos" data-aos="fade-up">
-                <h5>How it Works</h5>
-                <h2 className="section-title">
-                  4 easy steps to get your solution
-                </h2>
-              </div>
-              <div className="row">
-                {home?.howitworks?.map((el, i) => {
-                  return (
-                    <>
-                      <div
-                        className="col-lg-6 col-md-6 aos"
-                        data-aos="fade-up"
-                        key={i}
-                      >
-                        <div className="work-info">
-                          <div className="work-icon">
-                            <span>
-                              <img
-                                src={`${baseUrl}content/${el?.icon}`}
-                                alt="search-doctor-icon"
-                              />
-                            </span>
-                          </div>
-                          <div className="work-content">
-                            <h5>{el?.shorttitle}</h5>
-                            <p>{el?.shortdescription}</p>
+              <div className="col-lg-8 col-md-12 work-details">
+                <div className="section-header-one aos" data-aos="fade-up">
+                  <h5>How it Works</h5>
+                  <h2 className="section-title">
+                    4 easy steps to get your solution
+                  </h2>
+                </div>
+                <div className="row">
+                  {home?.howitworks?.map((el, i) => {
+                    return (
+                      <>
+                        <div
+                          className="col-lg-6 col-md-6 aos"
+                          data-aos="fade-up"
+                          key={i}
+                        >
+                          <div className="work-info">
+                            <div className="work-icon">
+                              <span>
+                                <img
+                                  src={`${baseUrl}content/${el?.icon}`}
+                                  alt="search-doctor-icon"
+                                />
+                              </span>
+                            </div>
+                            <div className="work-content">
+                              <h5>{el?.shorttitle}</h5>
+                              <p>{el?.shortdescription}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </>
-                  );
-                })}
+                      </>
+                    );
+                  })}
 
-                {/* <div className="col-lg-6 col-md-6 aos" data-aos="fade-up">
+                  {/* <div className="col-lg-6 col-md-6 aos" data-aos="fade-up">
                   <div className="work-info">
                     <div className="work-icon">
                       <span>
@@ -647,19 +698,19 @@ const Home = () => {
                     </div>
                   </div>
                 </div> */}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      {/* <!-- /Work Section --> */}
+        </section>
+        {/* <!-- /Work Section --> */}
 
-      {/* <!-- Articles Section --> */}
-      <Articles />
-      {/* <!-- /Articles Section --> */}
+        {/* <!-- Articles Section --> */}
+        <Articles />
+        {/* <!-- /Articles Section --> */}
 
-      {/* <!-- App Section --> */}
-      {/* <section className="app-section">
+        {/* <!-- App Section --> */}
+        {/* <section className="app-section">
         <div className="container">
           <div className="app-bg">
             <div className="row align-items-center">
@@ -692,12 +743,12 @@ const Home = () => {
           </div>
         </div>
       </section> */}
-      {/* <!-- /App Section --> */}
+        {/* <!-- /App Section --> */}
 
-      <Testimonial />
+        <Testimonial />
 
-      {/* <!-- Partners Section --> */}
-      {/* <section className="partners-section">
+        {/* <!-- Partners Section --> */}
+        {/* <section className="partners-section">
         <div className="container">
           <div className="row">
             <div className="col-md-12">
@@ -775,8 +826,9 @@ const Home = () => {
           </div>
         </div>
       </section> */}
-      {/* <!-- /Partners Section --> */}
-    </div>
+        {/* <!-- /Partners Section --> */}
+      </div>
+    </>
   );
 };
 

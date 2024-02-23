@@ -43,7 +43,6 @@ exports.addDoctor = async function (req, res, next) {
       throw new Error("Please Enter Valid Feild");
     }
 
-    
     const experties = JSON.parse(req.body.experties);
     console.log(experties);
     const cate = experties.map((el) => el);
@@ -66,9 +65,6 @@ exports.addDoctor = async function (req, res, next) {
     if (chekspecialist === false) {
       throw new Error("Invalid add value");
     }
-
-
-
 
     console.log(req.body);
     req.body.experienceInfo = JSON.parse(req.body.experienceInfo);
@@ -177,18 +173,18 @@ exports.updateDoctor = async function (req, res, next) {
     data.fellowShipInfo = JSON.parse(req.body.fellowShipInfo);
     data.awardAndAchivementsInfo = JSON.parse(req.body.awardAndAchivementsInfo);
 
-
     const userData = {
       Name: req.body.doctorName,
       Username: req.body.Username,
       phoneNumber: req.body.phoneNumber,
       Email: req.body.Email,
-      
+
       Password: await bcrypt.hash(req.body.Password, 10),
     };
 
-    const UpdateUser = await USER.findByIdAndUpdate(getData?.userId, userData,{new:true});
-
+    const UpdateUser = await USER.findByIdAndUpdate(getData?.userId, userData, {
+      new: true,
+    });
 
     const udata = await DOCTOR.findByIdAndUpdate(req.params.id, data);
     res.status(200).json({
@@ -533,9 +529,10 @@ exports.searchDoctorByFiltetsatHome = async function (req, res, next) {
     const currentpage = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 5;
     const location = req.query.location || "";
-    const search = req.query.search || "";
+    const search = req.query.name || "";
     const regexPattern = new RegExp("\\b" + decodeURI(location) + "\\b", "i");
     console.log(regexPattern);
+    console.log(search);
 
     let templocation = decodeURI(location);
     console.log(
@@ -560,31 +557,44 @@ exports.searchDoctorByFiltetsatHome = async function (req, res, next) {
         $match: {
           $or: [
             {
-              "assign.hospital.hospitalname": {
-                $regex: search,
-                $options: "i",
-              },
-            }, // Match hospital name
-            { doctorName: { $regex: search, $options: "i" } }, // Match doctor name
-            { experties: { $in: [search] } },
-            { specialities: { $regex: search, $options: "i" } },
-            // Match expertise
-          ],
-          $or: [
-            {
               location: {
                 $regex: templocation.split(",")[0]?.trim(),
                 $options: "i",
               },
+              $or: [
+                {
+                  "assign.hospital.hospitalname": {
+                    $regex: search,
+                    $options: "i",
+                  },
+                }, // Match hospital name
+                { doctorName: { $regex: search, $options: "i" } }, // Match doctor name
+                // { experties: { $in: [search] } },
+                { specialities: { $regex: search, $options: "i" } },
+                // Match expertise
+              ],
             },
             {
               location: {
                 $regex: templocation.split(",")[1]?.trim(),
                 $options: "i",
               },
+
+              $or: [
+                {
+                  "assign.hospital.hospitalname": {
+                    $regex: search,
+                    $options: "i",
+                  },
+                }, // Match hospital name
+                { doctorName: { $regex: search, $options: "i" } }, // Match doctor name
+                // { experties: { $in: [search] } },
+                { specialities: { $regex: search, $options: "i" } },
+                // Match expertise
+              ],
             },
           ],
-          // Match location
+        
         },
       },
       {
@@ -594,7 +604,7 @@ exports.searchDoctorByFiltetsatHome = async function (req, res, next) {
           patients: { $first: "$patients" },
           doctorName: { $first: "$doctorName" },
           assign: { $first: "$assign" },
-          experties: { $first: "$experties" },
+          // experties: { $first: "$experties" },
           location: { $first: "$location" },
           image: { $first: "$image" },
           specialities: { $first: "$specialities" },
@@ -618,7 +628,7 @@ exports.searchDoctorByFiltetsatHome = async function (req, res, next) {
           location: 1,
           image: 1,
           specialities: 1,
-          experties: 1,
+          // experties: 1,
           price: 1,
           totalratings: 1,
           ratings: 1,

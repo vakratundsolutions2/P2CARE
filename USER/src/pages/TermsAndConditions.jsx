@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import BreadCrum from "../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { GetTermsAndConditions } from "../features/content/ContentSlice";
+import Seo from "../components/seo/SEO";
 
 const TermsAndConditions = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,11 @@ const TermsAndConditions = () => {
 
   return (
     <>
+      <Seo
+        metaTitle={"Terms and Conditions - P2CARE"}
+        
+      />
+
       <BreadCrum heading={"Terms & Condition"} location={"Terms & Condition"} />
 
       <div className="terms-section">

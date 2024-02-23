@@ -9,13 +9,15 @@ const blogSchema = new Schema(
     author: String,
     slug: String,
     blogtags: [String],
-    metatag: [String],
+    // metatag: [String],
+    metatag: String,
     metatitle: String,
     ogmetatitle: String,
     metadescription: String,
     ogmetadescription: String,
-    blogimage: String,
     ogmetaimage: String,
+    
+    blogimage: String,
     category: String,
     status: {
       type: String,

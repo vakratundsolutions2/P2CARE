@@ -1,5 +1,3 @@
-
-
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/CustomInput";
 import { IoArrowBack } from "react-icons/io5";
@@ -25,14 +23,14 @@ let schema = yup.object().shape({
 
 const BookDoctor = () => {
   const TimeId = location.pathname.split("/")[3];
-  const [TIME, setTIME] = useState([])
+  const [TIME, setTIME] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const timeState = useSelector((state) => state.time);
   const { SingleData } = timeState;
   useEffect(() => {
-    if (TimeId !== undefined || '') {
+    if (TimeId !== undefined || "") {
       dispatch(getAtime(TimeId));
       dispatch(resetState());
     } else {
@@ -40,16 +38,14 @@ const BookDoctor = () => {
     }
   }, [TimeId]);
 
- 
-
   const formik = useFormik({
-    enableReinitialize:true,
+    enableReinitialize: true,
     initialValues: {
       Time: SingleData?.Time || "",
 
       status: SingleData?.status || "",
     },
-    validationSchema:schema,
+    validationSchema: schema,
 
     onSubmit: (values) => {
       console.log(values);
@@ -60,7 +56,6 @@ const BookDoctor = () => {
         dispatch(updatetime({ id: TimeId, formData: values }));
         dispatch(resetState());
       }
-      
     },
   });
 
@@ -93,18 +88,28 @@ const BookDoctor = () => {
               {/* <TimePicker.RangePicker
                 name="Time"
                 onChange={(value) =>
-                  formik.setFieldValue('Time',[
+                  formik.setFieldValue("Time", [
                     dayjs(value[0]).format("HH:mm"),
                     dayjs(value[1]).format("HH:mm"),
                   ])
                 }
                 defaultValue={TIME}
                 format={"HH:mm"}
+              />
+
+
+
+              <TimePicker
+                name="Time"
+                format={"HH:mm"}
+                // defaultValue={dayjs(TIME, "HH:mm")}
+                // onChange={}
+                onChange={(e) => console.log(dayjs(e, "HH:mm"))}
               /> */}
+
               <div className="error">
                 {formik.touched.Time && formik.errors.Time}
               </div>
-
               <select
                 name="status"
                 onChange={formik.handleChange("status")}
@@ -119,7 +124,6 @@ const BookDoctor = () => {
               <div className="error">
                 {formik.touched.status && formik.errors.status}
               </div>
-
               <button className="btn btn-primary" type="submit">
                 Submit
               </button>

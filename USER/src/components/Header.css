@@ -1,56 +1,69 @@
 .navbar-brand .logo img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  @media (max-width: 375px){
-        .img-fluid {
-          max-width: 50vw;
-          display: block;
-          align-items: center;
-          justify-content: center;
-          width: 50%;
-          object-fit: cover;
-           height: 80%;
+  max-width: 100%;
+  height: auto;
 }
-        }
-  
-  @media (max-width: 360px) {
-    .navbar-brand .logo img {
-      display: none;
-       }
-  }
-  
-  @media (max-width: 768px) {
-    .navbar-brand .logo img{
-      max-width: 100vw;
-      width: 100%;
-      margin-left: 75px;
-      object-fit: cover;
-      height: 83%;
-    }
-  }
-  
-  @media (max-width: 360px) {
-    .navbar-brand .logo img {
-      max-width: 100vw;
-      width: 50%; 
-      margin-left: 50px;
-      object-fit: cover;
-      height: 70%; 
-    }
-  }
 
-@media (max-width: 375px){
-    .img-fluid  {
-        max-width: 100vw;
-        display: block;
-        margin-left: 75px;
-        align-items: center;
-        justify-content: center;
-        width: 50%;
-        object-fit: cover;
-        height: 83%;
-    }
+@media (max-width: 375px) {
+  .img-fluid {
+    max-width: 50vw;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    object-fit: cover;
+    height: 80%;
   }
+}
+
+@media (max-width: 360px) {
+  .navbar-brand .logo img {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-brand .logo img {
+    max-width: 100vw;
+    width: 100%;
+    margin-left: 75px;
+    object-fit: cover;
+    height: 83%;
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar-brand .logo img {
+    max-width: 100vw;
+    width: 50%;
+    margin-left: 50px;
+    object-fit: cover;
+    height: 70%;
+  }
+}
+
+@media (max-width: 375px) {
+  .img-fluid {
+    max-width: 100vw;
+    display: block;
+    margin-left: 75px;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    object-fit: cover;
+    height: 83%;
+  }
+}
+
+/* styles.css */
+.chat-window {
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 300;
+  bottom: 2rem;
+  right: 2rem;
+  background: #f1f1f1;
+}
 
