@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import BreadCrum from "../components/BreadCrum";
 import { useDispatch, useSelector } from "react-redux";
 import { GetTermsAndConditions } from "../features/content/ContentSlice";
-import Seo from "../components/seo/SEO";
+import Seo from "../components/seo/Seo";
 
 const TermsAndConditions = () => {
   const dispatch = useDispatch();
