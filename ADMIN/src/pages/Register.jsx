@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 
-const MyImage = (await import("../assets/images/pages/login-v2.svg")).default;
+// const MyImage = (await import("../assets/images/pages/login-v2.svg")).default;
+import MyImage  from "../assets/images/pages/login-v2.svg";
+
 import * as yup from "yup";
 import CustomInput from "../components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
