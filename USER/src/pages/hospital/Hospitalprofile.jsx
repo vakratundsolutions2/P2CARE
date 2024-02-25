@@ -15,6 +15,7 @@ import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import * as yup from "yup";
 import { FaUser } from "react-icons/fa";
+import Seo from "../../components/seo/SEO";
 let schema = yup.object().shape({
   // postedby: yup
   //   .string()
@@ -73,6 +74,8 @@ function Hospitalprofile() {
 
   return (
     <>
+      <Seo metaTitle={`${SingleData?.hospitalname} - P2CARE`} />
+
       <div className="main-wrapper">
         <BreadCrum location={"Hospital "} heading={"Hospital "} />
       </div>

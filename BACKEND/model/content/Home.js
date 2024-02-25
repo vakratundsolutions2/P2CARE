@@ -4,13 +4,18 @@ const Schema = mongoose.Schema;
 const homeSchema = new Schema({
   bennertitle: String,
   bennerdescription: String, // 20 words
+  metaTitle: String,
+  metaDescription: String,
+  metaTags: String,
 
-  howitworks: [{
-    //  4 steps required
-    shorttitle: String,
-    shortdescription: String,
-    icon: String,
-  }],
+  howitworks: [
+    {
+      //  4 steps required
+      shorttitle: String,
+      shortdescription: String,
+      icon: String,
+    },
+  ],
 });
 
 const HOME = mongoose.model("home", homeSchema);

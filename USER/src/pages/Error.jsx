@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import IMG from     "../assets/images/no-result-search.png";
+import Seo from "../components/seo/SEO";
 
 const Error = () => {
   const navigate = useNavigate();
@@ -11,6 +12,11 @@ const Error = () => {
   };
   return (
     <>
+      <Seo
+        metaTitle="404 Not Found"
+        
+      />
+
       <div className="card">
         <div className="d-flex justify-content-center p-5">
           <img src={IMG} alt="" className="noresult_Img" />

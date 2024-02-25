@@ -311,7 +311,7 @@ const DoctorList = () => {
         AvailByDocId?.bookingavailabilityInformation[6]?.bookingtime
       );
     }
-  });
+  }, [AvailByDocId]);
 
   // console.log("sundsay", Sunday);
   // console.log("Monday", Monday);

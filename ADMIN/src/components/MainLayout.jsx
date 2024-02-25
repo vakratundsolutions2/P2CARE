@@ -7,6 +7,7 @@ import { Layout, Menu, theme, Flex, Button, Dropdown } from "antd";
 import p2c_logo from "../assets/images/logo/p2c_logo.jpg";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const USER = useSelector((state) => state?.auth?.admin);
@@ -133,10 +134,7 @@ const MainLayout = () => {
                   //   key: "assign-doctor",
                   //   label: "Assign Doctor",
                   // },
-                  {
-                    key: "blog-hospital",
-                    label: "Blog Of Hospital",
-                  },
+                  
                   // {
                   //   key: "hospital/all-review",
                   //   label: "All Reviews",
@@ -334,7 +332,7 @@ const MainLayout = () => {
             <Outlet />
             <Flex>
               <footer className=" d-flex    flex-grow-1 bg-white p-3 roudned-3">
-                &copy; Copyright 2023 All Right Reserved By PCARE
+                &copy; Copyright {dayjs().year()} All Right Reserved By P2CARE
               </footer>
             </Flex>
           </Content>

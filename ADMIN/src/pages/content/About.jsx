@@ -23,7 +23,6 @@ const About = () => {
 
   return (
     <>
-      
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -31,6 +30,10 @@ const About = () => {
           description: about?.description || "",
           bennertitle: about?.bennertitle || "",
           bennerdescription: about?.bennerdescription || "",
+          metaTitle: about?.metaTitle || "",
+          metaTags: about?.metaTags || "",
+          metaDescription: about?.metaDescription || "",
+
           whychoseus: about?.whychoseus || [
             { shorttitle: "", shortdescription: "" },
           ],
@@ -213,6 +216,43 @@ const About = () => {
                       <div className="error">
                         {formik.touched.whychoseus && formik.errors.whychoseus}
                       </div>
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Title"
+                      name="metaTitle"
+                      onChng={formik.handleChange("metaTitle")}
+                      onBlr={formik.handleBlur("metaTitle")}
+                      val={formik.values.metaTitle}
+                    />
+                    <div className="error">
+                      {formik.touched.metaTitle && formik.errors.metaTitle}
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Description"
+                      name="metaDescription"
+                      onChng={formik.handleChange("metaDescription")}
+                      onBlr={formik.handleBlur("metaDescription")}
+                      val={formik.values.metaDescription}
+                    />
+                    <div className="error">
+                      {formik.touched.metaDescription &&
+                        formik.errors.metaDescription}
+                    </div>
+
+                    <CustomInput
+                      type="text"
+                      label="Meta Tags"
+                      name="metaTags"
+                      onChng={formik.handleChange("metaTags")}
+                      onBlr={formik.handleBlur("metaTags")}
+                      val={formik.values.metaTags}
+                    />
+                    <div className="error">
+                      {formik.touched.metaTags && formik.errors.metaTags}
                     </div>
                   </div>
                   <button className="btn btn-primary" type="submit">

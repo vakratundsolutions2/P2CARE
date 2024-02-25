@@ -175,11 +175,7 @@ const Header = () => {
         </div>
       </header>
 
-      <span className="wpImage">
-        <Link to={`https://wa.me/${contact?.whatsapp}`}>
-          <img src={WP} alt="" />
-        </Link>
-      </span>
+      
     </>
   );
 };

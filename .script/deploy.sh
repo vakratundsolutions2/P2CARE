@@ -24,8 +24,10 @@ pm2 start 0
 cd ..
 
 cd DOCTOR
-npm install --yes
-npm run build
+
+npm install --f
+pm2 start 0
+
 cd ..
 
 

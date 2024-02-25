@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAppoinmentsUser } from "../../features/auth/authSlice";
 import dayjs from "dayjs";
+import Seo from "../../components/seo/SEO";
 const columns = [
   {
     title: "SNo",
@@ -65,8 +66,10 @@ const MyAppoinments = () => {
   }
   return (
     <>
+      <Seo metaTitle={"My Appointments - P2CARE"} />
+
       <div className="main-wrapper">
-        <BreadCrum location={"My Appoinments "} heading={"Appointments "} />
+        <BreadCrum location={"My Appoinments"} heading={"Appointments"} />
 
         <div className="container-xxl">
           <div className="row py-3 m-4">

@@ -15,7 +15,9 @@ import Slider from "react-slick";
 import axios from "axios";
 
 import noResult from "../../assets/images/download.svg";
-1
+import dayjs from "dayjs";
+import Seo from "../../components/seo/SEO";
+1;
 const BookAppointment = () => {
   const ID = location.pathname.split("/")[2];
   var crtDate = new Date();
@@ -53,9 +55,6 @@ const BookAppointment = () => {
   const [scheduleWiseDate, changeScheduleWiseDate] = useState([]);
   const [Speciality, setSpeciality] = useState("");
 
-  // <<<<<<< HEAD
-
-  // =======
   useEffect(() => {
     axios
       .get(`${baseUrl}available/searchdoctortime/${ID}?date=${NEWDATE}`)
@@ -113,7 +112,6 @@ const BookAppointment = () => {
     changeSchedule(setSchedule);
   }, []);
 
-  // <<<<<<< HEAD
   const handlePrev = () => {
     if (currentPosition != -1) {
       changeCurrentPosition(currentPosition - 1);
@@ -128,17 +126,17 @@ const BookAppointment = () => {
     }
   };
 
-  const sliderRef = React.createRef();
+  // const sliderRef = React.createRef();
   const sliderRef2 = React.createRef();
 
   const handleTestimonialPrevClick = async () => {
-    await sliderRef.current.slickPrev();
+    // await sliderRef.current.slickPrev();
     await sliderRef2.current.slickPrev();
     handlePrev();
   };
 
   const handleTestimonialNextClick = async () => {
-    await sliderRef.current.slickNext();
+    // await sliderRef.current.slickNext();
     await sliderRef2.current.slickNext();
     handleNext();
   };
@@ -160,299 +158,314 @@ const BookAppointment = () => {
     draggable: false,
   };
 
+  console.log(currentDate);
+  console.log(NEWDATE);
+
+  const handlePOS = (e, i) => {
+    setNEWDATE(e);
+    changeCurrentPosition(i);
+  };
   return (
-    <div className="main-wrapper">
-      <BreadCrum location={"Book An Appoinment "} heading={"Book Appoinment"} />
+    <>
+      <Seo metaTitle={"Book Appoinment - P2CARE"} />
 
-      {/* <!-- Page Content --> */}
-      <form>
-        <div className="content">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="booking-doc-info d-flex">
-                      <div className="col-md-9">
-                        <Link
-                          to={`/doctor-profile/${SingleData?._id}`}
-                          className="booking-doc-img"
-                        >
-                          <img
-                            src={`${baseUrl}doctor/${SingleData?.image}`}
-                            alt={SingleData?.doctorName}
-                          />
-                        </Link>
-                        <div className="booking-info">
-                          <h4>
-                            <Link to={`/doctor-profile/${SingleData?._id}`}>
-                              {SingleData?.doctorName}
-                            </Link>
-                          </h4>
-                          <div className="rating">
-                            <span className="review-count rating">
-                              <Rate
-                                style={{ color: "#f2b600" }}
-                                disabled
-                                value={SingleData?.totalratings}
-                              />
-                            </span>
+      <div className="main-wrapper">
+        <BreadCrum
+          location={"Book An Appoinment "}
+          heading={"Book Appoinment"}
+        />
 
-                            <span className="d-inline-block px-3 bg-primary rounded-pill mx-3 average-rating">
-                              ({SingleData?.ratings.length})
-                            </span>
+        {/* <!-- Page Content --> */}
+        <form>
+          <div className="content">
+            <div className="container">
+              <div className="row">
+                <div className="col-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="booking-doc-info d-flex">
+                        <div className="col-md-9">
+                          <Link
+                            to={`/doctor-profile/${SingleData?._id}`}
+                            className="booking-doc-img"
+                          >
+                            <img
+                              src={`${baseUrl}doctor/${SingleData?.image}`}
+                              alt={SingleData?.doctorName}
+                            />
+                          </Link>
+                          <div className="booking-info">
+                            <h4>
+                              <Link to={`/doctor-profile/${SingleData?._id}`}>
+                                {SingleData?.doctorName}
+                              </Link>
+                            </h4>
+                            <div className="rating">
+                              <span className="review-count rating">
+                                <Rate
+                                  style={{ color: "#f2b600" }}
+                                  disabled
+                                  value={SingleData?.totalratings}
+                                />
+                              </span>
+
+                              <span className="d-inline-block px-3 bg-primary rounded-pill mx-3 average-rating">
+                                ({SingleData?.ratings.length})
+                              </span>
+                            </div>
+                            <p className="text-muted mb-0">
+                              <i className="fas fa-map-marker-alt"></i>{" "}
+                              {SingleData?.location}
+                            </p>
+                            <div className="d-flex gap-3 mt-3">
+                              {SingleData?.experties?.map((el, i) => {
+                                return (
+                                  <>
+                                    <button
+                                      className="btn-sm btn btn-primary"
+                                      key={i}
+                                    >
+                                      {el}
+                                    </button>
+                                  </>
+                                );
+                              })}
+                            </div>
                           </div>
-                          <p className="text-muted mb-0">
-                            <i className="fas fa-map-marker-alt"></i>{" "}
-                            {SingleData?.location}
-                          </p>
-                          <div className="d-flex gap-3 mt-3">
-                            {SingleData?.experties?.map((el, i) => {
+                        </div>
+                        <div className="col-md-3">
+                          <select
+                            name="category"
+                            className="form-select"
+                            onChange={(e) => setSpeciality(e.target.value)}
+                            value={Speciality}
+                            required={true}
+                          >
+                            <option value="">Please Select Speciality</option>
+                            {SingleData?.experties?.map((el) => {
                               return (
                                 <>
-                                  <button
-                                    className="btn-sm btn btn-primary"
-                                    key={i}
-                                  >
-                                    {el}
-                                  </button>
+                                  {" "}
+                                  <option value={el}>{el} </option>
                                 </>
                               );
                             })}
-                          </div>
+                          </select>
                         </div>
-                      </div>
-                      <div className="col-md-3">
-                        <select
-                          name="category"
-                          className="form-select"
-                          onChange={(e) => setSpeciality(e.target.value)}
-                          value={Speciality}
-                          required={true}
-                        >
-                          <option value="">Please Select Speciality</option>
-                          {SingleData?.experties?.map((el) => {
-                            return (
-                              <>
-                                {" "}
-                                <option value={el}>{el} </option>
-                              </>
-                            );
-                          })}
-                        </select>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <section className=" bg-white">
-                  <div className="container">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div className="owl-nav slide-nav-1 text-end nav-control d-flex justify-content-between">
-                          <button
-                            type="button"
-                            className="owl-prev"
-                            onClick={handleTestimonialPrevClick}
-                            disabled={currentPosition === 0 ? true : false}
-                          >
-                            <i className="fas fa-chevron-left custom-arrow"></i>
-                          </button>
-                          <div className=" w-75">
-                            <div className="row d-flex flex-nowrap overflow-auto m-2">
-                              <Slider ref={sliderRef2} {...settings2}>
-                                {schedule.map((val, index) => {
-                                  return (
-                                    <>
-                                      <div className="col-12 px-0 text-center m-0">
-                                        <div className="p-2">
-                                          {index == 0 || index == 1 ? (
-                                            index == 0 ? (
-                                              <span>Today</span>
-                                            ) : index == 1 ? (
-                                              <>
-                                                <span>Tomorrow</span>
-                                              </>
+                  <section className=" bg-white">
+                    <div className="container">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <div className="owl-nav slide-nav-1 text-end nav-control d-flex justify-content-between">
+                            <button
+                              type="button"
+                              className="owl-prev"
+                              onClick={handleTestimonialPrevClick}
+                              disabled={currentPosition === 0 ? true : false}
+                            >
+                              <i className="fas fa-chevron-left custom-arrow"></i>
+                            </button>
+                            <div className=" w-75">
+                              <div className="row d-flex flex-nowrap  m-2">
+                                <Slider ref={sliderRef2} {...settings2}>
+                                  {schedule.map((val, index) => {
+                                    return (
+                                      <>
+                                        <div className="col-12 px-0 text-center m-0">
+                                          <div className="p-2">
+                                            {index == 0 || index == 1 ? (
+                                              index == 0 ? (
+                                                <span
+                                                  type="button"
+                                                  onClick={(e) =>
+                                                    handlePOS(val, index)
+                                                  }
+                                                  className="nav-link text-center"
+                                                >
+                                                  Today
+                                                </span>
+                                              ) : index == 1 ? (
+                                                <>
+                                                  <span
+                                                    type="button"
+                                                    onClick={(e) =>
+                                                      handlePOS(val, index)
+                                                    }
+                                                    className="nav-link text-center"
+                                                  >
+                                                    Tomorrow
+                                                  </span>
+                                                </>
+                                              ) : (
+                                                ""
+                                              )
                                             ) : (
-                                              ""
-                                            )
-                                          ) : (
-                                            <span>{val}</span>
-                                          )}
+                                              <span
+                                                type="button"
+                                                onClick={(e) =>
+                                                  handlePOS(
+                                                    e.target.innerHTML,
+                                                    index
+                                                  )
+                                                }
+                                                className="nav-link text-center"
+                                              >
+                                                {val}
+                                              </span>
+                                            )}
+                                          </div>
+
+                                          <div
+                                            className={
+                                              currentPosition == index
+                                                ? "py-1 bg-primary"
+                                                : "py-1"
+                                            }
+                                          ></div>
                                         </div>
-                                        <div
-                                          className={
-                                            currentPosition == index
-                                              ? "py-1 bg-primary"
-                                              : "py-1"
-                                          }
-                                        ></div>
-                                      </div>
-                                    </>
-                                  );
-                                })}
-                              </Slider>
+                                      </>
+                                    );
+                                  })}
+                                </Slider>
+                              </div>
                             </div>
+                            <button
+                              className="owl-next"
+                              type="button"
+                              onClick={handleTestimonialNextClick}
+                              disabled={currentPosition === 14 ? true : false}
+                            >
+                              <i className="fas fa-chevron-right custom-arrow"></i>
+                            </button>
                           </div>
-                          <button
-                            className="owl-next"
-                            type="button"
-                            onClick={handleTestimonialNextClick}
-                            disabled={currentPosition === 14 ? true : false}
-                          >
-                            <i className="fas fa-chevron-right custom-arrow"></i>
-                          </button>
-                        </div>
 
-                        <div className="testimonial-slider-container">
-                          <div>
-                            <div className="row d-flex flex-nowrap overflow-auto m-2">
-                              <Slider ref={sliderRef} {...settings}>
-                                {schedule.map((val, index) => {
-                                  return (
-                                    <>
-                                      <div className="col-12 p-2">
-                                        <div className="card p-4 m-0 border-dark">
-                                          <div>
-                                            {index == 0 || index == 1
-                                              ? index == 0
-                                                ? "Today"
-                                                : index == 1
-                                                ? "Tomorrow"
-                                                : ""
-                                              : val}
-                                          </div>
-                                          <hr />
-                                          <div>
-                                            <div className="schedule-cont">
-                                              <div className="row">
-                                                <div className="col-md-12">
-                                                  {/* <!-- Time Slot --> */}
+                          <div className="testimonial-slider-container">
+                            <div>
+                              <div className="row d-flex   m-2">
+                                <div className="col-12 p-2">
+                                  <div className="card p-4 m-0 border-dark">
+                                    <div>
+                                      {dayjs(NEWDATE)?.format("ddd , DD MMM")}
+                                    </div>
+                                    <hr />
+                                    <div>
+                                      <div className="schedule-cont">
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            {/* <!-- Time Slot --> */}
 
-                                                  <div className="time-slot">
-                                                    <ul className="clearfix ">
-                                                      {availableSchedule?.length ===
-                                                        0 ||
-                                                      availableSchedule ===
-                                                        undefined ? (
-                                                        <div className="d-flex flex-column justify-content-center  ">
-                                                          <div className=" mb-3 m-auto">
-                                                            <img
-                                                              src={noResult}
-                                                              alt="No Slots Available"
-                                                              className="imf-fluid"
-                                                            />
-                                                          </div>
-                                                          No Slots available for{" "}
-                                                          {index == 0 ||
-                                                          index == 1
-                                                            ? index == 0
-                                                              ? "Today"
-                                                              : index == 1
-                                                              ? "Tomorrow"
-                                                              : ""
-                                                            : val}
-                                                        </div>
-                                                      ) : (
-                                                        availableSchedule?.map(
-                                                          (el, i) => {
-                                                            return (
-                                                              <>
-                                                                <div
-                                                                  className="form-check-inline visits  "
-                                                                  key={i}
-                                                                >
-                                                                  <label className="visit-btns">
-                                                                    <input
-                                                                      type="radio"
-                                                                      name="time"
-                                                                      required={
-                                                                        true
-                                                                      }
-                                                                      className="form-check-input"
-                                                                      id=""
-                                                                      onChange={(
-                                                                        e
-                                                                      ) => {
-                                                                        setTIME(
-                                                                          e
-                                                                            .target
-                                                                            .value
-                                                                        );
-                                                                      }}
-                                                                      value={el}
-                                                                    />
-                                                                    <span
-                                                                      className="visit-rsn"
-                                                                      data-bs-toggle="tooltip"
-                                                                    >
-                                                                      {el}
-                                                                    </span>{" "}
-                                                                  </label>
-                                                                </div>
-                                                              </>
-                                                            );
-                                                          }
-                                                        )
-                                                      )}
-                                                    </ul>
+                                            <div className="time-slot">
+                                              <ul className="clearfix ">
+                                                {availableSchedule?.length ===
+                                                  0 ||
+                                                availableSchedule ===
+                                                  undefined ? (
+                                                  <div className="d-flex flex-column justify-content-center  ">
+                                                    <div className=" mb-3 m-auto">
+                                                      <img
+                                                        src={noResult}
+                                                        alt="No Slots Available"
+                                                        className="imf-fluid"
+                                                      />
+                                                    </div>
+                                                    No Slots available for{" "}
                                                   </div>
-
-                                                  {/* <!-- /Time Slot --> */}
-                                                </div>
-                                              </div>
+                                                ) : (
+                                                  availableSchedule?.map(
+                                                    (el, i) => {
+                                                      return (
+                                                        <>
+                                                          <div
+                                                            className="form-check-inline visits  "
+                                                            key={i}
+                                                          >
+                                                            <label className="visit-btns">
+                                                              <input
+                                                                type="radio"
+                                                                name="time"
+                                                                required={true}
+                                                                className="form-check-input"
+                                                                id=""
+                                                                onChange={(
+                                                                  e
+                                                                ) => {
+                                                                  setTIME(
+                                                                    e.target
+                                                                      .value
+                                                                  );
+                                                                }}
+                                                                value={el}
+                                                              />
+                                                              <span
+                                                                className="visit-rsn"
+                                                                data-bs-toggle="tooltip"
+                                                              >
+                                                                {el}
+                                                              </span>{" "}
+                                                            </label>
+                                                          </div>
+                                                        </>
+                                                      );
+                                                    }
+                                                  )
+                                                )}
+                                              </ul>
                                             </div>
+
+                                            {/* <!-- /Time Slot --> */}
                                           </div>
                                         </div>
                                       </div>
-                                    </>
-                                  );
-                                })}
-                              </Slider>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
 
-                {/* <Appointment /> */}
+                  {/* <Appointment /> */}
 
-                {/* <!-- Submit Section --> */}
-                <div className="submit-section proceed-btn text-end">
-                  <button
-                    type="submit"
-                    className="outline-none border-0 p-0 bg-transprent"
-                  >
-                    <Link
-                      // to={`/checkout?doctor=${DOCTOR._id}&date=${NEWDATE}&time=${TIME}`}
-
-                      onClick={() =>
-                        dispatch(
-                          BOOKNOW({
-                            doctor: SingleData?._id,
-                            date: NEWDATE,
-                            time: TIME,
-                            Speciality: Speciality,
-                          })
-                        )
-                      }
-                      to={user ? `/checkout` : `/login`}
-                      className="btn btn-primary submit-btn"
+                  {/* <!-- Submit Section --> */}
+                  <div className="submit-section proceed-btn text-end">
+                    <button
+                      type="submit"
+                      className="outline-none border-0 p-0 bg-transprent"
                     >
-                      Proceed to Pay
-                    </Link>
-                  </button>
+                      <Link
+                        onClick={() =>
+                          dispatch(
+                            BOOKNOW({
+                              doctor: SingleData?._id,
+                              date: NEWDATE,
+                              time: TIME,
+                              Speciality: Speciality,
+                            })
+                          )
+                        }
+                        to={user ? `/checkout` : `/login`}
+                        className="btn btn-primary submit-btn"
+                      >
+                        Proceed to Pay
+                      </Link>
+                    </button>
+                  </div>
+                  {/* <!-- /Submit Section --> */}
                 </div>
-                {/* <!-- /Submit Section --> */}
               </div>
             </div>
           </div>
-        </div>
-      </form>
-      {/* <!-- /Page Content --> */}
-    </div>
+        </form>
+        {/* <!-- /Page Content --> */}
+      </div>
+    </>
   );
 };
 

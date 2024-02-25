@@ -5,27 +5,25 @@ import { getAllDoctors } from "../features/doctor/doctorSlice";
 import { getAllHospitals } from "../features/hospital/hospitalSlice";
 import { getAllServices } from "../features/service/serviceSlice";
 import { GetAllBlogs } from "../features/blog/blogSlice";
-import {
-  Allusers,
-  
-} from "../features/auth/authSlice";
+import { Allusers } from "../features/auth/authSlice";
 import { Link } from "react-router-dom";
+import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
 const Dashboard = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllDoctors());
     dispatch(getAllHospitals());
     dispatch(getAllServices());
-    dispatch(GetAllBlogs());
-dispatch(Allusers());
-  }, [])
-  
-  
+    dispatch(allDoctorCategory());
+    dispatch(Allusers());
+  }, []);
+
   const doctorState = useSelector((state) => state?.doctor?.doctors);
   const hospitalState = useSelector((state) => state?.hospital?.hospitals);
   const serviceState = useSelector((state) => state?.service?.Services);
   const blogState = useSelector((state) => state?.blog?.blogs);
   const { users } = useSelector((state) => state?.auth);
+  const { dCategories } = useSelector((state) => state?.dCategory);
   return (
     <div className="dashbord">
       <h3 className="mb-4 title">Dashboard</h3>
@@ -39,9 +37,7 @@ dispatch(Allusers());
               <BiUser></BiUser>
             </h2>
             <div>
-              <h2 className="text-center">
-                {users ? users.length : 0}
-              </h2>
+              <h2 className="text-center">{users ? users.length : 0}</h2>
               <p className="desc"> Total Users</p>
             </div>
           </div>
@@ -107,6 +103,22 @@ dispatch(Allusers());
                 {serviceState ? serviceState.length : 0}
               </h2>
               <p className="desc">Total Services</p>
+            </div>
+          </div>
+        </Link>
+        <Link
+          to={"doctor-category-list"}
+          className="col-4 mb-3 text-dark text-decoration-none"
+        >
+          <div className="d-flex  justify-content-around gap-4 align-items-center flex-grow-1 bg-white p-3 roudned-3">
+            <h2>
+              <BiUser></BiUser>
+            </h2>
+            <div>
+              <h2 className="text-center">
+                {dCategories ? dCategories.length : 0}
+              </h2>
+              <p className="desc">Total Categories </p>
             </div>
           </div>
         </Link>

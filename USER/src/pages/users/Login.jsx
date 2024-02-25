@@ -5,18 +5,15 @@ import { login, resetState } from "../../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { message } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import loginBanner from "../../assets/img/login-banner.png";
-
-let schema = yup.object().shape({
-  phoneNumber: yup.number().required("Email is Required"),
-  Password: yup.string().required("Password is Required"),
-});
+import Seo from "../../components/seo/SEO";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [Select, setSelect] = useState("phoneNumber");
 
   const navigate = useNavigate();
 
@@ -30,10 +27,28 @@ const Login = () => {
     }, 10);
   }
 
+  let schema = yup.object().shape({
+    loginSelect: yup.string(),
+    phoneNumber: yup.string().when("loginSelect", (loginSelect, schema) => {
+      if (loginSelect === "phoneNumber")
+        return schema.required("Phone Number is required");
+      return schema;
+    }),
+    Email: yup.string().when("loginSelect", (loginSelect, schema) => {
+      if (loginSelect === "Email") {
+        return schema.required("Must enter email address");
+      }
+      return schema;
+    }),
+    Password: yup.string().required("Password is Required"),
+  });
+
   const formik = useFormik({
     initialValues: {
       phoneNumber: "",
       Password: "",
+      Email: "",
+      loginSelect: "phoneNumber",
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -45,6 +60,8 @@ const Login = () => {
 
   return (
     <>
+      <Seo metaTitle={"Login - P2CARE"} />
+
       <div className="content top-space m-5">
         <div className="container-fluid">
           <div className="row">
@@ -66,30 +83,57 @@ const Login = () => {
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
-                        {/* <input
-                          type="text"
-                          name="phoneNumber"
-                          onChange={formik.handleChange("phoneNumber")}
-                          value={formik.values.phoneNumber}
-                          className="form-control floating"
-                        /> */}
-
-                        <PhoneInput
-                          countrySelectProps={{ unicodeFlags: true }}
-                          name="phoneNumber"
-                          // className="form-control floating"
-                          value={formik.values.phoneNumber}
-                          onChange={(el) =>
-                            formik.setFieldValue("phoneNumber", el)
+                        <select
+                          onChange={(e) =>
+                            formik.setFieldValue("loginSelect", e.target.value)
                           }
-                        />
-                        {/* <label className="focus-label">Phone Number</label> */}
-
-                        <div className="text-danger">
-                          {formik.touched.phoneNumber &&
-                            formik.errors.phoneNumber}
-                        </div>
+                          className="form-select"
+                          name="loginSelect"
+                          style={{ padding: "12px 12px" }}
+                        >
+                          <option value="phoneNumber">Phone Number</option>
+                          <option value="Email">Email Address</option>
+                        </select>
                       </div>
+
+                      {formik.values.loginSelect === "phoneNumber" ? (
+                        <>
+                          <div className="mb-3 form-focus">
+                            <PhoneInput
+                              countrySelectProps={{ unicodeFlags: true }}
+                              name="phoneNumber"
+                              // className="form-control floating"
+                              value={formik.values.phoneNumber}
+                              onChange={(el) =>
+                                formik.setFieldValue("phoneNumber", el)
+                              }
+                            />
+
+                            <div className="text-danger ">
+                              {formik.touched.phoneNumber &&
+                                formik.errors.phoneNumber}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="mb-3 form-focus">
+                            <input
+                              name="Email"
+                              type="email"
+                              onChange={formik.handleChange("Email")}
+                              value={formik.values.Email}
+                              className="form-control floating"
+                            />
+
+                            <label className="focus-label">Email Address</label>
+                            <div className="text-danger ">
+                              {formik.touched.Email && formik.errors.Email}
+                            </div>
+                          </div>
+                        </>
+                      )}
+
                       <div className="mb-3 form-focus">
                         <input
                           name="Password"
@@ -100,7 +144,7 @@ const Login = () => {
                         />
 
                         <label className="focus-label">Password</label>
-                        <div className="text-danger">
+                        <div className="text-danger ">
                           {formik.touched.Password && formik.errors.Password}
                         </div>
                       </div>

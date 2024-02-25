@@ -11,7 +11,12 @@ const contactSchema = new Schema(
     facebook: String,
     twitter: String,
     linkedin: String,
-    whatsapp: String
+    whatsapp: String,
+
+    
+    metaTitle: String,
+    metaDescription: String,
+    metaTags: String,
   },
   { timeseries: true }
 );
