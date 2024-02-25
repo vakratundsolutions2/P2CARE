@@ -20,34 +20,24 @@ const Login = () => {
   }
 
   let schema = yup.object().shape({
-    loginSelect: yup.string(),
-    phoneNumber: yup.string().when("loginSelect", (loginSelect, schema) => {
-      console.log(loginSelect);
-      if (loginSelect === "phoneNumber")
-        return schema.required("Phone Number is required");
-      return schema;
-    }),
-    Email: yup.string().when("loginSelect", (loginSelect, schema) => {
-      if (loginSelect === "Email") {
-        return schema.required("Must enter email address");
-      }
-      return schema;
-    }),
+    Email: yup
+      .string()
+      .email("Must be a valid email address")
+      .required("Email is Required"),
     Password: yup.string().required("Password is Required"),
   });
   const formik = useFormik({
     initialValues: {
-      phoneNumber: "",
+      // phoneNumber: "",
       Password: "",
       Email: "",
-      loginSelect: "phoneNumber",
+      // loginSelect: "phoneNumber",
+      
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      console.log(values);
-      // dispatch(login(values));
-      // dispatch({ type: "Login" });
-      // dispatch(resetState());
+      dispatch(login(values));
+      dispatch(resetState());
     },
   });
 
@@ -64,7 +54,7 @@ const Login = () => {
           </p>
 
           <form className="form-group mt-3" onSubmit={formik.handleSubmit}>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <select
                 onChange={(e) =>
                   formik.setFieldValue("loginSelect", e.target.value)
@@ -94,7 +84,7 @@ const Login = () => {
                 </div>
               </>
             ) : (
-              <>
+              <> */}
                 <div className="mb-3">
                   <CustomInput
                     type="email"
@@ -108,8 +98,15 @@ const Login = () => {
                     {formik.touched.Email && formik.errors.Email}
                   </div>
                 </div>
-              </>
-            )}
+
+
+
+
+              {/* </>
+            )} */}
+
+
+
             <div className="mb-3">
               <CustomInput
                 type="password"
