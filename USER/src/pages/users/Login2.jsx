@@ -4,52 +4,54 @@ import { useFormik } from "formik";
 
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { baseUrl } from "../../utils/baseUrl";
 import axios from "axios";
-import { useState } from "react";
-import { LoginOTP } from "../../features/auth/authSlice";
+import toast from "react-hot-toast";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import loginBanner from "../../assets/img/login-banner.png";
-import Seo from "../../components/seo/SEO";
-
+import Seo from "../../components/seo/Seo";
 
 let schema = yup.object().shape({
   phoneNumber: yup
     .string()
     // .email("Email should be valid")
     .required("Required"),
-
-  otpCode: yup.string().required("Required"),
 });
-const Login3 = () => {
+const Login2 = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
-  const phone = location.search.split("?")[1];
-  console.log(phone);
+
   const navigate = useNavigate();
 
   const userState = useSelector((state) => state.auth);
   const { isSuccess, user } = userState;
 
+  //   if (isSuccess && user) {
+  //     // navigate(-1);
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 10);
+  //   }
+
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: {
-      phoneNumber: phone || "",
-      otpCode: "",
+      phoneNumber: "",
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      dispatch(LoginOTP(values));
-      // if(res.data.status === "approved"){
-      //     navigate('/')
-      // }
+      const res = await axios.post(`${baseUrl}user/start-verification`, values);
+      if (res?.data) {
+        navigate(`/signin-verify?${values?.phoneNumber}`);
+      } else {
+        console.log(res.response.data);
+      }
     },
   });
 
   return (
     <>
       <Seo metaTitle={"Login - P2CARE"} />
-
       <div className="content top-space m-5">
         <div className="container-fluid">
           <div className="row">
@@ -71,35 +73,34 @@ const Login3 = () => {
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
-                        <input
+                        {/* <input
                           type="text"
                           name="phoneNumber"
                           onChange={formik.handleChange("phoneNumber")}
                           value={formik.values.phoneNumber}
                           className="form-control floating"
                         />
-                        <label className="focus-label">Phone Number</label>
-
+                        <label className="focus-label">Phone Number</label> */}
+                        <PhoneInput
+                          countrySelectProps={{ unicodeFlags: true }}
+                          name="phoneNumber"
+                          // className="form-control floating"
+                          value={formik.values.phoneNumber}
+                          onChange={(el) =>
+                            formik.setFieldValue("phoneNumber", el)
+                          }
+                        />
                         <div className="text-danger">
                           {formik.touched.phoneNumber &&
                             formik.errors.phoneNumber}
                         </div>
                       </div>
-                      <div className="mb-3 form-focus">
-                        <input
-                          type="text"
-                          name="otpCode"
-                          onChange={formik.handleChange("otpCode")}
-                          value={formik.values.otpCode}
-                          className="form-control floating"
-                        />
-                        <label className="focus-label">OTP</label>
 
-                        <div className="text-danger">
-                          {formik.touched.otpCode && formik.errors.otpCode}
-                        </div>
+                      <div className="text-end ">
+                        <Link className="forgot-link" to="/login">
+                          Login via Password
+                        </Link>
                       </div>
-
                       <button
                         className="btn btn-primary w-100 btn-lg login-btn"
                         type="submit"
@@ -123,4 +124,4 @@ const Login3 = () => {
   );
 };
 
-export default Login3;
+export default Login2;

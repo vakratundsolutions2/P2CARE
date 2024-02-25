@@ -3,7 +3,7 @@ import BreadCrum from "../components/BreadCrum";
 import { AddInquiry } from "../features/inquary/inquarySlice";
 import { GetContact } from "../features/content/ContentSlice";
 import { useEffect } from "react";
-import Seo from "../components/seo/SEO";
+import Seo from "../components/seo/Seo";
 
 function Contact() {
   const dispatch = useDispatch();

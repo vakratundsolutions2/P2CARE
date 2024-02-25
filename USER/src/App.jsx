@@ -22,11 +22,10 @@ const BlogDetails = lazy(() => import("./pages/blog/BlogDetails"));
 const HospitalProfile = lazy(() => import("./pages/hospital/Hospitalprofile"));
 const HospitalList = lazy(() => import("./pages/hospital/HospitalList"));
 const Layout = lazy(() => import("./components/layout/Layout"));
-const Login2 = lazy(() => import("./pages/users/Ligin2"));
-const Login3 = lazy(() => import("./pages/users/Ligin3"));
+const Login2 = lazy(() => import("./pages/users/Login2"));
+const Login3 = lazy(() => import("./pages/users/Login3"));
 const ProfileSetting = lazy(() => import("./pages/users/ProfileSetting"));
 const Register = lazy(() => import("./pages/users/Register"));
-// import Login from "./pages/users/Login";
 function App() {
   return (
     <>

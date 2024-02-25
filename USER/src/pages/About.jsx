@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAllAbout, GetAllFAQ, GetContact } from "../features/content/ContentSlice";
 import { baseUrl } from "../utils/baseUrl";
-import Seo from "../components/seo/SEO";
+import Seo from "../components/seo/Seo";
 const About = () => {
   const dispatch = useDispatch();
   useEffect(() => {

@@ -16,7 +16,7 @@ import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import * as yup from "yup";
 import { FaUser } from "react-icons/fa";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 let schema = yup.object().shape({
   // postedby: yup
   //   .string()

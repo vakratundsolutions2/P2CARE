@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetABlog, resetState } from "../../features/blog/blogSlice";
 import { baseUrl } from "../../utils/baseUrl";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 function BlogDetails() {
   const location = useLocation();

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import IMG from     "../assets/images/no-result-search.png";
-import Seo from "../components/seo/SEO";
+import Seo from "../components/seo/Seo";
 
 const Error = () => {
   const navigate = useNavigate();

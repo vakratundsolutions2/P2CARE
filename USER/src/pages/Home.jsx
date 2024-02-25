@@ -57,7 +57,7 @@ import {
 } from "../features/doctor/doctorSlice";
 import { Modal, Pagination, Row } from "antd";
 import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
-import Seo from "../components/seo/SEO";
+import Seo from "../components/seo/Seo";
 
 const Home = () => {
   const [search, setSearch] = useState("");

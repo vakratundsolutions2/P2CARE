@@ -10,7 +10,7 @@ import {
 import { baseUrl } from "../../utils/baseUrl";
 import { Pagination } from "antd";
 import { GetAllBlogCategory } from "../../features/blogCategory/BlogCategorySlice";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 const BlogList = () => {
   const dispatch = useDispatch();

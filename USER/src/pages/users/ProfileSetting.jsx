@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { baseUrl } from "../../utils/baseUrl";
 import { GetAUser, UpdateUser } from "../../features/auth/authSlice";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();

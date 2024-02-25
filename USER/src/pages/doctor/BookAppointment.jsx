@@ -16,7 +16,7 @@ import axios from "axios";
 
 import noResult from "../../assets/images/download.svg";
 import dayjs from "dayjs";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 1;
 const BookAppointment = () => {
   const ID = location.pathname.split("/")[2];

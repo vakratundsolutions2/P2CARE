@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAppoinmentsUser } from "../../features/auth/authSlice";
 import dayjs from "dayjs";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 const columns = [
   {
     title: "SNo",

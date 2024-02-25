@@ -13,7 +13,7 @@ import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
 import { Pagination, Rate, Slider } from "antd";
 import { GetAllAavailablity } from "../../features/availablity/availablitySlice";
 import dayjs from "dayjs";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 const DoctorList = () => {
   const nowdate = dayjs().format("YY-M-D");

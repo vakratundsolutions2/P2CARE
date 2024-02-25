@@ -15,7 +15,7 @@ const key = import.meta.env.TEST_ID;
 
 import LOGO from "../../assets/images/P2CARE.png";
 import { Rate } from "antd";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 const CheckOut = () => {
   const { BOOKSTATE } = useSelector((state) => state.doctor);
 

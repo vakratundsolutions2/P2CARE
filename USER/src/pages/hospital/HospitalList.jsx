@@ -7,7 +7,7 @@ import { baseUrl } from "../../utils/baseUrl";
 import { Pagination, Rate } from "antd";
 import { allDoctorCategory } from "../../features/dCategory/dCategorySlice";
 import { getAllServices } from "../../features/service/serviceSlice";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 const HospitalList = () => {
   const [category, setcatagory] = useState("");

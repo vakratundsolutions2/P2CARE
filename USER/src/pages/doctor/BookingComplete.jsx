@@ -3,7 +3,7 @@ import BreadCrum from "../../components/BreadCrum";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { BookingDetails } from "../../features/doctor/doctorSlice";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 const BookingComplete = () => {
 

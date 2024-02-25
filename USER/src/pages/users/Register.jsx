@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import loginBanner from "../../assets/img/login-banner.png";
-import Seo from "../../components/seo/SEO";
+import Seo from "../../components/seo/Seo";
 
 let schema = yup.object().shape({
   Email: yup
