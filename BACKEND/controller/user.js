@@ -120,19 +120,26 @@ exports.addAdmin = async function (req, res, next) {
 //=======================login====================
 
 exports.logIn = async function (req, res, next) {
-  // req.body.phoneNumber = req.body.Email
   try {
-    const checkUser = await USER.findOne({
+    let checkUser = await USER.findOne({
       phoneNumber: req.body.phoneNumber,
     });
+    if (req.body.Email) {
+      var checkUser2 = await USER.findOne({
+        Email: req.body.Email,
+      });
 
-    if (!checkUser) {
-      throw new Error("User not found");
+      if (!checkUser2) throw new Error("User not found")
+
+      if (checkUser2) {
+        checkUser = checkUser2;
+      }
     }
-    const checkPass = await bcrypt.compare(
-      req.body.Password,
-      checkUser.Password
-    );
+
+    if (!checkUser) throw new Error("User not found");
+    
+
+    let checkPass = await bcrypt.compare(req.body.Password, checkUser.Password);
 
     if (!checkPass) {
       throw new Error("Password is Wrong");
@@ -169,7 +176,7 @@ exports.logIn = async function (req, res, next) {
 
 exports.logInAdmin = async function (req, res, next) {
   try {
-    const checkUser = await USER.findOne({ Email: req.body.Cred });
+    const checkUser = await USER.findOne({ Email: req.body.Email });
 
     if (!checkUser) {
       throw new Error("User not found");
@@ -570,10 +577,9 @@ exports.importManyDoctor = async function (req, res, next) {
       });
     }
 
-    
     const AVAILABLE = await DOCTORAVAILABILITY?.insertMany(availData);
-console.log(req.file);
-     
+    console.log(req.file);
+
     await fs.unlinkSync(`./public/uploads/${req?.file?.filename}`);
     res.status(201).json({
       status: "Successful",

@@ -2,13 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./src/assets/images/p2care_fev.png"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/assets/css/bootstrap.min.css" />
     <!-- Favicon -->
     <link
       rel="shortcut icon"
-      href="/src/assets/img/favicon.png"
+      href="/src/assets/images/p2care_fev.png"
       type="image/x-icon"
     />
 
@@ -50,7 +54,6 @@
     <div id="root"></div>
 
     <script type="module" src="/src/main.jsx"></script>
-    <script src="/src/assets/js/bootstrap.bundle.min.js"></script>
 
     <!-- jQuery -->
 
@@ -61,7 +64,7 @@
 
     <!-- Datepicker JS -->
     <!-- <script src="/src/assets/js/moment.min.js"></script>
-		<script src="/src/assets/js/bootstrap-datetimepicker.min.js"></script> -->
+      <script src="/src/assets/js/bootstrap-datetimepicker.min.js"></script> -->
 
     <!-- Owl Carousel JS -->
     <!-- <script src="/src/assets/js/owl.carousel.min.js"></script> -->
@@ -81,21 +84,23 @@
     <!-- Custom JS -->
 
     <!-- <script src="/src/assets/js/script.js"></script> -->
+    <script src="./src/assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script type="text/javascript">
       window.ymConfig = {
         bot: "x1708550024367",
         host: "https://r0.cloud.yellow.ai",
       };
-      (function() {
+      (function () {
         var w = window,
           ic = w.YellowMessenger;
         if ("function" === typeof ic)
           ic("reattach_activator"), ic("update", ymConfig);
         else {
           var d = document,
-            i = function() {
+            i = function () {
               i.c(arguments);
             };
           function l() {
@@ -108,7 +113,7 @@
             t.parentNode.insertBefore(e, t);
           }
           (i.q = []),
-            (i.c = function(e) {
+            (i.c = function (e) {
               i.q.push(e);
             }),
             (w.YellowMessenger = i),

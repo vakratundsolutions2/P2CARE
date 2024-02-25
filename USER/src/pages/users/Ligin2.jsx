@@ -96,6 +96,11 @@ const Login2 = () => {
                         </div>
                       </div>
 
+                      <div className="text-end ">
+                        <Link className="forgot-link" to="/login">
+                          Login via Password
+                        </Link>
+                      </div>
                       <button
                         className="btn btn-primary w-100 btn-lg login-btn"
                         type="submit"
