@@ -66,7 +66,12 @@ function BlogDetails() {
                     </div>
                   </div>
                   <div className="blog-content">
-                    <p className="mb-0">{SingleBlog?.blogcontent}</p>
+                    <p
+                      className="px-1"
+                      dangerouslySetInnerHTML={{
+                        __html: SingleBlog?.blogcontent,
+                      }}
+                    ></p>
                   </div>
                 </div>
               </div>

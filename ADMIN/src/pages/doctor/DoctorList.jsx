@@ -1,4 +1,4 @@
-import { Modal, Switch, Table } from "antd";
+import { Modal, Switch, Table, TimePicker } from "antd";
 import { useEffect, useState } from "react";
 import { AiFillDelete, AiOutlineFileSearch } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
@@ -12,7 +12,6 @@ import {
   getAllDoctors,
   resetState,
 } from "../../features/doctor/doctorSlice";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 import { baseUrl } from "../../utils/baseUrl";
 import {
@@ -21,10 +20,10 @@ import {
   resetStateAvailablity,
   updateAvailablity,
 } from "../../features/availablity/availablitySlice";
-import CheckableTag from "antd/es/tag/CheckableTag";
 import { alltime } from "../../features/time/timeSlice";
 import CustomInput from "../../components/CustomInput";
-import { useFormik } from "formik";
+import { Field, FieldArray, Formik, useFormik } from "formik";
+import axios from "axios";
 
 const columns = [
   {
@@ -68,32 +67,19 @@ const columns = [
     dataIndex: "action",
   },
 ];
-const columns1 = [
-  {
-    title: "Day",
-    dataIndex: "day",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
-  {
-    title: "Availability",
-    dataIndex: "availability",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
-
-  {
-    title: "Booking Time",
-    dataIndex: "bookingTime",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
-];
 
 const DoctorList = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [openAvail, setOpenAvail] = useState(false);
+  const [openSlot, setOpenSlot] = useState(false);
   const [search, setSearch] = useState("");
   const [delDoc, setdelDoc] = useState("");
   const [AvailDoc, setAvailDoc] = useState("");
+  const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const [availableSchedule, setavailableSchedule] = useState([]);
+  const [finalSchedule, setfinalSchedule] = useState([]);
+  const [DAY, setDAY] = useState("");
 
   useEffect(() => {
     if (search) {
@@ -105,224 +91,13 @@ const DoctorList = () => {
 
   useEffect(() => {
     dispatch(getAllDoctors());
-    dispatch(alltime());
 
     if (AvailDoc !== undefined) dispatch(getAAvailablity(AvailDoc));
   }, [AvailDoc]);
 
-  const [selectedTagsSun, setSelectedTagsSUN] = useState([]);
-  const [selectedTagsMON, setSelectedTagsMON] = useState([]);
-  const [selectedTagsTUE, setSelectedTagsTUE] = useState([]);
-  const [selectedTagsWED, setSelectedTagsWED] = useState([]);
-  const [selectedTagsTHU, setSelectedTagsTHU] = useState([]);
-  const [selectedTagsFRI, setSelectedTagsFRI] = useState([]);
-  const [selectedTagsSAT, setSelectedTagsSAT] = useState([]);
-
-  const [Sunday, setSunday] = useState({
-    available: false,
-    day: "Sun",
-    bookingtime: selectedTagsSun,
-  });
-  const [Monday, setMonday] = useState({
-    available: false,
-    day: "Mon",
-    bookingtime: selectedTagsMON,
-  });
-  const [Tuesday, setTuesday] = useState({
-    available: false,
-    day: "Tue",
-    bookingtime: selectedTagsTUE,
-  });
-  const [Wednesday, setWednesday] = useState({
-    available: false,
-    day: "Wed",
-    bookingtime: selectedTagsWED,
-  });
-  const [Thursday, setThursday] = useState({
-    available: false,
-    day: "Thu",
-    bookingtime: selectedTagsTHU,
-  });
-  const [Friday, setFriday] = useState({
-    available: false,
-    day: "Fri",
-    bookingtime: selectedTagsFRI,
-  });
-  const [Saturday, setSaturday] = useState({
-    available: false,
-    day: "Sat",
-    bookingtime: selectedTagsSAT,
-  });
-
-  const finalAvailable = {
-    doctorid: AvailDoc,
-    bookingavailabilityInformation: [
-      Sunday,
-      Monday,
-      Tuesday,
-      Wednesday,
-      Thursday,
-      Friday,
-      Saturday,
-    ],
-  };
-
-  const AllTime = useSelector((state) => state.time?.AllTimes);
-  const AvailByDocId = useSelector(
-    (state) => state.available?.DoctorAvailablity
+  const { DoctorAvailablity, DoctorData } = useSelector(
+    (state) => state.available
   );
-  console.log("AvailByDocId", AvailByDocId);
-
-  const handleChangeSUN = (tag, checked) => {
-    console.log(tag);
-    console.log(checked);
-    const nextSelectedTags = checked
-      ? [...selectedTagsSun, tag]
-      : selectedTagsSun?.filter((t) => t !== tag);
-
-    setSelectedTagsSUN(nextSelectedTags);
-  };
-  const handleChangeMON = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsMON, tag]
-      : selectedTagsMON.filter((t) => t !== tag);
-
-    setSelectedTagsMON(nextSelectedTags);
-  };
-  const handleChangeTUE = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsTUE, tag]
-      : selectedTagsTUE.filter((t) => t !== tag);
-
-    setSelectedTagsTUE(nextSelectedTags);
-  };
-  const handleChangeWED = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsWED, tag]
-      : selectedTagsWED.filter((t) => t !== tag);
-
-    setSelectedTagsWED(nextSelectedTags);
-  };
-  const handleChangeTHU = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsTHU, tag]
-      : selectedTagsTHU.filter((t) => t !== tag);
-
-    setSelectedTagsTHU(nextSelectedTags);
-  };
-  const handleChangeFRI = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsFRI, tag]
-      : selectedTagsFRI.filter((t) => t !== tag);
-
-    setSelectedTagsFRI(nextSelectedTags);
-  };
-  const handleChangeSAT = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTagsSAT, tag]
-      : selectedTagsSAT.filter((t) => t !== tag);
-
-    setSelectedTagsSAT(nextSelectedTags);
-  };
-
-  useEffect(() => {
-    if (AvailByDocId === null || AvailByDocId === undefined) {
-      setSunday({
-        available: false,
-        day: "Sun",
-        bookingtime: [],
-      });
-      setSelectedTagsSUN([]);
-
-      setMonday({
-        available: false,
-        day: "Mon",
-        bookingtime: [],
-      });
-      setSelectedTagsMON([]);
-
-      setTuesday({
-        available: false,
-        day: "Tue",
-        bookingtime: [],
-      });
-      setSelectedTagsTUE([]);
-
-      setWednesday({
-        available: false,
-        day: "Wed",
-        bookingtime: [],
-      });
-      setSelectedTagsWED([]);
-      setThursday({
-        available: false,
-        day: "Thu",
-        bookingtime: [],
-      });
-      setSelectedTagsTHU([]);
-
-      setFriday({
-        available: false,
-        day: "Fri",
-        bookingtime: [],
-      });
-      setSelectedTagsFRI([]);
-
-      setSaturday({
-        available: false,
-        day: "Sat",
-        bookingtime: [],
-      });
-      setSelectedTagsSAT([]);
-    } else {
-      setSunday(AvailByDocId?.bookingavailabilityInformation[0]);
-      setSelectedTagsSUN(
-        AvailByDocId?.bookingavailabilityInformation[0]?.bookingtime
-      );
-
-      setMonday(AvailByDocId?.bookingavailabilityInformation[1]);
-      setSelectedTagsMON(
-        AvailByDocId?.bookingavailabilityInformation[1]?.bookingtime
-      );
-
-      setTuesday(AvailByDocId?.bookingavailabilityInformation[2]);
-
-      setSelectedTagsTUE(
-        AvailByDocId?.bookingavailabilityInformation[2]?.bookingtime
-      );
-      setWednesday(AvailByDocId?.bookingavailabilityInformation[3]);
-
-      setSelectedTagsWED(
-        AvailByDocId?.bookingavailabilityInformation[3]?.bookingtime
-      );
-      setThursday(AvailByDocId?.bookingavailabilityInformation[4]);
-
-      setSelectedTagsTHU(
-        AvailByDocId?.bookingavailabilityInformation[4]?.bookingtime
-      );
-      setFriday(AvailByDocId?.bookingavailabilityInformation[5]);
-
-      setSelectedTagsFRI(
-        AvailByDocId?.bookingavailabilityInformation[5]?.bookingtime
-      );
-      setSaturday(AvailByDocId?.bookingavailabilityInformation[6]);
-
-      setSelectedTagsSAT(
-        AvailByDocId?.bookingavailabilityInformation[6]?.bookingtime
-      );
-    }
-  }, [AvailByDocId]);
-
-  // console.log("sundsay", Sunday);
-  // console.log("Monday", Monday);
-  // console.log("Tuesday", Tuesday);
-  // console.log("Wednesday", Wednesday);
-  // console.log("Thursday", Thursday);
-  // console.log("Friday", Friday);
-  // console.log("saturday", Saturday);
-
-  // console.log("finalAvailable", finalAvailable);
-
   const searchResult = useSelector((state) => state.doctor.doctors);
 
   const showModal = (e) => {
@@ -338,284 +113,6 @@ const DoctorList = () => {
     setOpen(false);
   };
 
-  const dataAvail = [
-    {
-      day: "Sunday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            value={Sunday?.available}
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            // value={avail}
-            onChange={(e) =>
-              setSunday({
-                available: e,
-                day: "Sun",
-                bookingtime: selectedTagsSun,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  // key={time?._id}
-                  value={Sunday?.bookingtime}
-                  checked={selectedTagsSun?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeSUN(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Monday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            value={Monday?.available}
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            onChange={(e) =>
-              setMonday({
-                available: e,
-                day: "Mon",
-                bookingtime: selectedTagsMON,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  // key={time?._id}
-                  checked={selectedTagsMON?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeMON(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Tuesday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            value={Tuesday?.available}
-            onChange={(e) =>
-              setTuesday({
-                available: e,
-                day: "Tue",
-                bookingtime: selectedTagsTUE,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  // key={time?._id}
-                  checked={selectedTagsTUE?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeTUE(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Wednesday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            value={Wednesday?.available}
-            onChange={(e) =>
-              setWednesday({
-                available: e,
-                day: "Wed",
-                bookingtime: selectedTagsWED,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  // key={time?._id}
-                  checked={selectedTagsWED?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeWED(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Thursday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            value={Thursday?.available}
-            onChange={(e) =>
-              setThursday({
-                available: e,
-                day: "Thu",
-                bookingtime: selectedTagsTHU,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  // key={time?._id}
-                  checked={selectedTagsTHU?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeTHU(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Friday",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            value={Friday?.available}
-            onChange={(e) =>
-              setFriday({
-                available: e,
-                day: "Fri",
-                bookingtime: selectedTagsFRI,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  className="p-2"
-                  checked={selectedTagsFRI?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeFRI(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      day: "Sat",
-      availability: (
-        <>
-          <Switch
-            type="checkbox"
-            value={Saturday?.available}
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            size="small"
-            // value={avail}
-            onChange={(e) =>
-              setSaturday({
-                available: e,
-                day: "Sat",
-                bookingtime: selectedTagsSAT,
-              })
-            }
-          />
-        </>
-      ),
-      bookingTime: (
-        <>
-          {AllTime?.map((time) => {
-            return (
-              <>
-                <CheckableTag
-                  defaultValue={Saturday?.bookingtime}
-                  className="p-2"
-                  // key={time?._id}
-                  checked={selectedTagsSAT?.includes(time?.Time)}
-                  onChange={(checked) => handleChangeSAT(time?.Time, checked)}
-                >
-                  {time?.Time}
-                </CheckableTag>
-              </>
-            );
-          })}
-        </>
-      ),
-    },
-  ];
   // ----------------------------------------------------------------------------------------------------------------
   const data1 = [];
   for (let i = 0; i < searchResult?.length; i++) {
@@ -623,16 +120,8 @@ const DoctorList = () => {
       key: i + 1,
 
       specialization: searchResult[i]?.specialities,
-      name: (
-        <>
-          <Link
-            className="nav-link"
-            to={`/admin/doctor-profile/${searchResult[i]?._id}`}
-          >
-            {searchResult[i]?.doctorName}
-          </Link>
-        </>
-      ),
+      name: searchResult[i]?.doctorName,
+
       image: (
         <>
           <img
@@ -687,22 +176,6 @@ const DoctorList = () => {
       dispatch(getAllDoctors());
     }, 400);
   };
-  const handleSubmit = (e) => {
-    if (AvailByDocId === null) {
-      dispatch(addNewavailablity(e));
-      setTimeout(() => {
-        dispatch(resetStateAvailablity());
-        dispatch(getAllDoctors());
-      }, 300);
-    } else {
-      dispatch(updateAvailablity({ id: AvailDoc, formData: e }));
-      setTimeout(() => {
-        dispatch(resetStateAvailablity());
-        dispatch(getAllDoctors());
-      }, 300);
-    }
-    setOpenAvail(false);
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -720,6 +193,27 @@ const DoctorList = () => {
       });
     },
   });
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}available/searchdoctorday/${AvailDoc}?day=${DAY}`)
+      .then((res) => {
+        setavailableSchedule(
+          res.data.responseData.bookingavailabilityInformation[0]?.bookingtime
+        );
+        setfinalSchedule(
+          res.data.responseData.bookingavailabilityInformation[0]
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [DAY, AvailDoc]);
+
+  const handlePOS = (e, i) => {
+    setDAY(e);
+    console.log(i);
+  };
 
   return (
     <div>
@@ -775,15 +269,203 @@ const DoctorList = () => {
         open={openAvail}
         onCancel={() => setOpenAvail(false)}
         onOk={() => {
-          handleSubmit(finalAvailable);
+          setOpenAvail(false);
         }}
         width={1000}
-        // title="Are you sure you want to remove this doctor ?"
-        okText={AvailByDocId ? "Edit" : "Add"}
+        okText={"Ok"}
         cancelText="Cancel"
       >
         <form className="m-4">
-          <Table columns={columns1} dataSource={dataAvail} />
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title fs-5 ">
+                  Personal Booking Availablity Information for DR.{" "}
+                  {DoctorData?.doctorName}
+                </h4>
+              </div>
+              <div className="card-body">
+                <ul className="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                  {weekday?.map((el, i) => {
+                    return (
+                      <>
+                        <li
+                          className="nav-item"
+                          key={i}
+                          onClick={() => {
+                            handlePOS(el, i);
+                          }}
+                        >
+                          <a className="nav-link  " data-bs-toggle="tab">
+                            {el}
+                          </a>
+                        </li>
+                      </>
+                    );
+                  })}
+                </ul>
+
+                <div className="d-flex p-4 my-3  gap-2">
+                  {availableSchedule?.length === 0 ||
+                  availableSchedule === undefined ? (
+                    <>
+                      <div className="text-center w-100">
+                        No slots available
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {availableSchedule?.map((el, i) => {
+                        return (
+                          <>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              type="button"
+                              key={i}
+                            >
+                              {el}
+                            </button>
+                          </>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+                <button
+                  className="btn btn-sm btn-primary"
+                  type="button"
+                  onClick={() => setOpenSlot(true)}
+                >
+                  Add slots
+                </button>
+              </div>
+              <Modal
+                open={openSlot}
+                onCancel={() => setOpenSlot(false)}
+                onOk={() => {
+                  setOpenSlot(false);
+                }}
+                title={`DR. ${DoctorData?.doctorName}'s  available slots `}
+                width={500}
+                okText={"Ok"}
+                cancelText="Cancel"
+              >
+                {" "}
+                <Formik
+                  enableReinitialize={true}
+                  initialValues={{
+                    bookingtime: availableSchedule,
+                    day: DAY,
+                  }}
+                  onSubmit={(values) => {
+                    const { bookingtime, day } = values;
+                    const data = {
+                      doctorid: AvailDoc,
+                      bookingavailabilityInformation: [
+                        {
+                          available: true,
+                          day: day,
+                          bookingtime: JSON.stringify(bookingtime),
+                        },
+                      ],
+                    };
+
+                    dispatch(
+                      updateAvailablity({ id: AvailDoc, formData: data })
+                    );
+                    setTimeout(() => {
+                      dispatch(resetStateAvailablity());
+                      dispatch(getAllDoctors());
+                      setOpenSlot(false);
+                    }, 300);
+                  }}
+                >
+                  {(formik) => (
+                    <>
+                      <form onSubmit={formik.handleSubmit} className="mb-4 ">
+                        <div
+                          className=" justify-content-center rounded p-4 pb-5 mb-1 m-4 "
+                          style={{ background: " rgba(0, 0, 0, 0.1)" }}
+                        >
+                          <div className="my-3">
+                            {" "}
+                            Availablity information for{" "}
+                            {formik.values.day + "day"}{" "}
+                          </div>
+                          <FieldArray
+                            name="bookingtime"
+                            render={(arrayHelpers) => {
+                              return (
+                                <>
+                                  <div className="row">
+                                    {formik.values.bookingtime?.map((e, i) => {
+                                      return (
+                                        <>
+                                          <div key={i}>
+                                            <div
+                                              className="float-end p-1"
+                                              key={i}
+                                            >
+                                              <button
+                                                type="button"
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() =>
+                                                  arrayHelpers.remove(i)
+                                                }
+                                              >
+                                                X
+                                              </button>
+                                            </div>
+
+                                            <div className="form-group  ">
+                                              <Field
+                                                type="time"
+                                                ampm={true}
+                                                placeholder={`Slot-${i + 1}`}
+                                                className="form-control  mb-2"
+                                                format="h:mm a"
+                                                style={{ width: "85%" }}
+                                                name={`bookingtime.${i}`}
+                                              />
+                                            </div>
+                                          </div>
+                                        </>
+                                      );
+                                    })}
+                                  </div>
+                                  <div className="form-group  float-end">
+                                    <button
+                                      className="btn btn-primary btn-sm"
+                                      type="button"
+                                      onClick={() =>
+                                        arrayHelpers.insert(
+                                          formik.values.bookingtime?.length + 1,
+                                          []
+                                        )
+                                      }
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </>
+                              );
+                            }}
+                          />
+                          <div className="error"></div>
+                        </div>
+                        <div className="form-group p-4">
+                          <button type="submit" className="btn btn-primary ">
+                            {" "}
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </>
+                  )}
+                </Formik>
+              </Modal>
+            </div>
+          </div>{" "}
         </form>
       </Modal>
     </div>

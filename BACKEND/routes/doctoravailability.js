@@ -31,6 +31,12 @@ router.get(
 
   availableController.searchAvailableDrID
 );
+/// available by DAY
+router.get(
+  "/searchdoctorday/:id",
+
+  availableController.searchAvailableDrIDandDAY
+);
 /// available Filter  by date
 router.get(
   "/availablebydatefilter",

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import availablityService from "./availablityService";
 
 export const getAllAvailablity = createAsyncThunk(
-  "available/get-al-availablity",
+  "available/get-all-availablity",
   async (thunkAPI) => {
     try {
       return await availablityService.getAvail();
@@ -26,6 +26,7 @@ export const addNewavailablity = createAsyncThunk(
   "available/add-availablity",
   async (DATA, thunkAPI) => {
     try {
+      console.log(DATA);
       return await availablityService.addAvail(DATA);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -126,6 +127,7 @@ export const availablitySlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.DoctorAvailablity = action.payload?.data;
+        state.DoctorData = action.payload?.doctor;
       })
       .addCase(getAAvailablity.rejected, (state, action) => {
         state.isError = true;

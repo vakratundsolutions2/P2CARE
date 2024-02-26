@@ -11,6 +11,7 @@ import {
   resetState,
 } from "../../features/blog/blogSlice";
 import { useLocation } from "react-router-dom";
+import ReactQuill from "react-quill";
 
 let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
@@ -142,24 +143,27 @@ const AddBlog = () => {
                   {formik.touched.title && formik.errors.title}
                 </div>
               </div>
-              <div className="col-12">
-                <div className="form-floating">
-                  <textarea
-                    className="form-control"
-                    placeholder=""
-                    id="floatingTextarea"
-                    name="blogcontent"
-                    onChange={formik.handleChange("blogcontent")}
-                    value={formik.values.blogcontent}
-                  />
-                  <label className="mx-3" htmlFor="floatingTextarea">
-                    Content
-                  </label>
-                </div>
+
+              <div className="col-12 rounded ">
+                <label
+                  htmlFor="exampleFormControlTextarea3"
+                  className=" m-1 px-1  py-2"
+                >
+                  Content
+                </label>{" "}
+                <ReactQuill
+                  // readOnly={true}
+                  id="exampleFormControlTextarea3"
+                  theme="snow"
+                  name="blogcontent"
+                  onChange={formik.handleChange("blogcontent")}
+                  value={formik.values.blogcontent}
+                />
                 <div className="error">
                   {formik.touched.blogcontent && formik.errors.blogcontent}
                 </div>
               </div>
+
               <div className="col-6">
                 <CustomInput
                   type="text"

@@ -51,9 +51,7 @@ const BlogList = () => {
 
   return (
     <>
-      <Seo
-        metaTitle={"All Blogs | P2CARE"}
-      />
+      <Seo metaTitle={"All Blogs | P2CARE"} />
       <BreadCrum location={"All Blogs"} heading={"All Blogs"} />
 
       <div className="content">
@@ -94,7 +92,15 @@ const BlogList = () => {
                                 {e?.title}
                               </Link>
                             </h3>
-                            <p className="mb-0">{e?.blogcontent}</p>
+                            <p
+                              className="mb-0"
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  e?.blogcontent?.length < 100
+                                    ? e?.blogcontent
+                                    : e?.blogcontent?.slice(0, 100) + "...",
+                              }}
+                            ></p>
                           </div>
                         </div>
                       </div>

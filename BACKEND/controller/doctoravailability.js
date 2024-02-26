@@ -4,25 +4,17 @@ const DOCTORAVAILABILITY = require("../model/doctoravailability");
 const BOOKAPPOINTMENT = require("../model/bookappointment");
 //====================doctorAvailable================
 exports.availability = async function (req, res, next) {
-  console.log(req.body);
   try {
     var bookdata = req.body.bookingavailabilityInformation;
-    const bookingAvailabilityInformation =
+    var bookingAvailabilityInformation =
       bookdata.bookingavailabilityInformation;
-    const time = bookdata.map((info) => info?.bookingtime);
-    const checkTime = async (el) => {
-      const timeResult = await TIME.find({ Time: el });
-      return timeResult?.length > 0;
-    };
-    const isValidTime = await Promise.all(
-      time.flat().map(async (el) => await checkTime(el))
-    );
+    var time = bookdata.map((info) => info?.bookingtime);
+    time = JSON.parse(time);
 
-    if (!isValidTime.every(Boolean)) {
-      throw new Error("Invalid add value");
-    }
+    req.body.bookingavailabilityInformation[0].bookingtime = time;
 
-    // res.send(req.body);
+    console.log(req.body);
+
     const data = await DOCTORAVAILABILITY.create(req.body);
     res.status(201).json({
       status: "successful",
@@ -59,15 +51,14 @@ exports.allData = async function (req, res, next) {
 //====================updateAvailableTime==================
 
 exports.updatAvailable = async function (req, res, next) {
-  console.log("req.body", req.body);
-
   try {
     const getData = await DOCTORAVAILABILITY.findOne({
       doctorid: req.params.id,
     });
 
-    
-    const data = { ...getData?._doc, ...req.body };
+    const data = { ...getData._doc, ...req.body };
+    console.log("getData", getData);
+    console.log("data", data);
 
     if (data?.doctorid) {
       const cheCkid = await DOCTOR.findOne({ _id: data.doctorid });
@@ -76,36 +67,43 @@ exports.updatAvailable = async function (req, res, next) {
       }
     }
 
-    if (data.bookingavailabilityInformation) {
-      var bookdata = data.bookingavailabilityInformation;
+    if (data?.bookingavailabilityInformation) {
+      var bookdata = req.body?.bookingavailabilityInformation;
+      console.log("bookdata", bookdata);
 
-      const bookingAvailabilityInformation =
-        bookdata.bookingavailabilityInformation;
-      const time = bookdata?.map((info) => info?.bookingtime);
-      console.log(time);
-      // const bookingAvailabilityInformation = bookdata.bookingavailabilityInformation;
-      // includes;
-      const checkTime = async (el) => {
-        const timeResult = await TIME.find({ Time: el });
-        return timeResult.length > 0;
-      };
-      const isValidTime = await Promise.all(
-        time.flat().map(async (el) => await checkTime(el))
-      );
-
-      console.log(isValidTime);
-
-      if (!isValidTime.every(Boolean)) {
-        throw new Error("Invalid add value");
-      }
+      var time = bookdata?.map((info) => info.bookingtime);
     }
+    time = JSON.parse(time);
 
-    const udata = await DOCTORAVAILABILITY.findOneAndUpdate(
-      { doctorid: req.params.id },
-      req.body,
+    req.body.bookingavailabilityInformation[0].bookingtime = time;
+    console.log(req.body?.bookingavailabilityInformation[0]?.day);
+    const findData = await DOCTORAVAILABILITY.find({
+      doctorid: req.params.id,
+      bookingavailabilityInformation: {
+        $elemMatch: { day: req.body?.bookingavailabilityInformation[0]?.day },
+      },
+    });
+    console.log("findData", findData);
+    console.log(time);
+
+    const udata = await DOCTORAVAILABILITY.updateOne(
       {
-        new: true,
-      }
+        doctorid: req.params.id,
+        bookingavailabilityInformation: {
+          $elemMatch: { day: req.body?.bookingavailabilityInformation[0]?.day },
+        },
+      },
+      {
+        $set: {
+          "bookingavailabilityInformation.$.bookingtime": time,
+          "bookingavailabilityInformation.$.day":
+            req.body?.bookingavailabilityInformation[0]?.day,
+          "bookingavailabilityInformation.$.available":
+            req.body?.bookingavailabilityInformation[0]?.available,
+        },
+      },
+
+      { new: true }
     );
 
     console.log("udata", udata);
@@ -158,13 +156,16 @@ exports.deleteAvailableSingle = async function (req, res, next) {
 
 exports.DOCTORIDSEARCH = async function (req, res, next) {
   try {
-    const data = await DOCTORAVAILABILITY.findOne({
+    var data = await DOCTORAVAILABILITY.findOne({
       doctorid: req.params.id,
-    });
+    })
+    let doctor = await DOCTOR.findById(req.params.id)
+    
     res.status(200).json({
       status: "successfull",
       message: "data get successfull",
       data,
+      doctor,
     });
   } catch (error) {
     res.status(500).json({
@@ -202,16 +203,39 @@ exports.searchAvailableDrID = async function (req, res, next) {
         (dayInfo) => dayInfo.day === targetDay
       );
 
-    console.log("time", time);
     if (time?.length > 0) {
-      console.log("data", responseData?.bookingavailabilityInformation);
       responseData.bookingavailabilityInformation[0].bookingtime =
         responseData?.bookingavailabilityInformation[0]?.bookingtime?.filter(
           (ele) => !time.includes(ele)
         );
     }
 
-    console.log("responseData", responseData);
+    res.status(200).json({
+      status: "successfull",
+      message: "data generated successfully",
+      responseData,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
+exports.searchAvailableDrIDandDAY = async function (req, res, next) {
+  try {
+    var day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    targetDay = req.query.day;
+
+    responseData = await DOCTORAVAILABILITY.findOne({
+      doctorid: req.params.id,
+    });
+
+    responseData.bookingavailabilityInformation =
+      responseData?.bookingavailabilityInformation?.filter(
+        (dayInfo) => dayInfo.day === targetDay
+      );
+
     res.status(200).json({
       status: "successfull",
       message: "data generated successfully",
@@ -227,7 +251,6 @@ exports.searchAvailableDrID = async function (req, res, next) {
 
 exports.searchAvailableByDate = async function (req, res, next) {
   try {
-    console.log("Searching");
     var { mydate, diff } = req.query;
 
     const currentDate = new Date(mydate);
@@ -255,9 +278,7 @@ exports.searchAvailableByDate = async function (req, res, next) {
                 diff) %
                 diff)
           );
-          console.log(
-            dayDate + ":" + availability.day + ":" + availability.available
-          );
+
           return (
             dayDate <= nextSevenDays &&
             dayDate.getDate() >= currentDate.getDate() &&
@@ -281,68 +302,6 @@ exports.searchAvailableByDate = async function (req, res, next) {
       message: "data generated successfully",
       filterData,
     });
-    /* const { mydate , diff}=req.query;
-
-    console.log("req.query", req.query);
-    const currentDate = new Date(mydate);
-    const next7Days = new Date(mydate);
-    next7Days.setDate(currentDate.getDate() + diff);
-console.log("next7Days: " , next7Days)
-console.log("currentDate: ", currentDate);
-    const filterData = await BOOKAPPOINTMENT.aggregate([
-      {
-        $addFields: {
-          dateObject: {
-            $dateFromString: {
-              dateString: "$date",
-              format: "%Y-%m-%d",
-            },
-          },
-        },
-      },
-      {
-        $match: {
-          dateObject: { $gte: currentDate, $lt: next7Days },
-        },
-      },
-      {
-        $group: {
-          _id: "$doctor",
-          appointmentCount: { $sum: 1 },
-        },
-      },
-      {
-        $match: {
-          appointmentCount: { $eq: Number(diff) },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          
-        },
-      },
-    ]);
-
-
-    console.log("filterData", filterData);
-    //convert map to arrray
-    const doctorIdsArray = filterData?.map((obj) => obj._id);
-
-        console.log("filterData", doctorIdsArray);
-
-    const finalFilterData =await DOCTOR.find({ _id: { $nin: doctorIdsArray } })
-
-
-console.log("filterData:", filterData);
-res.status(200).json({
-  status: "successfull",
-  message: "data generated successfully",
-  finalFilterData,
-
-}
-
-); */
   } catch (error) {
     res.status(500).json({
       status: "fail",

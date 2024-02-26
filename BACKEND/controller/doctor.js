@@ -76,6 +76,12 @@ exports.addDoctor = async function (req, res, next) {
       req.body.awardAndAchivementsInfo
     );
     req.body.experties = JSON.parse(req.body.experties);
+
+
+
+
+
+
     const userDATA = {
       Username: req.body.Username,
       Password: await bcrypt.hash(req.body.Password, 10),
@@ -87,6 +93,51 @@ exports.addDoctor = async function (req, res, next) {
     const userdata = await USER.create(userDATA);
     req.body.userId = await userdata?._id;
     const data = await DOCTOR.create(req.body);
+
+
+
+        const available = await DOCTORAVAILABILITY.create({
+          doctorid: data?._id,
+          bookingavailabilityInformation: [
+            {
+              day: "Sun",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Mon",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Tue",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Wed",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Thu",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Fri",
+              available: false,
+              bookingtime: [],
+            },
+            {
+              day: "Sat",
+              available: false,
+              bookingtime: [],
+            },
+          ],
+        });
+
+
     res.status(201).json({
       status: "Successful",
       message: "Doctor SucessFully Added",

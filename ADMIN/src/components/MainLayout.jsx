@@ -110,10 +110,7 @@ const MainLayout = () => {
                     key: "doctor-category-list",
                     label: "Doctor Category",
                   },
-                  {
-                    key: "doctor-booking-list",
-                    label: "Booking Time",
-                  },
+                  
                   {
                     key: "doctor-request",
                     label: "New Doctor Request",

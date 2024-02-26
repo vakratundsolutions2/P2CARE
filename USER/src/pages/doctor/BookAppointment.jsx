@@ -68,8 +68,6 @@ const BookAppointment = () => {
       });
   }, [NEWDATE, currentPosition, ID]);
 
-  // console.log("NEWDATE", NEWDATE);
-  // console.log("availableSchedule", availableSchedule);
   const month = [
     "Jan",
     "Feb",
@@ -84,7 +82,6 @@ const BookAppointment = () => {
     "Nov",
     "Dec",
   ];
-  // >>>>>>> 88f733e5a2b78db3feb35d8044d4bde51f621b29
   const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   useEffect(() => {
@@ -165,6 +162,10 @@ const BookAppointment = () => {
     setNEWDATE(e);
     changeCurrentPosition(i);
   };
+
+  const currentTime = dayjs().format("HH:mm");
+  // console.log(currentTime);
+
   return (
     <>
       <Seo metaTitle={"Book Appoinment - P2CARE"} />

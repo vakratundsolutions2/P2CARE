@@ -111,12 +111,13 @@ const DoctorList = () => {
     setcategory("");
     setgender("");
     setavail([0, 1]);
-    setvaluePrice([]);
+    setvaluePrice([0, 2000]);
     dispatch(resetState());
     setTimeout(() => {
       dispatch(getAllDoctors());
       dispatch(GetAllAavailablity());
       dispatch(allDoctorCategory());
+      // window.location.reload();
     }, 400);
   };
 
@@ -525,26 +526,11 @@ const DoctorList = () => {
                             <div className="doctors-found">
                               <p>
                                 <span>
-                                  {doctorsFilter?.total} Doctors found for:
+                                  {doctorsFilter?.data?.length} Doctors found{" "}
+                                  {category ? "for :" : ""}
                                 </span>{" "}
-                                {category} in San francisco, California
+                                {category}{" "}
                               </p>
-                            </div>
-                            <div className="doctor-filter-availability">
-                              <p>Availability</p>
-                              <div className="status-toggle status-tog">
-                                <input
-                                  type="checkbox"
-                                  id="status_6"
-                                  className="check"
-                                />
-                                <label
-                                  htmlFor="status_6"
-                                  className="checktoggle"
-                                >
-                                  checkbox
-                                </label>
-                              </div>
                             </div>
                           </div>
 

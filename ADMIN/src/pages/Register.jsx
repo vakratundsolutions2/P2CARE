@@ -16,7 +16,7 @@ let schema = yup.object().shape({
     .required("Email is Required"),
   Name: yup.string().required("Name is Required"),
   Username: yup.string().required("Username is Required"),
-  // phoneNumber: yup.string().required("Phone Number is Required"),
+  phoneNumber: yup.string().required("Phone Number is Required"),
   Password: yup
     .string()
     .required("No password provided.")

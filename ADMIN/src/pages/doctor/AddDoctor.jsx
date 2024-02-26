@@ -16,9 +16,9 @@ import {
   updateDoctor,
 } from "../../features/doctor/doctorSlice";
 import { Switch } from "antd";
-import Select from "react-dropdown-select";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../utils/baseUrl";
+import Select from "react-dropdown-select";
 
 let schema = yup.object().shape({
   doctorName: yup.string().required("Doctor Name is Required"),
@@ -65,6 +65,7 @@ const AddDoctor = () => {
   }, [dispatch]);
 
   const DoctorCategory = useSelector((state) => state.dCategory?.dCategories);
+  const catData = DoctorCategory.map((el) => el.name);
 
   useEffect(() => {
     if (doctorId !== undefined || "") {
@@ -365,42 +366,16 @@ const AddDoctor = () => {
                       <Select
                         name="experties"
                         placeholder="Select Experties ..."
+                        className="form-control rounded p-3 mb-3"
+                        onChange={(e) => formik.setFieldValue("experties", e)}
                         labelField="name"
                         valueField="_id"
-                        onChange={(e) => formik.setFieldValue("experties", e)}
-                        className="form-control rounded p-3 mb-3"
                         multi
-                        value={[
-                          formik.values?.experties[0],
-                          formik.values?.experties[1],
-                        ]}
-                        defaultValue={[
-                          formik.values?.experties[0],
-                          formik.values?.experties[1],
-                        ]}
+                        value={DoctorCategory.name}
+                        defaultValue={formik.values?.experties[0]}
                         options={DoctorCategory}
                       />
 
-                      {/* <Select
-                        name="experties"
-                        mode="multiple"
-                        placeholder="Select Experties ..."
-                        allowClear
-                        style={{
-                          width: "100%",
-                        }}
-                        value={[
-                          formik.values?.experties[0],
-                          formik.values?.experties[1],
-                        ]}
-                        // defaultValue={["a10", "c12"]}
-                        onChange={(e) => formik.setFieldValue("experties", e)}
-                        options={nameCategory}
-                      /> */}
-
-                      <div className="error">
-                        {formik.touched.experties && formik.errors.experties}
-                      </div>
                     </div>
                     <div className="col-6">
                       <CustomInput

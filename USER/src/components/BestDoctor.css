@@ -129,8 +129,15 @@
   position: relative;
   overflow: hidden;
   border-radius: 8px 8px 0px 0px;
-  height: 14rem;
+  height: 16rem;
   width: 22vw;
+  /* flex: 0 0 164px;
+  margin-right: 20px;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden; */
 }
 
 .doctor-profile-img img {
@@ -326,6 +333,7 @@
   height: 50px;
   width: 100px;
   object-fit: fill;
+
 }
 
 .reviews-ratings span i {
@@ -426,114 +434,3 @@
 .treatment-section-sixteen .item.item-sixteen .doctor-profile-widget .doc-content .doc-pro-info .reviews-ratings p span i {
   margin-right: 4px;
 }
-
-/* Responsive adjustments */
-
-/* 
-@media (max-width: 991.98px) {
-  .doctor-section::before,
-  .doctor-section::after {
-    display: none;
-  }
-  .doc-pro-img {
-    max-width: 100%;
-    height: 80%;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .doctor-section {
-    margin: 0;
-    padding: 40px 0;
-  }
-
-  .section-header-slider {
-    margin-bottom: 20px;
-  }
-
-  .doc-pro-info .doc-pro-name a {
-    font-size: 18px;
-  }
-
-  .doc-content {
-    padding: 15px;
-  }
-
-  .reviews-ratings p {
-    font-size: 12px;
-  }
-
-  .doctor-amount span {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-  .doc-pro-img {
-    max-width: 100%;
-    height: 80%;
-  }
-}
-
-@media (max-width: 375px) {
-  .doctor-profile-widget {
-    width: 100%;
-    height: 200px; 
-  }
-  .img-fluid {
-    max-width: 100vw;
-    height: 200px; 
-  }
-
-  
-}
-
-@media (max-width: 767.98px) {
-  .doctor-profile-widget {
-    margin-bottom: 20px;
-  }
-}
-.reviews-ratings span {
-  display: inline-flex;
-  display: -webkit-inline-flex;
-  align-items: center;
-  -webkit-align-items: center;
-  justify-content: center;
-  -webkit-justify-content: center;
-}
- .reviews-ratings p {
-  display: inline-flex;
-  display: -webkit-inline-flex;
-  align-items: center;
-  -webkit-align-items: center;
-}
-.reviews-ratings p {
-  font-size: 12px;
-}
-
-
-.reviews-ratings p span {
-  min-width: 52px;
-  font-size: 14px;
-  margin: 0;
-  padding: 2px 3px;
-}
-.reviews-ratings p {
-  color: #D1D5DB;
-  font-size: 12px;
-}
-.reviews-ratings p span {
-  background: none;
-  color: #6B7280;
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0 4px 0 0;
-  padding: 0;
-}
-.reviews-ratings p span i {
-  margin-right: 4px;
-}
-.reviews-ratings p span {
-  background: none;
-  color: #FFBC11;
-  font-size: 14px;
-  margin: 0 5px 0 0;
-} */

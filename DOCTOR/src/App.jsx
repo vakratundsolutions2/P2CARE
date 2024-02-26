@@ -21,7 +21,7 @@ import InvoiceView from "./pages/InvoiceView";
 
 import ProfileSetting from "./pages/doctorinfo/ProfileSetting";
 import DoctorDashboard from "./pages/DoctorDashbord";
-import PatientProfile from "./pages/patientProfile";
+import PatientProfile from "./pages/PatientProfile";
 // import PrivateRoute from "./pages/private/PrivateRoute";
 // import PrivateRoute from "./pages/private/PrivateRoute
 // import Dashboard from "./pages/Dashboard";

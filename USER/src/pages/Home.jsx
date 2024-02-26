@@ -47,15 +47,14 @@ import { baseUrl } from "../utils/baseUrl";
 import { useState } from "react";
 import { useRef } from "react";
 import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
-import { useFormik } from "formik";
 
 import {
-  FilterDoctor,
+
   FilterDoctor2,
   getAllDoctors,
-  resetState,
+
 } from "../features/doctor/doctorSlice";
-import { Modal, Pagination, Row } from "antd";
+import { Modal } from "antd";
 import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
 import Seo from "../components/seo/Seo";
 

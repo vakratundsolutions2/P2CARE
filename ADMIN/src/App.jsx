@@ -21,7 +21,6 @@ const DoctorCategory = lazy(() => import("./pages/doctor/DoctorCategory"));
 const AddDoctorCategory = lazy(() =>
   import("./pages/doctor/AddDoctorCategory")
 );
-const BookDoctor = lazy(() => import("./pages/doctor/BookDoctor"));
 
 const BlogList = lazy(() => import("./pages/blog/BlogList"));
 
@@ -49,7 +48,6 @@ const Testimonial = lazy(() => import("./pages/testimonials/TestimonialList"));
 const AddTestimonial = lazy(() =>
   import("./pages/testimonials/AddTestimonials")
 );
-const BookDoctorList = lazy(() => import("./pages/doctor/BookDoctorList"));
 
 const InvoiceReport = lazy(() => import("./pages/reports/InvoiceReport"));
 
@@ -109,9 +107,6 @@ function App() {
                 path="doctor-category/:id"
                 element={<AddDoctorCategory />}
               />
-              <Route path="doctor-booking" element={<BookDoctor />} />
-              <Route path="doctor-booking/:id" element={<BookDoctor />} />
-              <Route path="doctor-booking-list" element={<BookDoctorList />} />
               <Route path="doctor-request" element={<RequesrDoctor />} />
 
               {/* Blog Routes */}

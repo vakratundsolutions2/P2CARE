@@ -8,8 +8,7 @@ import {
   reviewDoctor,
 } from "../../features/doctor/doctorSlice";
 import { baseUrl } from "../../utils/baseUrl";
-import { Rate, message } from "antd";
-import toast from "react-hot-toast";
+import { Rate } from "antd";
 import { useFormik } from "formik";
 import dayjs from "dayjs";
 import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";

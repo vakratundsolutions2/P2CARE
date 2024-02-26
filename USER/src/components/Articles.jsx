@@ -62,11 +62,16 @@ const Articles = () => {
                                 {e?.title}{" "}
                               </Link>
                             </h4>
-                            <p>
-                              {e?.blogcontent?.length < 100
-                                ? e?.blogcontent
-                                : e?.blogcontent?.slice(0, 100) + "..."}
-                            </p>
+                            <p
+                              className="px-1"
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  e?.blogcontent?.length < 100
+                                    ? e?.blogcontent
+                                    : e?.blogcontent?.slice(0, 100) + "...",
+                              }}
+                            ></p>
+
                             <Link
                               to={`/blog-details/${e?._id}`}
                               className="btn"
