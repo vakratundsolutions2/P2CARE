@@ -38,7 +38,7 @@ const Footer = () => {
               </div>
               <div className="col-lg-6">
                 <div className="row">
-                  <div className="col-lg-3 col-md-4">
+                  <div className="col-lg-5 col-md-4">
                     <div className="footer-widget footer-menu">
                       <h2 className="footer-title">For Patients</h2>
                       <ul>
@@ -54,13 +54,11 @@ const Footer = () => {
                       </ul>
                     </div>
                   </div>
-                  <div className="col-lg-3 col-md-4">
+                  {/* <div className="col-lg-3 col-md-4">
                     <div className="footer-widget footer-menu">
                       <h2 className="footer-title">For Doctors</h2>
                       <ul>
-                        {/* <li>
-                          <Link to="appointments">Appointments</Link>
-                        </li> */}
+                        
                         <li>
                           <Link to="/blogs">Blog</Link>
                         </li>
@@ -69,8 +67,8 @@ const Footer = () => {
                         </li>
                       </ul>
                     </div>
-                  </div>
-                  <div className="col-lg-6 col-md-4">
+                  </div> */}
+                  <div className="col-lg-6 px-4 col-md-4">
                     <div className="footer-widget footer-contact">
                       <h2 className="footer-title">Contact Us</h2>
                       <div className="footer-contact-info">

@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import blogService from "./blogService";
 const initialState = {
-  blogs :[],
+  blogs: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -19,16 +19,13 @@ export const AddBlogs = createAsyncThunk(
     }
   }
 );
-export const GetAllBlogs = createAsyncThunk(
-  "blog/getAll",
-  async (thunkAPI) => {
-    try {
-      return await blogService.allblogs();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const GetAllBlogs = createAsyncThunk("blog/getAll", async (thunkAPI) => {
+  try {
+    return await blogService.allblogs();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 export const DeleteABlog = createAsyncThunk(
   "blog/delete",
   async (catData, thunkAPI) => {
@@ -42,7 +39,7 @@ export const DeleteABlog = createAsyncThunk(
 );
 export const DeleteAllBlog = createAsyncThunk(
   "blog/delete-all",
-  async ( thunkAPI) => {
+  async (thunkAPI) => {
     //  console.log(catData);
     try {
       return await blogService.delAllBlog();
@@ -149,9 +146,6 @@ export const blogSlice = createSlice({
         state.isSuccess = false;
       });
 
-
-
-
     builder.addCase(UpdateBlog.pending, (state) => {
       state.isLoading = true;
     }),
@@ -160,6 +154,7 @@ export const blogSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.message = action.payload?.message;
+        state.editedBlog = action.payload?.udata;
         if (state.isSuccess === true) {
           toast.success("Blog Updated Successfully");
         }
@@ -168,7 +163,7 @@ export const blogSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-      })
+      });
     builder.addCase(GetABlog.pending, (state) => {
       state.isLoading = true;
     }),
@@ -177,15 +172,14 @@ export const blogSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.message = action.payload?.message;
-        state.SingleBlog = action.payload?.data
+        state.SingleBlog = action.payload?.data;
       }),
       builder.addCase(GetABlog.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
       });
-      builder.addCase(resetState, () => initialState);
-
+    builder.addCase(resetState, () => initialState);
   },
 });
 

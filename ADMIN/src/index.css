@@ -202,3 +202,11 @@ main::-webkit-scrollbar {
   padding: 11px 15px;
   outline: none;
 }
+
+.table-image {
+  height: 5rem;
+  width: 5rem;
+  object-fit: contain;
+  overflow: hidden;
+
+}

@@ -8,6 +8,8 @@ import { GetAllBlogs } from "../features/blog/blogSlice";
 import { Allusers } from "../features/auth/authSlice";
 import { Link } from "react-router-dom";
 import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
+import IconSearch from "../components/IconSerch";
+import IconPicker from "../components/IconPicker";
 const Dashboard = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -122,6 +124,8 @@ const Dashboard = () => {
             </div>
           </div>
         </Link>
+        {/* <IconSearch />
+        <IconPicker /> */}
       </div>
     </div>
   );

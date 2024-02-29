@@ -102,19 +102,13 @@ const MainLayout = () => {
                     key: "doctor",
                     label: "New Doctor",
                   },
-                  // {
-                  //   key: "search-doctor",
-                  //   label: "Search Doctor",
-                  // },
+                  
                   {
                     key: "doctor-category-list",
                     label: "Doctor Category",
                   },
                   
-                  {
-                    key: "doctor-request",
-                    label: "New Doctor Request",
-                  },
+
                 ],
               },
 
@@ -127,15 +121,7 @@ const MainLayout = () => {
                     key: "all-hospital",
                     label: "All Hospitals",
                   },
-                  // {
-                  //   key: "assign-doctor",
-                  //   label: "Assign Doctor",
-                  // },
                   
-                  // {
-                  //   key: "hospital/all-review",
-                  //   label: "All Reviews",
-                  // },
                 ],
               },
               {

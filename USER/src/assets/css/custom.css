@@ -6276,6 +6276,7 @@ th.table-head-days {
     display: inline;
   }
 }
+
 @media (max-width: 991.98px) {
   .header-one .navbar-header {
     -webkit-box-align: center;
@@ -18245,6 +18246,11 @@ input.form-control.rounded-pill:focus {
     margin-top: 10px;
     text-align: center;
     display: block;
+  }
+
+  .login-header .login-header-text {
+    margin-top: .5rem;
+    text-align: center;
   }
 }
 

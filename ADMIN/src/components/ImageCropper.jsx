@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { imageDetail } from "../features/imageSlice";
 
 const ASPECT_RATIO = 1;
-const MIN_DIMENSION = 150;
+const MIN_DIMENSION = 120;
 
 const ImageCropper = ({ closeModal, updateAvatar }) => {
   const dispatch = useDispatch();
@@ -18,11 +18,13 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
   const [imgSrc, setImgSrc] = useState("");
   const [crop, setCrop] = useState();
   const [error, setError] = useState("");
-  
+  const [ImgName, setImgName] = useState("");
+
   const onSelectFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setImgName(file?.name);
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       const imageElement = new Image();
@@ -33,7 +35,9 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
         if (error) setError("");
         const { naturalWidth, naturalHeight } = e.currentTarget;
         if (naturalWidth < MIN_DIMENSION || naturalHeight < MIN_DIMENSION) {
-          setError("Image must be at least 150 x 150 pixels.");
+          setError(
+            `Image must be at least ${MIN_DIMENSION} x ${MIN_DIMENSION} pixels.`
+          );
           return setImgSrc("");
         }
       });
@@ -61,18 +65,17 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
 
   return (
     <>
-      <label className="block mb-3 w-fit">
-        <span className="sr-only">Choose profile photo</span>
+      <label className="   my-3">
         <input
           type="file"
           accept="image/*"
           onChange={onSelectFile}
-          className="block w-full text-sm text-slate-500 file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-gray-700 file:text-sky-300 hover:file:bg-gray-600"
+          className="form-control w-75 "
         />
       </label>
       {error && <p className="error">{error}</p>}
       {imgSrc && (
-        <div className="d-flex flex-column align-items-center">
+        <div className="d-flex flex-column align-items-center gap-4">
           <ReactCrop
             crop={crop}
             onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
@@ -85,7 +88,6 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
               ref={imgRef}
               src={imgSrc}
               alt="Upload"
-              
               style={{ maxHeight: "70vh" }}
               onLoad={onImageLoad}
             />
@@ -103,10 +105,10 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
                 )
               );
               const dataUrl = previewCanvasRef.current.toDataURL();
+              
               updateAvatar(dataUrl);
+              dispatch(imageDetail({ dataUrl, ImgName }));
               closeModal();
-
-              dispatch(imageDetail(dataUrl));
             }}
           >
             Crop Image
@@ -121,8 +123,8 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
             display: "none",
             border: "1px solid black",
             objectFit: "contain",
-            width: 150,
-            height: 150,
+            width: 180,
+            height: 180,
           }}
         />
       )}

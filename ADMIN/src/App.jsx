@@ -1,65 +1,45 @@
 import { Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/content/Home";
-import Contact from "./pages/content/Contact";
-import About from "./pages/content/About";
-import Faq from "./pages/content/Faq";
-import AddFaq from "./pages/content/AddFaq";
+import Dashboard from "./pages/Dashbord";
+import MainLayout from "./components/MainLayout";
+import PrivateRoute from "./utils/PrivateRoute";
+import PublicRoute from "./utils/PublicRoute";
+import AddDoctorCategory from "./pages/doctor/AddDoctorCategory";
+import DoctorCategory from "./pages/doctor/DoctorCategory";
 import AddDoctor from "./pages/doctor/AddDoctor";
-import EditProfile from "./pages/users/EditProfile";
-import PrivacyPolicy from "./pages/content/PrivacyPolicy";
+import DoctorList from "./pages/doctor/DoctorList";
 import TermsAndConditions from "./pages/content/TermsAndConditions";
-
-const Login = lazy(() => import("./pages/Login"));
-const MainLayout = lazy(() => import("./components/MainLayout"));
-const Dashbord = lazy(() => import("./pages/Dashbord"));
-const DoctorList = lazy(() => import("./pages/doctor/DoctorList"));
-
-// const AddDoctor = lazy(() => import("./pages/doctor/AddDoctor"));
-const DoctorCategory = lazy(() => import("./pages/doctor/DoctorCategory"));
-const AddDoctorCategory = lazy(() =>
-  import("./pages/doctor/AddDoctorCategory")
-);
-
-const BlogList = lazy(() => import("./pages/blog/BlogList"));
-
-const AddBlog = lazy(() => import("./pages/blog/AddBlog"));
-const BlogCatList = lazy(() => import("./pages/blog/BlogCatList"));
-const AddBlogCategory = lazy(() => import("./pages/blog/AddBlogCategory"));
-
-const HospitalList = lazy(() => import("./pages/hospital/HospitalList"));
-const AddHospital = lazy(() => import("./pages/hospital/AddHospital"));
-const AssignDoctor = lazy(() => import("./pages/hospital/AssignDoctor"));
-
-const ServiceList = lazy(() => import("./pages/service/ServiceList"));
-const AddService = lazy(() => import("./pages/service/AddService"));
-const ServiceCategoryList = lazy(() =>
-  import("./pages/service/ServiceCategoryList")
-);
-const AddServiceCategory = lazy(() =>
-  import("./pages/service/AddServiceCategory")
-);
-
-const DoctorProfile = lazy(() => import("./pages/profile/DoctorProfile"));
-const HospitalProfile = lazy(() => import("./pages/profile/HospitalProfile"));
-
-const Testimonial = lazy(() => import("./pages/testimonials/TestimonialList"));
-const AddTestimonial = lazy(() =>
-  import("./pages/testimonials/AddTestimonials")
-);
-
-const InvoiceReport = lazy(() => import("./pages/reports/InvoiceReport"));
-
-const Register = lazy(() => import("./pages/Register"));
-const PrivateRoute = lazy(() => import("./utils/PrivateRoute"));
-const PublicRoute = lazy(() => import("./utils/PublicRoute"));
-const Appoinments = lazy(() => import("./pages/reports/Appoinments"));
-const Inquary = lazy(() => import("./pages/reports/Inquary"));
-const EditInquary = lazy(() => import("./pages/reports/EditInquary"));
-const Users = lazy(() => import("./pages/users/Users"));
-const AddUsers = lazy(() => import("./pages/users/AddUsers"));
-const RequesrDoctor = lazy(() => import("./pages/doctor/RequesrDoctor"));
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import BlogList from "./pages/blog/BlogList";
+import AddBlog from "./pages/blog/AddBlog";
+import AddBlogCategory from "./pages/blog/AddBlogCategory";
+import BlogCatList from "./pages/blog/BlogCatList";
+import HospitalList from "./pages/hospital/HospitalList";
+import AddHospital from "./pages/hospital/AddHospital";
+import AssignDoctor from "./pages/hospital/AssignDoctor";
+import AddService from "./pages/service/AddService";
+import AddServiceCategory from "./pages/service/AddServiceCategory";
+import ServiceCategoryList from "./pages/service/ServiceCategoryList";
+import ServiceList from "./pages/service/ServiceList";
+import AddTestimonial from "./pages/testimonials/AddTestimonials";
+import TestimonialList from "./pages/testimonials/TestimonialList";
+import DoctorProfile from "./pages/profile/DoctorProfile";
+import HospitalProfile from "./pages/profile/HospitalProfile";
+import AddUsers from "./pages/users/AddUsers";
+import InvoiceReport from "./pages/reports/InvoiceReport";
+import Appoinments from "./pages/reports/Appoinments";
+import EditInquary from "./pages/reports/EditInquary";
+import Inquary from "./pages/reports/Inquary";
+import Users from "./pages/reports/Users";
+import About from "./pages/content/About";
+import Home from "./pages/content/Home";
+import AddFaq from "./pages/content/AddFaq";
+import Contact from "./pages/content/Contact";
+import Faq from "./pages/content/Faq";
+import PrivacyPolicy from "./pages/content/PrivacyPolicy";
+import EditProfile from "./pages/users/EditProfile";
 
 function App() {
   return (
@@ -94,7 +74,7 @@ function App() {
                 </PrivateRoute>
               }
             >
-              <Route index element={<Dashbord />} />
+              <Route index element={<Dashboard />} />
 
               {/* Doctor Routes */}
 
@@ -107,7 +87,6 @@ function App() {
                 path="doctor-category/:id"
                 element={<AddDoctorCategory />}
               />
-              <Route path="doctor-request" element={<RequesrDoctor />} />
 
               {/* Blog Routes */}
 
@@ -144,7 +123,7 @@ function App() {
 
               <Route path="testimonial" element={<AddTestimonial />} />
               <Route path="testimonial/:id" element={<AddTestimonial />} />
-              <Route path="testimonial-list" element={<Testimonial />} />
+              <Route path="testimonial-list" element={<TestimonialList />} />
 
               {/* Profile Routes */}
 

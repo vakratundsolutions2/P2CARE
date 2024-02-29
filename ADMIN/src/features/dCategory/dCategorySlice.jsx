@@ -2,7 +2,8 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import doctorCategoryService from "./dCategoryService";
 const initialState = {
-  dCategories:[],
+  dCategories: [],
+  dCategory: [],
   isError: false,
   isLoading: false,
   isSuccess: false,

@@ -6,7 +6,12 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/CustomInput";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Switch } from "antd";
-import {  EditUser, GetUSERBYID, register, resetState } from "../../features/auth/authSlice";
+import {
+  EditUser,
+  GetUSERBYID,
+  register,
+  resetState,
+} from "../../features/auth/authSlice";
 
 const AddUsers = () => {
   const navigate = useNavigate();
@@ -22,56 +27,52 @@ const AddUsers = () => {
   }, [ID]);
 
   const { SingleData } = useSelector((state) => state?.auth);
-const formik = useFormik({
-  initialValues: {
-    Name: SingleData?.Name || "",
-    Username: SingleData?.Username || "",
-    Email: SingleData?.Email || "",
-    phoneNumber: SingleData?.phoneNumber || "",
-    Role: SingleData?.Role || "",
-    isBlocked: SingleData?.isBlocked || false,
-    ProfilePic: SingleData?.ProfilePic || "",
-  },
-  enableReinitialize: true,
-  onSubmit: (values) => {
-    const {
-      Name,
-      Username,
-      Email,
-      phoneNumber,
-      Role,
-      isBlocked,
-      ProfilePic,
-      
-    } = values;
+  const formik = useFormik({
+    initialValues: {
+      Name: SingleData?.Name || "",
+      Username: SingleData?.Username || "",
+      Email: SingleData?.Email || "",
+      phoneNumber: SingleData?.phoneNumber || "",
+      Role: SingleData?.Role || "",
+      isBlocked: SingleData?.isBlocked || false,
+      ProfilePic: SingleData?.ProfilePic || "",
+    },
+    enableReinitialize: true,
+    onSubmit: (values) => {
+      const {
+        Name,
+        Username,
+        Email,
+        phoneNumber,
+        Role,
+        isBlocked,
+        ProfilePic,
+      } = values;
 
-      console.log(values)
-    const formData = new FormData()
-          formData.append("Name", Name);
+      const formData = new FormData();
+      formData.append("Name", Name);
 
-    formData.append("phoneNumber", phoneNumber);
-    formData.append("Email",Email);
-    formData.append("Username", Username);
-    formData.append("Name",Name);
-    formData.append("Role", Role);
-    formData.append("isBlocked", isBlocked);
-    formData.append("ProfilePic", ProfilePic);
-  
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("Email", Email);
+      formData.append("Username", Username);
+      formData.append("Name", Name);
+      formData.append("Role", Role);
+      formData.append("isBlocked", isBlocked);
+      formData.append("ProfilePic", ProfilePic);
 
-    if (ID === undefined || "") {
-      dispatch(register(values));
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 300);
-    } else {
-      dispatch(EditUser({ formData: values, id: ID }));
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 300);
-    }
-  },
-});
-
+      if (ID === undefined || "") {
+        dispatch(register(values));
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      } else {
+        dispatch(EditUser({ formData: values, id: ID }));
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      }
+    },
+  });
 
   return (
     <>
@@ -182,7 +183,7 @@ const formik = useFormik({
                       {formik.touched.Role && formik.errors.Role}
                     </div>
                   </div>
-                  <div className="col-6 m-4 d-flex">
+                  {/* <div className="col-6 m-4 d-flex">
                     <div className="form-check-inline visits ">
                       <label className="">
                         <Switch
@@ -201,7 +202,7 @@ const formik = useFormik({
                     <div className="error">
                       {formik.touched.isBlocked && formik.errors.isBlocked}
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="form-group">
                     <button className="btn btn-sm btn-primary" type="submit">

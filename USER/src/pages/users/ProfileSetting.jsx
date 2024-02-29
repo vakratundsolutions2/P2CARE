@@ -66,6 +66,17 @@ const ProfileSetting = () => {
                           <div className="mb-3">
                             <div className="change-avatar">
                               <div className="profile-img w-25">
+                                {formik.values.Profile ? (
+                                  <>
+                                    {" "}
+                                    <img
+                                      src={`${baseUrl}user/${user?.Profile}`}
+                                      alt={formik.values.Name}
+                                    />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
                                 <img
                                   src={`${baseUrl}user/${user?.Profile}`}
                                   alt={formik.values.Name}

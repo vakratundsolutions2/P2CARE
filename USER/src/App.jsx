@@ -3,6 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Toaster } from "react-hot-toast";
 import MyAppoinments from "./pages/users/MyAppoinments";
+import ForgotPassword from "./pages/users/ForgotPassword";
+import ResetPassword from "./pages/users/ResetPassword";
+import LoginEmail from "./pages/users/LoginEmail";
+import LoginPhone from "./pages/users/LoginPhone";
 
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
@@ -53,8 +57,12 @@ function App() {
               />
 
               <Route path="register" element={<Register />} />
-              <Route path="login" element={<Login />} />
+              {/* <Route path="login" element={<Login />} /> */}
+              <Route path="login" element={<LoginEmail />} />
+              <Route path="login-phone" element={<LoginPhone />} />
               <Route path="signin" element={<Login2 />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password/:token" element={<ResetPassword />} />
               <Route path="signin-verify" element={<Login3 />} />
 
               <Route path="profile-setting" element={<ProfileSetting />} />

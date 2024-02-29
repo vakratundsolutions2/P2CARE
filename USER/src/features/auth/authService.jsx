@@ -31,18 +31,16 @@ const getAuser = async (DATA) => {
   return res.data;
 };
 const updateUser = async (DATA) => {
-
   const res = await axios.put(
     `${baseUrl}user/update/${DATA?.id}`,
     DATA?.FDATA,
     config
   );
 
-    await localStorage.setItem("USER", JSON.stringify(res.data?.udata));
+  await localStorage.setItem("USER", JSON.stringify(res.data?.udata));
   return res.data;
 };
 const getAppoinmentsUser = async (DATA) => {
-
   const res = await axios.get(
     `${baseUrl}book/appointmentsbyuser/${DATA}`,
 
@@ -51,9 +49,23 @@ const getAppoinmentsUser = async (DATA) => {
 
   return res.data;
 };
+const forgotPassword = async (DATA) => {
+  const res = await axios.post(
+    `${baseUrl}user/forgot-password-token`,
+DATA,
+  );
 
+  return res.data;
+};
+const resetPassword = async (DATA) => {
+  const res = await axios.put(
+    `${baseUrl}user/reset-password/${DATA.token}`,
+    DATA,
 
+  );
 
+  return res.data;
+};
 
 const authService = {
   login,
@@ -63,6 +75,8 @@ const authService = {
   getAuser,
   updateUser,
   getAppoinmentsUser,
+  forgotPassword,
+  resetPassword
 };
 
 export default authService;

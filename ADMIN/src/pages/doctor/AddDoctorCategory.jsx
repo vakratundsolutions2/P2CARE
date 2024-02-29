@@ -13,40 +13,33 @@ import { useFormik } from "formik";
 import { IoArrowBack } from "react-icons/io5";
 import Loding from "../../components/Loding.jsx";
 import * as yup from "yup";
-import { Modal } from "antd";
-import axios from "axios";
-import ImageUploader from "../../components/ImageCropper.jsx";
 import Profile from "../../components/Profile.jsx";
+import MyEditor from "../../components/MyEditor.jsx";
+import UrlToFile from "../../utils/UrlToFile.jsx";
+import { resetImageState } from "../../features/imageSlice.jsx";
 let schema = yup.object().shape({
   name: yup.string().required("Category Name is Required"),
-  image: yup.string().required("Image is Required"),
   status: yup.string().required("Status is Required"),
 });
 
 const AddDoctorCategory = () => {
   const dispatch = useDispatch();
-  const [Open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [Response, setResponse] = useState("");
+
   const navigate = useNavigate();
   const catId = location.pathname.split("/")[3];
   useEffect(() => {
     if (catId !== undefined || "") {
       dispatch(getADoctorCategory(catId));
-      dispatch(resetState());
     } else {
       dispatch(resetState());
     }
   }, [catId]);
 
-  const dCategory = useSelector((state) => state?.dCategory);
-  const { SingleData, isLoading } = dCategory;
+  const { SingleData, isLoading, isSuccess, dCategory } = useSelector(
+    (state) => state?.dCategory
+  );
 
-  useEffect(() => {
-    if (search) {
-      console.log(search);
-    }
-  }, [search]);
+  const { dataUrl, ImgName } = useSelector((state) => state.IMAGE.imageData);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -57,20 +50,34 @@ const AddDoctorCategory = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      const { image, status, name } = values;
+      const { status, name } = values;
+
+      const image = UrlToFile(dataUrl, ImgName);
+
       const formData = new FormData();
       formData.append("image", image);
       formData.append("status", status);
       formData.append("name", name);
+
       if (catId === undefined || "") {
         dispatch(createDoctorCategory(formData));
+        setTimeout(() => {
+          dispatch(resetState());
+          dispatch(resetImageState());
+        }, 800);
       } else {
         dispatch(updateDoctorCategory({ id: catId, formData: formData }));
+        setTimeout(() => {
+          dispatch(resetState());
+          dispatch(resetImageState());
+        }, 800);
       }
     },
   });
 
-  console.log(Response);
+  if (isSuccess === true && dCategory) {
+    navigate("/admin/doctor-category-list");
+  }
   return (
     <>
       <div className="">
@@ -128,7 +135,7 @@ const AddDoctorCategory = () => {
                   </div>
                 </Modal>
               </div> */}
-              <CustomInput
+              {/* <CustomInput
                 type="file"
                 label="Category Name "
                 accept="image/*"
@@ -138,7 +145,7 @@ const AddDoctorCategory = () => {
               />{" "}
               <div className="error">
                 {formik.touched.image && formik.errors.image}
-              </div>
+              </div> */}
               <select
                 name="status"
                 onChange={formik.handleChange("status")}
@@ -153,7 +160,7 @@ const AddDoctorCategory = () => {
               <div className="error">
                 {formik.touched.status && formik.errors.status}
               </div>
-              <Profile />
+              <Profile imageName={"image"} />
               <button className="btn btn-primary" type="submit">
                 Submit
               </button>

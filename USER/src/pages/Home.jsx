@@ -1,4 +1,5 @@
-// Home Banner
+import { Avatar, Divider, Tooltip } from "antd"; // Home Banner
+import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import headerIcon from "../assets/img/icons/header-icon.svg";
 import downArrow from "../assets/img/down-arrow-img.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -48,12 +49,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
 
-import {
-
-  FilterDoctor2,
-  getAllDoctors,
-
-} from "../features/doctor/doctorSlice";
+import { FilterDoctor2, getAllDoctors } from "../features/doctor/doctorSlice";
 import { Modal } from "antd";
 import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
 import Seo from "../components/seo/Seo";
@@ -200,9 +196,18 @@ const Home = () => {
     (state) => state.doctor
   );
 
+  const newDoctors = [];
+  for (let i = 0; i < 5; i++) {
+    newDoctors.push(doctors[i]);
+  }
+
   return (
     <>
-      <Seo  metaTitle={home?.metaTitle} metaDescription={home?.metaDescription} metaTags={home?.metaTags}  />
+      <Seo
+        metaTitle={home?.metaTitle}
+        metaDescription={home?.metaDescription}
+        metaTags={home?.metaTags}
+      />
       <div className="main-wrapper">
         {/* <!-- Home Banner --> */}
 
@@ -368,12 +373,12 @@ const Home = () => {
                                   <div className="doc-info-right">
                                     <div className="clini-infos">
                                       <ul>
-                                        <li>
+                                        {/* <li>
                                           <i className="feather-clock available-icon"></i>
                                           <span className="available-date available-today">
                                             Available Today
                                           </span>
-                                        </li>
+                                        </li> */}
 
                                         <li>
                                           <i className="feather-dollar-sign available-icon"></i>{" "}
@@ -424,11 +429,52 @@ const Home = () => {
                     <img src={img1} className="img-fluid" alt="checkup-image" />
                   </div>
                   {/* <div className="banner-img2">
-                  <img src={img2} className="img-fluid" alt="doctor-slide" />
-                </div> */}
-                  <Link to={"/doctor-list"} className="banner-img3">
+                    <img src={img2} className="img-fluid" alt="doctor-slide" />
+                  </div> */}
+
+                  <div className="meet-our-doctor-card  banner-img3 ">
+                    <p className="fs-6 text-dark">Meet Our Doctors</p>
+
+                    <div className="">
+                      {/* <Avatar.Group
+                      maxCount={2}
+                      maxStyle={{
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf",
+                      }}
+                    > */}
+
+                      {newDoctors
+                        ? newDoctors?.map((el, i) => {
+                            return (
+                              <>
+                                <Link to={`/doctor-profile/${el?._id}`} key={i}>
+                                  <Avatar
+                                    src={`${baseUrl}doctor/${el?.image}`}
+                                  />
+                                </Link>
+                              </>
+                            );
+                          })
+                        : ""}
+                      <Link to={"/doctor-list"}>
+                        {doctors?.length > 5 ? (
+                          <Avatar>
+                            {doctors?.length > 5
+                              ? doctors?.length - 5 + "+"
+                              : ""}
+                          </Avatar>
+                        ) : (
+                          ""
+                        )}
+                      </Link>
+
+                      {/* </Avatar.Group> */}
+                    </div>
+                  </div>
+                  {/* <Link to={"/doctor-list"} className=" banner-img3">
                     <img src={img3} className="img-fluid" alt="doctors-list" />
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
@@ -443,7 +489,7 @@ const Home = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-12 text-center aos" data-aos="fade-up">
-              <div className="section-header-one">
+            <div className="section-header-one">
                 <h2 className="section-title">Pricing Plan</h2>
               </div>
             </div>

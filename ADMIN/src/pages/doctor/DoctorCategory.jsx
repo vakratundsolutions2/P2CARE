@@ -1,4 +1,4 @@
-import {  Table } from "antd";
+import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { AiFillDelete, AiOutlineFileSearch } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
@@ -41,40 +41,37 @@ const columns = [
   },
 ];
 
-
-
-
 const DoctorCategory = () => {
   const [open, setOpen] = useState(false);
   const [delCatId, setDelCatId] = useState("");
   const dispatch = useDispatch();
-const [search, setSearch] = useState("");
-const [searchResult, setSearchResult] = useState([]);
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   // const dCategory = useSelector((state) => state?.dCategory?.dCategories);
-    useEffect(() => {
-      if (search) {
-        axios
-          .get(`${baseUrl}doctorcategory/searchcategory/${search}`)
-          .then((e) => setSearchResult(e.data?.data));
-      } else {
-        axios
-          .get(`${baseUrl}doctorcategory/allcategory`)
-          .then((e) => setSearchResult(e.data?.data));
-      }
-    }, [search, delCatId]);
-
+  useEffect(() => {
+    if (search) {
+      axios
+        .get(`${baseUrl}doctorcategory/searchcategory/${search}`)
+        .then((e) => setSearchResult(e.data?.data));
+    } else {
+      axios
+        .get(`${baseUrl}doctorcategory/allcategory`)
+        .then((e) => setSearchResult(e.data?.data));
+    }
+  }, [search]);
 
   useEffect(() => {
     dispatch(allDoctorCategory());
-    dispatch(resetState());
   }, []);
 
   const deleteDCategory = (e) => {
     dispatch(deleteDoctorCategory(e));
+    dispatch(resetState());
+    setOpen(false);
+
     setTimeout(() => {
       dispatch(allDoctorCategory());
-    }, 100);
-    setOpen(false);
+    }, 400);
   };
 
   const showModal = (e) => {
@@ -127,25 +124,28 @@ const [searchResult, setSearchResult] = useState([]);
           <div className="col-sm-12 mb-4">
             <div className="card p-5">
               <div className="d-flex w-full  justify-content-between align-items-center p-4">
-              <h3 className="  mb-3 ">All Category</h3>
-                <Link className="btn btn-primary " to={`/admin/doctor-category`}>
+                <h3 className="  mb-3 ">All Category</h3>
+                <Link
+                  className="btn btn-primary "
+                  to={`/admin/doctor-category`}
+                >
                   Add New Category
                 </Link>
               </div>
               <div className="w-full">
-              <div className="input-group mb-3 px-4  w-25 float-end  ">
-                <span className="input-group-text" id="basic-addon1">
-                  <AiOutlineFileSearch />
-                </span>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Sesrch..."
-                  aria-label="Username"
-                  onChange={(e) => setSearch(e.target.value)}
-                  aria-describedby="basic-addon1"
-                />
-              </div>
+                <div className="input-group mb-3 px-4  w-25 float-end  ">
+                  <span className="input-group-text" id="basic-addon1">
+                    <AiOutlineFileSearch />
+                  </span>
+                  <input
+                    type="search"
+                    className="form-control"
+                    placeholder="Sesrch..."
+                    aria-label="Username"
+                    onChange={(e) => setSearch(e.target.value)}
+                    aria-describedby="basic-addon1"
+                  />
+                </div>
               </div>
               <Table columns={columns} dataSource={data1} />
               <CustomModal
@@ -156,7 +156,7 @@ const [searchResult, setSearchResult] = useState([]);
                   deleteDCategory(delCatId);
                 }}
                 onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
+                hideModal={() => setOpen(false)}
               />
             </div>
           </div>

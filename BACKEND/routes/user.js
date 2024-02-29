@@ -88,4 +88,10 @@ router.post("/start-verification", userController.startVerification);
 
 router.post("/check-verification", userController.checkVerification);
 
+
+// forgot password
+router.post("/forgot-password-token", userController.forgotPasswordToken);
+
+router.put("/reset-password/:token", userController.resetPassword);
+
 module.exports = router;

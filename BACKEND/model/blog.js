@@ -8,7 +8,7 @@ const blogSchema = new Schema(
     blogcontent: String,
     author: String,
     slug: String,
-    blogtags: [String],
+    blogtags: String,
     // metatag: [String],
     metatag: String,
     metatitle: String,
@@ -26,7 +26,7 @@ const blogSchema = new Schema(
     },
     // date:DATE.now()
   },
-  { timeseries: true }
+  { timestamps: true }
 );
 
 

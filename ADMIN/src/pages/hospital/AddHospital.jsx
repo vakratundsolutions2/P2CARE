@@ -19,6 +19,9 @@ import {
 } from "../../features/hospital/hospitalSlice";
 
 import * as yup from "yup";
+import UrlToFile from "../../utils/UrlToFile";
+import { baseUrl } from "../../utils/baseUrl";
+import MyEditor from "../../components/MyEditor";
 let schema = yup.object().shape({
   hospitalname: yup.string().required("Hospital Name is Required"),
   hospitaladdress: yup.string().required("Hospital Address is Required"),
@@ -28,7 +31,6 @@ let schema = yup.object().shape({
   closingtime: yup.string().required("Closing time is Required"),
   service: yup.array().required("service is Required"),
   category: yup.array().required("Category is Required"),
-  hospitallogo: yup.string().required("Hospital logo is Required"),
   status: yup.string().required("Status is Required"),
   yearofexperience: yup.number().required("year of experience is Required"),
 });
@@ -61,7 +63,8 @@ useEffect(() => {
   const {SingleData } = hospitalState;
 
 
-  
+    const { dataUrl, ImgName } = useSelector((state) => state.IMAGE.imageData);
+
 
   return (
     <>
@@ -77,7 +80,9 @@ useEffect(() => {
           service: SingleData?.service || "",
           category: SingleData?.category || "",
           status: SingleData?.status || "",
-          hospitallogo: SingleData?.hospitallogo || "",
+          hospitallogo: dataUrl
+            ? dataUrl
+            : `${baseUrl}hospital/${SingleData?.hospitallogo}` || "",
           yearofexperience: SingleData?.yearofexperience || "",
         }}
         validationSchema={schema}
@@ -93,8 +98,6 @@ useEffect(() => {
             category,
             status,
             yearofexperience,
-
-            hospitallogo,
           } = values;
           console.log(values);
 
@@ -107,8 +110,9 @@ useEffect(() => {
             serviceName.push(service[index]?.title);
           }
 
-                    console.log("serviceName", serviceName);
-                    console.log("categoryName", categoryName);
+          var hospitallogo = dataUrl
+            ? UrlToFile(dataUrl, ImgName)
+            : SingleData?.hospitallogo;
 
           const formData = new FormData();
           formData.append("hospitalname", hospitalname);
@@ -120,8 +124,6 @@ useEffect(() => {
           formData.append("service", JSON.stringify(serviceName));
           formData.append("yearofexperience", yearofexperience);
 
-          // formData.append("service", service);
-          // formData.append("category", category);
           formData.append("category", JSON.stringify(categoryName));
           formData.append("status", status);
           formData.append("hospitallogo", hospitallogo);
@@ -318,21 +320,15 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className="col-6">
-                    <CustomInput
-                      type="file"
-                      label="Hospital Logo "
-                      accept="image/*"
-                      name="hospitallogo"
-                      id="formFile"
-                      onChng={(e) =>
-                        formik.setFieldValue("hospitallogo", e.target.files[0])
-                      }
-                    />{" "}
-                    <div className="error">
-                      {formik.touched.hospitallogo &&
-                        formik.errors.hospitallogo}
-                    </div>
+                    {formik.values.hospitallogo ? (
+                      <>
+                        <img src={formik.values.hospitallogo} alt="" />
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </div>
+                  <MyEditor ImgName={"hospitallogo"} Title={"hospital logo"} />
                 </div>
 
                 <button className="btn btn-primary m-4" type="submit">
