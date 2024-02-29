@@ -14,7 +14,7 @@ const multerStorage = multer.diskStorage({
 });
 
 const multerFilter = (req, file, cb) => {
-    
+    console.log(file);
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
@@ -24,7 +24,7 @@ const multerFilter = (req, file, cb) => {
 
 const uploadPhoto = multer({
   storage: multerStorage,
-  fileFilter: multerFilter,
+  
   limits: { fileSize: 200000 },
 });
 
@@ -47,15 +47,13 @@ const doctorCategoryImageResize = async (req, res, next) => {
     
   if (!req.file) return next();
 
-//   await Promise.all(
-   await  sharp(req.file.path)
-      .resize(300, 300)
-      .toFormat("jpeg")
-      .jpeg({ quality: 90 })
-      .toFile(`public/doctorcategory/${req.file.filename}`)
+   await sharp(req.file.path)
+     .resize(300, 300)
+     .toFormat("jpeg")
+     .jpeg({ quality: 90 })
+     .toFile(`public/doctorcategory/${req.file.filename}`);
 
-    // })
-//   );
+    
   next();
 };
 const userImageResize = async (req, res, next) => {

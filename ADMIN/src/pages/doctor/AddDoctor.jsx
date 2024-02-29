@@ -19,6 +19,9 @@ import { Switch } from "antd";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../utils/baseUrl";
 import Select from "react-dropdown-select";
+import Profile from "../../components/Profile";
+import MyEditor from "../../components/MyEditor";
+import UrlToFile from "../../utils/UrlToFile";
 
 let schema = yup.object().shape({
   doctorName: yup.string().required("Doctor Name is Required"),
@@ -45,7 +48,6 @@ let schema = yup.object().shape({
   ogMetaDescription: yup.string().required("ogMetaDescription is Required"),
   metaTags: yup.string().required("metaTags is Required"),
   price: yup.string().required("Doctor Price is Required"),
-  image: yup.string().required("Doctor image is Required"),
   availabileforappointment: yup
     .string()
     .required("availabile for appointment Name is Required"),
@@ -77,11 +79,16 @@ const AddDoctor = () => {
   }, [dispatch, doctorId]);
 
   const DoctorState = useSelector((state) => state?.doctor);
-  const { SingleData, updatedDoctor, isSuccess } = DoctorState;
+  const { SingleData, NewDoctor, updatedDoctor, isSuccess } = DoctorState;
 
-  if (isSuccess === true && updatedDoctor) {
+  if (
+    (isSuccess === true && updatedDoctor) ||
+    (isSuccess === true && NewDoctor)
+  ) {
     navigate("/admin/all-doctors");
   }
+
+  const { dataUrl, ImgName } = useSelector((state) => state.IMAGE.imageData);
 
   return (
     <>
@@ -112,7 +119,6 @@ const AddDoctor = () => {
           ogMetaDescription: SingleData?.ogMetaDescription || "",
           metaTags: SingleData?.metaTags || "",
           price: SingleData?.price || "",
-          image: SingleData?.image || "",
           availabileforappointment:
             SingleData?.availabileforappointment || false,
           yearofexperience: SingleData?.yearofexperience || "",
@@ -121,6 +127,9 @@ const AddDoctor = () => {
           Email: SingleData?.userId?.Email || "",
           phoneNumber: SingleData?.userId?.phoneNumber || "",
           Password: SingleData?.userId?.Password || "",
+          image: dataUrl
+            ? dataUrl
+            : `${baseUrl}doctor/${SingleData?.image}` || "",
         }}
         validationSchema={schema}
         onSubmit={(values) => {
@@ -150,7 +159,6 @@ const AddDoctor = () => {
             ogMetaDescription,
             metaTags,
             price,
-            image,
 
             availabileforappointment,
             yearofexperience,
@@ -167,6 +175,8 @@ const AddDoctor = () => {
           for (let index = 0; index < experties.length; index++) {
             expertiesName.push(experties[index]?.name);
           }
+
+          var image = dataUrl ? UrlToFile(dataUrl, ImgName) : SingleData?.image;
 
           const formData = new FormData();
 
@@ -348,49 +358,6 @@ const AddDoctor = () => {
                       </div>
                     </div>
                     <div className="col-6">
-                      <CustomInput
-                        type="text"
-                        label="Designation "
-                        name="designation"
-                        onChng={formik.handleChange("designation")}
-                        onBlr={formik.handleBlur("designation")}
-                        val={formik.values.designation}
-                      />
-
-                      <div className="error">
-                        {formik.touched.designation &&
-                          formik.errors.designation}
-                      </div>
-                    </div>
-                    <div className="col-6 mt-3">
-                      <Select
-                        name="experties"
-                        placeholder="Select Experties ..."
-                        className="form-control rounded p-3 mb-3"
-                        onChange={(e) => formik.setFieldValue("experties", e)}
-                        labelField="name"
-                        valueField="_id"
-                        multi
-                        value={DoctorCategory.name}
-                        defaultValue={formik.values?.experties[0]}
-                        options={DoctorCategory}
-                      />
-
-                    </div>
-                    <div className="col-6">
-                      <CustomInput
-                        type="text"
-                        label="Doctor location "
-                        name="location"
-                        onChng={formik.handleChange("location")}
-                        onBlr={formik.handleBlur("location")}
-                        val={formik.values.location}
-                      />
-                      <div className="error">
-                        {formik.touched.location && formik.errors.location}
-                      </div>
-                    </div>
-                    <div className="col-6">
                       <select
                         name="gender"
                         placeholder="Select Gender..."
@@ -407,6 +374,62 @@ const AddDoctor = () => {
                         {formik.touched.gender && formik.errors.gender}
                       </div>
                     </div>
+                    <div className="col-6">
+                      <CustomInput
+                        type="text"
+                        label="Designation "
+                        name="designation"
+                        onChng={formik.handleChange("designation")}
+                        onBlr={formik.handleBlur("designation")}
+                        val={formik.values.designation}
+                      />
+
+                      <div className="error">
+                        {formik.touched.designation &&
+                          formik.errors.designation}
+                      </div>
+                    </div>
+                    <div className="col-6 ">
+                      <Select
+                        name="experties"
+                        placeholder="Select Experties ..."
+                        className="form-control rounded p-3 mb-3"
+                        onChange={(e) => formik.setFieldValue("experties", e)}
+                        labelField="name"
+                        valueField="_id"
+                        multi
+                        value={DoctorCategory.name}
+                        // defaultValue={formik.values?.experties[0]}
+                        options={DoctorCategory}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <select
+                        name="specialities"
+                        placeholder="Select Specialities"
+                        onChange={formik.handleChange("specialities")}
+                        onBlur={formik.handleBlur("specialities")}
+                        value={formik.values.specialities}
+                        className="form-control form-select py-3 px-4 mb-3"
+                        // style={{fontSize:'small',fontWeight:'light'}}
+                      >
+                        <option value="">Select specialities</option>
+                        {DoctorCategory?.map((e, i) => {
+                          return (
+                            <>
+                              <option key={i} value={e?.name}>
+                                {e?.name}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+                      <div className="error">
+                        {formik.touched.specialities &&
+                          formik.errors.specialities}
+                      </div>
+                    </div>
+
                     <div className="col-12 rounded my-3">
                       <label
                         htmlFor="exampleFormControlTextarea3"
@@ -448,29 +471,16 @@ const AddDoctor = () => {
                       </div>
                     </div>
                     <div className="col-6">
-                      <select
-                        name="specialities"
-                        placeholder="Select Specialities"
-                        onChange={formik.handleChange("specialities")}
-                        onBlur={formik.handleBlur("specialities")}
-                        value={formik.values.specialities}
-                        className="form-control form-select py-3 px-4 mb-3"
-                        // style={{fontSize:'small',fontWeight:'light'}}
-                      >
-                        <option value="">Select specialities</option>
-                        {DoctorCategory?.map((e, i) => {
-                          return (
-                            <>
-                              <option key={i} value={e?.name}>
-                                {e?.name}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
+                      <CustomInput
+                        type="text"
+                        label="Doctor location "
+                        name="location"
+                        onChng={formik.handleChange("location")}
+                        onBlr={formik.handleBlur("location")}
+                        val={formik.values.location}
+                      />
                       <div className="error">
-                        {formik.touched.specialities &&
-                          formik.errors.specialities}
+                        {formik.touched.location && formik.errors.location}
                       </div>
                     </div>
                     <div className="col-6">
@@ -995,7 +1005,7 @@ const AddDoctor = () => {
                         {formik.touched.price && formik.errors.price}
                       </div>
                     </div>
-                    <div className="col-6">
+                    {/* <div className="col-6">
                       <CustomInput
                         type="file"
                         label="Doctor Image "
@@ -1009,7 +1019,7 @@ const AddDoctor = () => {
                       <div className="error">
                         {formik.touched.image && formik.errors.image}
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-6">
                       <select
                         name="status"
@@ -1027,13 +1037,7 @@ const AddDoctor = () => {
                         {formik.touched.status && formik.errors.status}
                       </div>
                     </div>
-                    <div className="col-6 ">
-                      <img
-                        src={`${baseUrl}doctor/${formik.values.image}`}
-                        alt={formik.values.doctorName}
-                        className="img-fluid"
-                      />
-                    </div>
+
                     <div className="col-6 m-4 d-flex">
                       <div className="form-check-inline visits ">
                         <label className="">
@@ -1062,6 +1066,16 @@ const AddDoctor = () => {
                           formik.errors.availabileforappointment}
                       </div>
                     </div>
+                    <div className="col-6">
+                      {formik.values.image ? (
+                        <>
+                          <img src={formik.values.image} alt="" />
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <MyEditor ImgName={"image"} Title={"doctor image"} />
                     <div className="p-3 w-full ">
                       <button type="submit" className="btn btn-primary ">
                         {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor

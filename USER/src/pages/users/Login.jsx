@@ -81,6 +81,10 @@ const Login = () => {
                         Login to <span>P2CARE</span>
                       </h3>
                     </div>
+
+
+
+                    
                     <form onSubmit={formik.handleSubmit}>
                       <div className="mb-3 form-focus">
                         <select
@@ -151,6 +155,11 @@ const Login = () => {
                       <div className="text-end">
                         <Link className="forgot-link" to="/signin">
                           Login via OTP
+                        </Link>
+                      </div>
+                      <div className="text-end">
+                        <Link className="forgot-link" to="/forgot-password">
+                          Forgot password?
                         </Link>
                       </div>
                       <button

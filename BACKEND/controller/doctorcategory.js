@@ -1,21 +1,16 @@
-const { request } = require('express');
-const DOCTORCATEGORY = require('../model/doctorcategory')
+const { request } = require("express");
+const DOCTORCATEGORY = require("../model/doctorcategory");
 
 //=======================addCategory====================
 exports.newCategory = async function (req, res, next) {
   try {
-   
-    // console.log(req.body);
-    // console.log(req.file);
-
-    req.body.image =req.file.filename;
     
-      
-    if (!req.body.name || !req.body.image || !req.body.status) {
+    req.body.image = req.file.filename;
 
-      throw new Error("Please fill valid data")
+    if (!req.body.name || !req.body.image || !req.body.status) {
+      throw new Error("Please fill valid data");
     }
-    console.log(req.body);
+    // console.log(req.body);
     const data = await DOCTORCATEGORY.create(req.body)
     res.status(201).json({
       status: "Sucessfull",
@@ -25,25 +20,25 @@ exports.newCategory = async function (req, res, next) {
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 //=======================allCategory====================
 exports.allCategory = async function (req, res, next) {
   try {
-    const data = await DOCTORCATEGORY.find()
+    const data = await DOCTORCATEGORY.find();
     res.status(200).json({
       status: "Success",
       message: "Data is found",
-      data: data
-    })
+      data: data,
+    });
   } catch (error) {
     res.status(404).json({
       status: "fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
 };
 
@@ -51,29 +46,29 @@ exports.allCategory = async function (req, res, next) {
 
 exports.updateCategory = async function (req, res, next) {
   try {
-    const getData = await DOCTORCATEGORY.findById(req.params.id)
-    var data = {...getData._doc, ...req.body}
+    const getData = await DOCTORCATEGORY.findById(req.params.id);
+    var data = { ...getData._doc, ...req.body };
     if (req.file) {
-      data.image = req.file.filename
+      data.image = req.file.filename;
     }
-    if(data.status){
-    if (data.status && !['publish', 'draft'].includes(data.status)) {
-      throw new Error('Invalid status value');
+    if (data.status) {
+      if (data.status && !["publish", "draft"].includes(data.status)) {
+        throw new Error("Invalid status value");
+      }
     }
-  }
-  console.log(data);
+    console.log(data);
     const udata = await DOCTORCATEGORY.findByIdAndUpdate(req.params.id, data);
     // console.log(udata);
     res.status(200).json({
       status: "Suceess",
       message: "category updated",
-      udata
-    })
+      udata,
+    });
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
 };
 
@@ -81,16 +76,16 @@ exports.updateCategory = async function (req, res, next) {
 
 exports.deleteCategory = async function (req, res, next) {
   try {
-    await DOCTORCATEGORY.findByIdAndDelete(req.params.id)
+    await DOCTORCATEGORY.findByIdAndDelete(req.params.id);
     res.status(200).json({
       status: "Suceess",
       message: "Category Deleted",
-    })
+    });
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
 };
 
@@ -98,53 +93,55 @@ exports.deleteCategory = async function (req, res, next) {
 
 exports.searchCategory = async function (req, res, next) {
   try {
-    const data = await DOCTORCATEGORY.find({ name: { "$regex": req.params.name, '$options': 'i' } })
+    const data = await DOCTORCATEGORY.find({
+      name: { $regex: req.params.name, $options: "i" },
+    });
 
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
-      data
-    })
+      data,
+    });
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 //=====================searchDoctorById=====================
 
 exports.searchCategorybyID = async function (req, res, next) {
   try {
-    const data = await DOCTORCATEGORY.findById(req.params.id)
+    const data = await DOCTORCATEGORY.findById(req.params.id);
     console.log(data);
     res.status(200).json({
       status: "Successfull",
       message: "Data is found",
-      data
-    })
+      data,
+    });
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 //=======================deleteCategory====================
 
 exports.deleteAllCategory = async function (req, res, next) {
   try {
-    await DOCTORCATEGORY.deleteMany()
+    await DOCTORCATEGORY.deleteMany();
     res.status(200).json({
       status: "Suceess",
       message: "All Category Deleted",
-    })
+    });
   } catch (error) {
     res.status(404).json({
       status: "Fail",
-      message: error.message
-    })
+      message: error.message,
+    });
   }
 };

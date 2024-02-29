@@ -601,7 +601,7 @@ const DoctorList = () => {
                                             <p className="doc-location">
                                               <i className="fa fa-location"></i>
                                               {e.location}
-                                              <a href="">Get Direction</a>
+                                              {/* <a href="">Get Direction</a> */}
                                             </p>
                                           </div>
                                           <div className="reviews-ratings">
@@ -618,12 +618,12 @@ const DoctorList = () => {
                                       <div className="doc-info-right">
                                         <div className="clini-infos">
                                           <ul>
-                                            <li>
+                                            {/* <li>
                                               <i className="feather-clock available-icon"></i>
                                               <span className="available-date available-today">
                                                 Available Today
                                               </span>
-                                            </li>
+                                            </li> */}
 
                                             <li>
                                               <i className="feather-dollar-sign available-icon"></i>{" "}

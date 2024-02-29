@@ -1,4 +1,4 @@
-import { Modal, Switch, Table, TimePicker } from "antd";
+import { Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import { AiFillDelete, AiOutlineFileSearch } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
@@ -15,12 +15,10 @@ import {
 
 import { baseUrl } from "../../utils/baseUrl";
 import {
-  addNewavailablity,
   getAAvailablity,
   resetStateAvailablity,
   updateAvailablity,
 } from "../../features/availablity/availablitySlice";
-import { alltime } from "../../features/time/timeSlice";
 import CustomInput from "../../components/CustomInput";
 import { Field, FieldArray, Formik, useFormik } from "formik";
 import axios from "axios";
@@ -91,8 +89,9 @@ const DoctorList = () => {
 
   useEffect(() => {
     dispatch(getAllDoctors());
-
-    if (AvailDoc !== undefined) dispatch(getAAvailablity(AvailDoc));
+    if (AvailDoc) {
+      dispatch(getAAvailablity(AvailDoc));
+    }
   }, [AvailDoc]);
 
   const { DoctorAvailablity, DoctorData } = useSelector(
@@ -127,7 +126,7 @@ const DoctorList = () => {
           <img
             src={`${baseUrl}doctor/${searchResult[i]?.image}`}
             alt={searchResult[i]?.doctorName}
-            className="list-img"
+            className="table-image"
           />
         </>
       ),
@@ -195,19 +194,21 @@ const DoctorList = () => {
   });
 
   useEffect(() => {
-    axios
-      .get(`${baseUrl}available/searchdoctorday/${AvailDoc}?day=${DAY}`)
-      .then((res) => {
-        setavailableSchedule(
-          res.data.responseData.bookingavailabilityInformation[0]?.bookingtime
-        );
-        setfinalSchedule(
-          res.data.responseData.bookingavailabilityInformation[0]
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (DAY) {
+      axios
+        .get(`${baseUrl}available/searchdoctorday/${AvailDoc}?day=${DAY}`)
+        .then((res) => {
+          setavailableSchedule(
+            res.data.responseData.bookingavailabilityInformation[0]?.bookingtime
+          );
+          setfinalSchedule(
+            res.data.responseData.bookingavailabilityInformation[0]
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [DAY, AvailDoc]);
 
   const handlePOS = (e, i) => {
@@ -378,6 +379,10 @@ const DoctorList = () => {
                       dispatch(getAllDoctors());
                       setOpenSlot(false);
                     }, 300);
+
+                    setTimeout(() => {
+                      setOpenAvail(false);
+                    }, 500);
                   }}
                 >
                   {(formik) => (

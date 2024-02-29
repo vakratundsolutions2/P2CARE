@@ -3,11 +3,9 @@ import { Modal } from "antd";
 import ImageCropper from "./ImageCropper";
 // import Modal from "./Modal";
 import "react-image-crop/dist/ReactCrop.css";
-const Profile = () => {
+const Profile = ({ imageName }) => {
   const avatarUrl = useRef("");
-  // const avatarUrl = useRef(
-  //   "https://avatarfiles.alphacoders.com/161/161002.jpg"
-  // );
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const updateAvatar = (imgSrc) => {
@@ -15,14 +13,13 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center ">
-      <div className="position-relative my-3  py-3">
+    <div className="d-flex flex-column align-items-start w-100 ">
+      <div className="position-relative my-3  py-3 ">
         {avatarUrl.current ? (
           <>
             <img
               src={avatarUrl.current}
-              alt="Avatar"
-              className="  border border-secondary "
+              className="  form-control p-0"
               style={{ width: "150px", height: "150px" }}
             />
           </>
@@ -30,14 +27,16 @@ const Profile = () => {
           ""
         )}
 
-        <button
-          className="btn btn-primary "
-          title="Change photo"
-          type="button"
-          onClick={() => setModalOpen(true)}
-        >
-          open
-        </button>
+        <div className="mx-3 px-4 py-2">
+          <button
+            className="btn btn-primary "
+            title="Change photo"
+            type="button"
+            onClick={() => setModalOpen(true)}
+          >
+            {imageName ? imageName : "Upload image"}
+          </button>
+        </div>
       </div>
 
       {modalOpen && (
@@ -45,6 +44,7 @@ const Profile = () => {
           updateAvatar={updateAvatar}
           open={modalOpen}
           onCancel={() => setModalOpen(false)}
+          title={`Upload ${imageName}`}
           onOk={() => setModalOpen(false)}
         >
           <ImageCropper

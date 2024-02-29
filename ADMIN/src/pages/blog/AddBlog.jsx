@@ -10,8 +10,11 @@ import {
   UpdateBlog,
   resetState,
 } from "../../features/blog/blogSlice";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
+import MyEditor from "../../components/MyEditor";
+import { baseUrl } from "../../utils/baseUrl";
+import UrlToFile from "../../utils/UrlToFile";
 
 let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
@@ -24,13 +27,12 @@ let schema = yup.object().shape({
   ogmetatitle: yup.string().required("ogmetatitle is Required"),
   metadescription: yup.string().required("metadescription is Required"),
   ogmetadescription: yup.string().required("ogmetadescription is Required"),
-  blogimage: yup.string().required("blogimage is Required"),
-  ogmetaimage: yup.string().required("ogmetaimage is Required"),
   category: yup.string().required("category is Required"),
   status: yup.string().required("status is Required"),
 });
 const AddBlog = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const blogId = location.pathname.split("/")[3];
   const dispatch = useDispatch();
 
@@ -52,9 +54,15 @@ const AddBlog = () => {
     (state) => state.blogCategory?.BlogCategories
   );
   const BlogState = useSelector((state) => state.blog);
-  const { SingleBlog } = BlogState;
+  const { SingleBlog, isSuccess, newBlog, editedBlog } = BlogState;
 
-  console.log(SingleBlog);
+  if ((isSuccess === true && newBlog) || (isSuccess === true && editedBlog)) {
+    navigate("/admin/all-blog");
+  }
+  const { dataUrl, ImgName } = useSelector((state) => state.IMAGE?.imageData);
+  const { dataUrl2, ImgName2 } = useSelector(
+    (state) => state.IMAGE?.imageData2
+  );
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -70,8 +78,12 @@ const AddBlog = () => {
       ogmetatitle: SingleBlog?.ogmetatitle || "",
       metadescription: SingleBlog?.metadescription || "",
       ogmetadescription: SingleBlog?.ogmetadescription || "",
-      blogimage: SingleBlog?.blogimage || "",
-      ogmetaimage: SingleBlog?.ogmetaimage || "",
+      blogimage: dataUrl
+        ? dataUrl
+        : `${baseUrl}blog/${SingleBlog?.blogimage}` || "",
+      ogmetaimage: dataUrl2
+        ? dataUrl2
+        : `${baseUrl}blog/${SingleBlog?.ogmetaimage}` || "",
       category: SingleBlog?.category || "",
       status: SingleBlog?.status || "",
     },
@@ -88,11 +100,27 @@ const AddBlog = () => {
         ogmetatitle,
         metadescription,
         ogmetadescription,
-        blogimage,
-        ogmetaimage,
+
         category,
         status,
       } = values;
+
+
+
+
+
+      var blogimage = dataUrl
+        ? UrlToFile(dataUrl, ImgName)
+        :  SingleBlog?.blogimage
+      var ogmetaimage = dataUrl2
+      ? UrlToFile(dataUrl2, ImgName2)
+        :SingleBlog?.ogmetaimage 
+
+
+
+
+
+
       const formData = new FormData();
       formData.append("title", title);
       formData.append("blogcontent", blogcontent);
@@ -220,7 +248,7 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="col-6">
+              <div className="col-6 mb-3">
                 <CustomInput
                   type="text"
                   label="Meta Title "
@@ -234,7 +262,7 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="col-6">
+              <div className="col-6 mb-3">
                 <CustomInput
                   type="text"
                   label="Og Meta Title "
@@ -248,11 +276,13 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="col-6 ">
+              <div className="col-6 mb-3">
                 <div className="form-floating">
                   <textarea
                     className="form-control"
                     name="metadescription"
+                    cols={10}
+                    rows={10}
                     onChange={formik.handleChange("metadescription")}
                     value={formik.values.metadescription}
                   />
@@ -266,7 +296,7 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="col-6 ">
+              <div className="col-6 mb-3 ">
                 <div className="form-floating">
                   <textarea
                     className="form-control"
@@ -284,39 +314,7 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="col-6 ">
-                <CustomInput
-                  type="file"
-                  label="Blog Image "
-                  accept="image/*"
-                  id="formFile"
-                  name="blogimage"
-                  onChng={(e) =>
-                    formik.setFieldValue("blogimage", e.target.files[0])
-                  }
-                />
-                <div className="error">
-                  {formik.touched.blogimage && formik.errors.blogimage}
-                </div>
-              </div>
-
-              <div className="col-6 ">
-                <CustomInput
-                  type="file"
-                  accept="image/*"
-                  id="formFile"
-                  label="Or Meta image "
-                  name="ogmetaimage"
-                  onChng={(e) =>
-                    formik.setFieldValue("ogmetaimage", e.target.files[0])
-                  }
-                />
-                <div className="error">
-                  {formik.touched.ogmetaimage && formik.errors.ogmetaimage}
-                </div>
-              </div>
-
-              <div className="mb-3">
+              <div className="col-6 mb-3">
                 <select
                   className="form-control form-select py-3 px-4"
                   name="category"
@@ -339,7 +337,7 @@ const AddBlog = () => {
                 </div>
               </div>
 
-              <div className="mb-3">
+              <div className=" col-6 mb-3">
                 <select
                   className="form-control form-select py-3 px-4"
                   name="status"
@@ -354,7 +352,27 @@ const AddBlog = () => {
                   {formik.touched.status && formik.errors.status}
                 </div>
               </div>
+              <div className="col-6">
+                {formik.values.blogimage ? (
+                  <>
+                    <img src={formik.values.blogimage} alt="" />
+                  </>
+                ) : (
+                  ""
+                )}
+                <MyEditor ImgName={"blogimage"} Title={"blog image"} />
+              </div>
 
+              <div className="col-6 ">
+                {formik.values.ogmetaimage ? (
+                  <>
+                    <img src={formik.values.ogmetaimage} alt="" />
+                  </>
+                ) : (
+                  ""
+                )}
+                <MyEditor ImgName2={"ogmetaimage"} Title2={"OG meta image"} />
+              </div>
               <div className="p-3 w-full ">
                 <button type="submit" className="btn btn-primary ">
                   {blogId !== undefined || "" ? "Edit" : "Add New"} Post

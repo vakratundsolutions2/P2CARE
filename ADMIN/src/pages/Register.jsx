@@ -26,7 +26,7 @@ let schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("Password"), null], "Passwords must match"),
 });
-const Login = () => {
+const Register = () => {
   const authState = useSelector((state) => state.auth);
   const { isSuccess } = authState;
   const navigate = useNavigate();
@@ -173,4 +173,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

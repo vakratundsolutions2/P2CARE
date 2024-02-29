@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LIGO from "../assets/images/P2CARE.png";
 import patient2 from "../assets/img/patients/patient2.jpg";
@@ -15,7 +15,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const { user } = useSelector((state) => state?.auth);
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,6 +31,9 @@ const Header = () => {
   useEffect(() => {
     dispatch(GetContact());
   }, []);
+  // useEffect(() => {
+  //   setIsMobile(false);
+  // }, [location]);
 
   const { contact } = useSelector((state) => state.content);
   return (
@@ -136,12 +139,21 @@ const Header = () => {
                         </Link>
                         <div className="dropdown-menu dropdown-menu-end">
                           <div className="user-header">
-                            <div className="avatar avatar-sm">
-                              <img
-                                src={`${baseUrl}user/${user?.Profile}`}
-                                alt={user.Name}
-                                className="avatar-img rounded-circle"
-                              />
+                            <div className="avatar avatar-sm pt-2">
+                              {user?.Profile ? (
+                                <>
+                                  <img
+                                    src={`${baseUrl}user/${user?.Profile}`}
+                                    alt={user.Name}
+                                    className="avatar-img rounded-circle"
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  {" "}
+                                  <FaUser className="fs-4 rounded-circle" />
+                                </>
+                              )}
                             </div>
                             <div className="user-text mt-2">
                               <h6>{user?.Username}</h6>
@@ -174,8 +186,6 @@ const Header = () => {
           </nav>
         </div>
       </header>
-
-      
     </>
   );
 };

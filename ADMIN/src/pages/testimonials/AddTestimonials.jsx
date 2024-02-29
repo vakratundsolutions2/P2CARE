@@ -14,6 +14,9 @@ import { useFormik } from "formik";
 import CustomInput from "../../components/CustomInput";
 
 import * as yup from "yup";
+import MyEditor from "../../components/MyEditor";
+import { baseUrl } from "../../utils/baseUrl";
+import UrlToFile from "../../utils/UrlToFile";
 let schema = yup.object().shape({
   name: yup.string().required("Name is Required"),
   designation: yup.string().required("Designation is Required"),
@@ -36,6 +39,7 @@ const AddTestimonials = () => {
 
   const testimonialState = useSelector((state) => state?.testimonial);
   const { SingleData } = testimonialState;
+  const { dataUrl, ImgName } = useSelector((state) => state.IMAGE.imageData);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -44,14 +48,18 @@ const AddTestimonials = () => {
       name: SingleData?.name || "",
       designation: SingleData?.designation || "",
       description: SingleData?.description || "",
-      image: SingleData?.image || "",
+      image: dataUrl
+        ? dataUrl
+        : `${baseUrl}testimonial/${SingleData?.image}` || "",
     },
     validationSchema: schema,
 
     onSubmit: (values) => {
-      const { name, designation, description, image } = values;
+      const { name, designation, description } = values;
 
       const formData = new FormData();
+
+      var image = dataUrl ? UrlToFile(dataUrl, ImgName) : SingleData?.image;
 
       formData.append("name", name);
       formData.append("designation", designation);
@@ -129,22 +137,16 @@ const AddTestimonials = () => {
                 </div>
               </div>
 
-              <div className="col-6  mb-3">
-                {/* <img src={formik.values.image} alt="imahe" /> */}
-                <CustomInput
-                  type="file"
-                  label="Image "
-                  accept="image/*"
-                  id="formFile"
-                  name="image"
-                  onChng={(e) =>
-                    formik.setFieldValue("image", e.target.files[0])
-                  }
-                />
-                <div className="error">
-                  {formik.touched.image && formik.errors.image}
-                </div>
+              <div className="col-6">
+                {formik.values.image ? (
+                  <>
+                    <img src={formik.values.image} alt="" />
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
+              <MyEditor ImgName={"image"} Title={"testimonial image"} />
               <button className="btn btn-primary" type="submit">
                 {testimonialId !== undefined ? "Edit" : "Add"} Testimonial
               </button>

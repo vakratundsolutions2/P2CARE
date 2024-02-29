@@ -34,11 +34,11 @@ const columns = [
     dataIndex: "author",
     sorter: (a, b) => a.name.length - b.name.length,
   },
-  {
-    title: "Date Created",
-    dataIndex: "dateCreate",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
+  // {
+  //   title: "Date Created",
+  //   dataIndex: "dateCreate",
+  //   sorter: (a, b) => a.name.length - b.name.length,
+  // },
   {
     title: "Status",
     dataIndex: "status",

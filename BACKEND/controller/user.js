@@ -1,4 +1,6 @@
 const USER = require("../model/user");
+
+const crypto = require("crypto");
 const DOCTOR = require("../model/doctor");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -13,6 +15,7 @@ const authToken = process.env.twilioAuthToken;
 const verifySid = process.env.twilioVerifySid;
 const client = twilio(accountSid, authToken);
 const fs = require("fs");
+const sendEmail = require("../config/twilloEmail");
 //==================================checkToken===============
 https: exports.CHECKJWT = async function (req, res, next) {
   try {
@@ -60,7 +63,11 @@ exports.addUser = async function (req, res, next) {
       phoneNumber: req.body.phoneNumber,
     });
 
-    if (userExists == null) {
+    const userExists2 = await USER.findOne({
+      Email: req.body.Email,
+    });
+
+    if (userExists == null && userExists2 == null) {
       const data = await USER.create(req.body);
       res.status(201).json({
         status: "Successful",
@@ -68,7 +75,7 @@ exports.addUser = async function (req, res, next) {
         data,
       });
     } else {
-      throw new Error("phone Number already registered");
+      throw new Error(`User already exist`);
     }
   } catch (error) {
     res.status(404).json({
@@ -129,7 +136,7 @@ exports.logIn = async function (req, res, next) {
         Email: req.body.Email,
       });
 
-      if (!checkUser2) throw new Error("User not found")
+      if (!checkUser2) throw new Error("User not found");
 
       if (checkUser2) {
         checkUser = checkUser2;
@@ -137,7 +144,6 @@ exports.logIn = async function (req, res, next) {
     }
 
     if (!checkUser) throw new Error("User not found");
-    
 
     let checkPass = await bcrypt.compare(req.body.Password, checkUser.Password);
 
@@ -766,5 +772,82 @@ exports.checkVerification = async function (req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
+};
+
+// Forgot Password
+exports.updatePassword = async (req, res) => {
+  const { _id } = req.user;
+  const { Password } = req.body;
+  validateMongoId(_id);
+  const user = await USER.findById(_id);
+  if (Password) {
+    user.Password = Password;
+    const UpdatePassword = await user.save();
+    res.json(UpdatePassword);
+  } else {
+    res.json(user);
+  }
+};
+
+// getting Forgot Password token and saving the token
+exports.forgotPasswordToken = async (req, res) => {
+  try {
+    const { Email } = req.body;
+    const user = await USER.findOne({ Email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const token = await user.createPasswordResetToken();
+    await user.save();
+
+    const resetUrl = `Hello , Please follow this link to reset your password . This link will be valid for the next 10 minutes <a href=${process.env.P2CARE_USER}reset-password/${token}>Click Here </a>`;
+    const data = {
+      to: Email,
+      text: "Hey user",
+      subject: "Forgot Password Link",
+      htm: resetUrl,
+    };
+    sendEmail(data);
+    //res.json(token);
+    res.status(201).json({
+      status: "Successful",
+      message: "Please check your email for getting a new password ",
+      token,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+// Reset Password
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { Password } = req.body;
+    const { token } = req.params;
+    const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await USER.findOne({
+      passwordResetToken: hashToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+    if (!user) throw new Error("Token expired , please try after some time");
+    user.Password = Password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    res.status(201).json({
+      status: "Successful",
+      message: "Password reset successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "Fail",
+      message: error.message,
+    });
   }
 };

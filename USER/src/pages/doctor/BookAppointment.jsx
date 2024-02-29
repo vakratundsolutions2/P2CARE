@@ -163,8 +163,10 @@ const BookAppointment = () => {
     changeCurrentPosition(i);
   };
 
-  const currentTime = dayjs().format("HH:mm");
-  // console.log(currentTime);
+  const currentTime = dayjs().format("HH");
+
+  console.log(currentTime);
+  console.log(currentPosition);
 
   return (
     <>
@@ -374,7 +376,55 @@ const BookAppointment = () => {
                                                       />
                                                     </div>
                                                     No Slots available for{" "}
+                                                    {dayjs(NEWDATE).format(
+                                                      "ddd , DD MMM"
+                                                    )}
                                                   </div>
+                                                ) : currentPosition === 0 ? (
+                                                  availableSchedule
+                                                    ?.filter((el) => {
+                                                      return (
+                                                        el.slice(0, 2) !==
+                                                          currentTime &&
+                                                        el.slice(0, 2) >
+                                                          currentTime
+                                                      );
+                                                    })
+                                                    ?.map((el, i) => {
+                                                      return (
+                                                        <>
+                                                          <div
+                                                            className="form-check-inline visits  "
+                                                            key={i}
+                                                          >
+                                                            <label className="visit-btns">
+                                                              <input
+                                                                type="radio"
+                                                                name="time"
+                                                                required={true}
+                                                                className="form-check-input"
+                                                                id=""
+                                                                onChange={(
+                                                                  e
+                                                                ) => {
+                                                                  setTIME(
+                                                                    e.target
+                                                                      .value
+                                                                  );
+                                                                }}
+                                                                value={el}
+                                                              />
+                                                              <span
+                                                                className="visit-rsn"
+                                                                data-bs-toggle="tooltip"
+                                                              >
+                                                                {el}
+                                                              </span>{" "}
+                                                            </label>
+                                                          </div>
+                                                        </>
+                                                      );
+                                                    })
                                                 ) : (
                                                   availableSchedule?.map(
                                                     (el, i) => {
