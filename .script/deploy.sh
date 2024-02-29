@@ -26,6 +26,7 @@ cd ..
 cd DOCTOR
 
 npm install --f
+npm run build
 pm2 start 0
 
 cd ..
