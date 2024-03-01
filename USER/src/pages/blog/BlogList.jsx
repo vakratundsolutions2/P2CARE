@@ -60,7 +60,6 @@ const BlogList = () => {
             <div className="col-lg-8 col-md-12">
               <div className="row blog-grid-row">
                 {blogs?.map((e, i) => {
-                  console.log(e);
                   return (
                     <>
                       <div className="col-md-6 col-sm-12" key={i}>

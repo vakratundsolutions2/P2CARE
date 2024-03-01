@@ -4,20 +4,33 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { BookingDetails } from "../../features/doctor/doctorSlice";
 import Seo from "../../components/seo/Seo";
+import dayjs from "dayjs";
 
 const BookingComplete = () => {
-
   const [paymentId, setPaymentId] = useSearchParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(BookingDetails(paymentId.get("reference")));
-  })
-  const bookingDetails = useSelector(state => state?.doctor?.BookingDetails);
-  const doctorsDetails = useSelector(state => state?.doctor?.DoctorsDetails);
+  });
+  const bookingDetails = useSelector((state) => state?.doctor?.BOOKSTATE);
+  const doctorsDetails = useSelector((state) => state?.doctor?.DoctorsDetails);
 
-  var date = new Date(bookingDetails.date);
-  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  // var date = new Date(bookingDetails.date);
+  // const month = [
+  //   "Jan",
+  //   "Feb",
+  //   "Mar",
+  //   "Apr",
+  //   "May",
+  //   "Jun",
+  //   "Jul",
+  //   "Aug",
+  //   "Sep",
+  //   "Oct",
+  //   "Nov",
+  //   "Dec",
+  // ];
 
   return (
     <>
@@ -43,11 +56,7 @@ const BookingComplete = () => {
                           <strong>Dr. {doctorsDetails.doctorName}</strong>
                           <br /> on{" "}
                           <strong>
-                            {date.getDate() +
-                              " " +
-                              month[date.getMonth()] +
-                              " " +
-                              date.getFullYear()}{" "}
+                            {dayjs(bookingDetails?.date).format("DD mmm YY")} at
                             {bookingDetails.time}
                           </strong>
                         </p>
@@ -57,11 +66,7 @@ const BookingComplete = () => {
                         <strong>Dr. {doctorsDetails.doctorName}</strong>
                         <br /> on{" "}
                         <strong>
-                          {date.getDate() +
-                            " " +
-                            month[date.getMonth()] +
-                            " " +
-                            date.getFullYear()}{" "}
+                          {/* {date.getDate(bookingDetails.date).format("DD mmm YY")}{" "} */}
                           {bookingDetails.time}
                         </strong>
                       </p>

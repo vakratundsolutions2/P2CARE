@@ -58,12 +58,11 @@ const MyAppoinments = () => {
       BookingDate: dayjs(appoinments[i].date).format("DD-MM-YYYY"),
       Amount: appoinments[i].doctor?.price,
       // action:(<>
-      
-      
-      
+
       // </>),
     });
   }
+  console.log(data);
   return (
     <>
       <Seo metaTitle={"My Appointments - P2CARE"} />
@@ -74,11 +73,30 @@ const MyAppoinments = () => {
         <div className="container-xxl">
           <div className="row py-3 m-4">
             <div className="tab-content pt-0">
-              <Table
-                className="table table-responsive"
-                columns={columns}
-                dataSource={data}
-              />
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">SNo</th>
+                    <th scope="col">Doctor</th>
+                    <th scope="col">Booking Date</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.map((el, i) => {
+                    return (
+                      <>
+                        <tr>
+                          <th scope="row">{i + 1}</th>
+                          <td>{el?.Doctor}</td>
+                          <td>{el?.BookingDate}</td>
+                          <td>{el?.Amount}</td>
+                        </tr>
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

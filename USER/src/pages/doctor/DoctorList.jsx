@@ -39,7 +39,6 @@ const DoctorList = () => {
 
   // const query = location?.search?.split("&")[1];
 
-  console.log("avail", avail);
 
   // const loc = query?.split('=')[1];
   // setLocaton(loc);
@@ -121,19 +120,7 @@ const DoctorList = () => {
     }, 400);
   };
 
-  console.log("filter", {
-    name,
-    category,
-    Sort,
-    valuePrice,
-    page,
-    limit,
-    star,
-    gender,
-    avail,
-  });
 
-  console.log("DoctorState", doctors);
   return (
     <>
       <Seo metaTitle={"All Doctors - P2CARE"} />

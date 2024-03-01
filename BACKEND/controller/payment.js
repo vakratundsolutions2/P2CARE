@@ -6,8 +6,8 @@ const bookappointmentController = require("../controller/bookappointment")
 // import Razorpay from "razorpay";
 
 const instance = new Razorpay({
-  key_id: "rzp_test_fjsZSYfFDu3rxm",
-  key_secret: 'Sn7Hj5l8PlJPzdOGWJkH29jw',
+  key_id: process.env.testID,
+  key_secret: process.env.testSECRET,
 });
 
 
@@ -48,7 +48,7 @@ exports.paymentVerification = async (req, res) => {
     });
 
     res.redirect(
-      `http://localhost:3000/booking-complete?reference=${razorpay_payment_id}`
+      `${process.env.P2CARE_USER}booking-complete?reference=${razorpay_payment_id}`
     );
   } else {
     res.status(400).json({

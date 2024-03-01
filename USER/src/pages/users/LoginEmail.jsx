@@ -67,7 +67,7 @@ const LoginEmail = () => {
                       <h3>
                         Login to <span>P2CARE</span>
                       </h3>
-                      <p className="small  login-header-text">
+                      <p className="small  login-header-text ">
                         <Link to={"/login-phone"} className="forgot-link">
                           Login via phone number
                         </Link>
