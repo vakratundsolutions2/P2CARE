@@ -11,7 +11,7 @@ import {
 import { baseUrl } from "../../utils/baseUrl";
 import { useFormik } from "formik";
 import axios from "axios";
-const key = import.meta.env.TEST_ID;
+const key = import.meta.env.VITE_TEST_ID;
 
 import LOGO from "../../assets/images/P2CARE.png";
 import { Rate } from "antd";
@@ -23,12 +23,6 @@ const CheckOut = () => {
   const time = BOOKSTATE?.time;
   const doctorID = BOOKSTATE?.doctor;
   const category = BOOKSTATE?.Speciality;
-
-  // const data = location.search?.split("?")[1];
-  // const date = data?.split("&")[1]?.split("=")[1];
-  // const time = data?.split("&")[2]?.split("=")[1];
-  // const doctorID = data?.split("&")[0]?.split("=")[1];
-  // const category = data?.split("&")[3]?.split("=")[1];
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -285,7 +279,9 @@ const CheckOut = () => {
                               <input type="checkbox" id="terms_accept" />
                               <label htmlFor="terms_accept">
                                 I have read and accept{" "}
-                                <Link>Terms &amp; Conditions</Link>
+                                <Link to={"/termsandconditions"}>
+                                  Terms &amp; Conditions
+                                </Link>
                               </label>
                             </div>
                           </div>

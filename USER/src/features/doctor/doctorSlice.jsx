@@ -38,7 +38,6 @@ export const getADoctor = createAsyncThunk(
 export const FilterDoctor = createAsyncThunk(
   "doctor/search/filter",
   async (DATA, thunkAPI) => {
-    console.log("data", DATA);
     try {
       return await doctorService.filterDoctor(DATA);
     } catch (error) {
@@ -49,7 +48,6 @@ export const FilterDoctor = createAsyncThunk(
 export const FilterDoctor2 = createAsyncThunk(
   "doctor/search/filter2",
   async (DATA, thunkAPI) => {
-    console.log("data", DATA);
     try {
       return await doctorService.filterDoctor2(DATA);
     } catch (error) {
@@ -92,7 +90,6 @@ export const doctorSlice = createSlice({
   initialState,
   reducers: {
     booking: (state, action) => {
-      console.log(action);
       state.booking = action.payload.date;
     },
     bookingDetails: (state, action) => {

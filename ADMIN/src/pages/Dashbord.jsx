@@ -17,6 +17,7 @@ const Dashboard = () => {
     dispatch(getAllHospitals());
     dispatch(getAllServices());
     dispatch(allDoctorCategory());
+    dispatch(GetAllBlogs());
     dispatch(Allusers());
   }, []);
 

@@ -160,7 +160,7 @@ const AddDoctorCategory = () => {
               <div className="error">
                 {formik.touched.status && formik.errors.status}
               </div>
-              <Profile imageName={"image"} />
+              {/* <MyEditor ImgName={"image"} Title={"doctor image"} /> */}
               <button className="btn btn-primary" type="submit">
                 Submit
               </button>

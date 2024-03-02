@@ -1,6 +1,7 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LIGO from "../assets/images/P2CARE.png";
+import LIGO2 from "../assets/images/p2c_logo.jpg";
 import patient2 from "../assets/img/patients/patient2.jpg";
 import { FaUser } from "react-icons/fa";
 import "./Header.css";
@@ -31,25 +32,22 @@ const Header = () => {
   useEffect(() => {
     dispatch(GetContact());
   }, []);
-  // useEffect(() => {
-  //   setIsMobile(false);
-  // }, [location]);
 
   const { contact } = useSelector((state) => state.content);
+
   return (
     <>
       <header className="header header-custom header-fixed header-one">
         <div className="container">
           <nav className="navbar navbar-expand-lg header-nav">
             <div className="navbar-header">
-              <div id="mobile_btn" className="menu-btn" onClick={handleToggle}>
+              <div id="mobile_btn" className="menu-btn">
                 <span className="bar-icon">
                   <span></span>
                   <span></span>
                   <span></span>
                 </span>
               </div>
-              {/* {isMobile && ( */}
               <Link to="/" className="navbar-brand logo">
                 <img
                   src={LIGO}
@@ -58,33 +56,36 @@ const Header = () => {
                   alt="Logo"
                 />
               </Link>
-              {/* )} */}
             </div>
 
-            <div className={`main-menu-wrapper ${isMobile ? "mobile" : ""}`}>
+            <div className={`main-menu-wrapper `}>
               <ul className="main-nav">
-                <li className="has-submenu megamenu   ">
+                <li className="has-submenu megamenu  position-relative menu-btn  ">
                   <NavLink to="/">Home</NavLink>
                 </li>
-                <li className="has-submenu">
+                <li className="has-submenu megamenu  position-relative menu-btn ">
                   <NavLink to="/doctor-list">All Doctors</NavLink>
                 </li>
-                <li className="has-submenu">
+                <li className="has-submenu megamenu  position-relative  menu-btn">
+                  {" "}
                   <NavLink to="/hospitals">Hospitals</NavLink>
                 </li>
-                <li className="has-submenu">
+                <li className="has-submenu megamenu  position-relative menu-btn ">
+                  {" "}
                   <NavLink to="/blogs">Blog</NavLink>
                 </li>
-                <li className="has-submenu">
+                <li className="has-submenu megamenu  position-relative menu-btn  ">
+                  {" "}
                   <NavLink to="/about">About Us</NavLink>
                 </li>
-                <li className="has-submenu">
+                <li className="has-submenu megamenu  position-relative  menu-btn">
+                  {" "}
                   <NavLink to="/contact">Contact Us</NavLink>
                 </li>
 
                 {user === null ? (
                   <>
-                    <li className="login-link">
+                    <li className="login-link position-relative menu-btn">
                       <NavLink to="/login">Login / Signup</NavLink>
                     </li>
                     <li className="register-btn">
@@ -100,17 +101,21 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    {/* <div className={`${isMobile ? "mobile" : ""}`}> */}
-                    <li className="login-link">
+                    <li className="login-link position-relative menu-btn">
+                      {" "}
                       <NavLink to="/profile-setting">Profile Settings</NavLink>
                     </li>
-                    <li className="login-link">
+                    <li
+                      className="login-link position-relative"
+                      id="mobile_btn"
+                    >
+                      {" "}
                       <NavLink to="/appointments">Appointment</NavLink>
                     </li>
-                    <li className="login-link">
+                    <li className="login-link position-relative menu-btn">
+                      {" "}
                       <Link onClick={handleLogout}>Logout</Link>
                     </li>
-                    {/* </div> */}
                     <ul className="  nav header-navbar-rht">
                       {/* <!-- User Menu --> */}
                       <li className="nav-item dropdown has-arrow logged-item">
@@ -166,14 +171,12 @@ const Header = () => {
                             Appointment
                           </Link>
                           <Link className="dropdown-item" to="/login">
-                            {/* <li className="register-btn"> */}
-                            <Link
+                            <div
                               onClick={handleLogout}
                               className="btn btn-primary log-btn"
                             >
                               <i className="fa fa-lock"></i>Logout
-                            </Link>
-                            {/* </li> */}
+                            </div>
                           </Link>
                         </div>
                       </li>

@@ -1215,10 +1215,10 @@ input[type=password] {
   margin: 0 15px;
 }
 
-.menu-btn {
+/* .menu-btn {
   display: none;
   cursor: pointer;
-}
+} */
 
 @media screen and (max-width: 768px) {
   .main-menu-wrapper {
@@ -1234,13 +1234,11 @@ input[type=password] {
     background-color: #1CA39C;
   }
 
-  .main-nav.mobile {
-    display: flex;
-  }
 
-  .menu-btn {
+
+  /* .menu-btn {
     display: block;
-  }
+  } */
 }
 
 
@@ -6069,7 +6067,7 @@ th.table-head-days {
   color: #ffffff;
 }
 
-.header .user-menu.nav li a.mobile_btn {
+.header .user-menu.nav li a #mobile_btn {
   border: 0;
   position: relative;
   cursor: pointer;
@@ -18236,6 +18234,10 @@ input.form-control.rounded-pill:focus {
   float: right;
   font-size: 15px;
   margin-top: 2px;
+}
+
+.login-header .login-header-text {
+  text-align: end;
 }
 
 @media (max-width: 479.98px) {

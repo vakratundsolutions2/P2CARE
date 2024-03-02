@@ -47,12 +47,12 @@ import { useEffect } from "react";
 import { baseUrl } from "../utils/baseUrl";
 import { useState } from "react";
 import { useRef } from "react";
-import { REACT_APP_GOOGLE_MAPS_KEY } from "./constants/Constants";
 
 import { FilterDoctor2, getAllDoctors } from "../features/doctor/doctorSlice";
 import { Modal } from "antd";
 import { allDoctorCategory } from "../features/dCategory/dCategorySlice";
 import Seo from "../components/seo/Seo";
+const GOOGLE_MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS;
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -76,7 +76,6 @@ const Home = () => {
 
   const { home } = useSelector((state) => state.content);
   const { dCategories } = useSelector((state) => state.dCategory);
-  console.log(dCategories);
 
   const d1 = [];
   dCategories?.forEach((element) => {
@@ -88,7 +87,6 @@ const Home = () => {
   };
   const onSearch = (e) => {
     setSearch(e);
-    console.log(e);
   };
 
   // ======================google Map =============================
@@ -136,7 +134,6 @@ const Home = () => {
 
     const query = addressObject.formatted_address;
     updateQuery(query);
-    console.log({ query });
 
     const latLng = {
       lat: addressObject?.geometry?.location?.lat(),
@@ -158,17 +155,13 @@ const Home = () => {
         latLng.pincode = component.long_name;
       }
     } //check
-    console.log(
-      "addressObject.address_components",
-      addressObject.address_components
-    );
-    console.log("latln", latLng);
+    
     setSelectedLocation(latLng);
   };
 
   useEffect(() => {
     loadScript(
-      `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GOOGLE_MAPS_KEY}&libraries=places`,
+      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places`,
       () => handleScriptLoad(setQuery, autoCompleteRef)
     );
   }, []);

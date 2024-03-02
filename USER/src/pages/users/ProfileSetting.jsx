@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { baseUrl } from "../../utils/baseUrl";
 import { GetAUser, UpdateUser } from "../../features/auth/authSlice";
 import Seo from "../../components/seo/Seo";
+import { FaUser } from "react-icons/fa";
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();
@@ -75,12 +76,12 @@ const ProfileSetting = () => {
                                     />
                                   </>
                                 ) : (
-                                  ""
+                                  <>
+                                    {" "}
+                                    <FaUser className="fs-4 rounded-circle" />
+                                  </>
                                 )}
-                                <img
-                                  src={`${baseUrl}user/${user?.Profile}`}
-                                  alt={formik.values.Name}
-                                />
+                                
                               </div>
                               <div className="upload-img">
                                 <div className="change-photo-btn">
