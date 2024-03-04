@@ -2,6 +2,7 @@ const TIME = require("../model/time");
 const DOCTOR = require("../model/doctor");
 const DOCTORAVAILABILITY = require("../model/doctoravailability");
 const BOOKAPPOINTMENT = require("../model/bookappointment");
+const dayjs = require("dayjs");
 //====================doctorAvailable================
 exports.availability = async function (req, res, next) {
   try {
@@ -158,9 +159,9 @@ exports.DOCTORIDSEARCH = async function (req, res, next) {
   try {
     var data = await DOCTORAVAILABILITY.findOne({
       doctorid: req.params.id,
-    })
-    let doctor = await DOCTOR.findById(req.params.id)
-    
+    });
+    let doctor = await DOCTOR.findById(req.params.id);
+
     res.status(200).json({
       status: "successfull",
       message: "data get successfull",
@@ -192,6 +193,7 @@ exports.searchAvailableDrID = async function (req, res, next) {
     });
 
     var day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    // targetDay = day[date.getDay()];
     targetDay = day[date.getDay()];
 
     responseData = await DOCTORAVAILABILITY.findOne({

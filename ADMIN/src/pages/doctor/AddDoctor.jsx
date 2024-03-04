@@ -1078,7 +1078,8 @@ const AddDoctor = () => {
                     <MyEditor ImgName={"image"} Title={"doctor image"} />
                     <div className="p-3 w-full ">
                       <button type="submit" className="btn btn-primary ">
-                        {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor
+                        {/* {doctorId !== undefined || "" ? "Edit" : "Add"} Doctor */}
+                        Submit
                       </button>
                     </div>
                   </div>

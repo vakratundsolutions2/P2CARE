@@ -332,7 +332,8 @@ useEffect(() => {
                 </div>
 
                 <button className="btn btn-primary m-4" type="submit">
-                  {hospitalId !== undefined || "" ? "Edit" : "Add"} Hospital
+                  {/* {hospitalId !== undefined || "" ? "Edit" : "Add"} Hospital */}
+                  Submit
                 </button>
               </form>
             </div>

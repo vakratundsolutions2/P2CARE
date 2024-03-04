@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import availableService from "./availablityService";
 const initialState = {
   availablities: [],
+  AvailableByID: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -60,7 +61,8 @@ export const availablitySlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.AvailableByID = action.payload?.data;
+        state.AvailableByID =
+          action.payload?.responseData.bookingavailabilityInformation[0]?.bookingtime;
 
       }),
       builder.addCase(GetAavailablity.rejected, (state) => {

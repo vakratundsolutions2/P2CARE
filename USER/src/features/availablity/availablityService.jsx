@@ -9,9 +9,9 @@ const allavailablity = async () => {
   return res.data;
 };
 const getavailablity = async (DATA) => {
-  console.log('GetAavailablity',DATA);
   const res = await axios.get(
-    `${baseUrl}available/searchdoctortime/${DATA.id} ` ,DATA.date,
+    `${baseUrl}available/searchdoctortime/${DATA.id}?date=${DATA.date} `,
+
     config
   );
 

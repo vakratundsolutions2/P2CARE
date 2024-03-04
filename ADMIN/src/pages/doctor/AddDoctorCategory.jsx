@@ -135,7 +135,7 @@ const AddDoctorCategory = () => {
                   </div>
                 </Modal>
               </div> */}
-              {/* <CustomInput
+              <CustomInput
                 type="file"
                 label="Category Name "
                 accept="image/*"
@@ -145,7 +145,7 @@ const AddDoctorCategory = () => {
               />{" "}
               <div className="error">
                 {formik.touched.image && formik.errors.image}
-              </div> */}
+              </div>
               <select
                 name="status"
                 onChange={formik.handleChange("status")}

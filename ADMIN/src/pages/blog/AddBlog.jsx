@@ -375,7 +375,8 @@ const AddBlog = () => {
               </div>
               <div className="p-3 w-full ">
                 <button type="submit" className="btn btn-primary ">
-                  {blogId !== undefined || "" ? "Edit" : "Add New"} Post
+                  {/* {blogId !== undefined || "" ? "Edit" : "Add New"} Post */}
+                  Submit
                 </button>
               </div>
             </div>

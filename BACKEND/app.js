@@ -34,24 +34,13 @@ mongoose
     console.log(error.message);
   });
 
-// const generateSecretKey = () => {
-//   return crypto.randomBytes(32).toString("hex");
-// };
 
-// const secretKey = generateSecretKey();
-
-// console.log("JWT Secret Key:", secretKey);
-
-// export const instance = new Razorpay({
-//   key_id: process.env.testID,
-//   key_secret: process.env.testSECRET,
-// });
 var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

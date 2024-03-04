@@ -219,7 +219,7 @@ const Home = () => {
                     className="header-icon"
                     alt="header-icon"
                   />
-                  <p>{home?.bennerdescription},</p>
+                  <p>{home?.bennerdescription}</p>
                   <Link to="/doctor-list" className="btn">
                     Start a Consult
                   </Link>
