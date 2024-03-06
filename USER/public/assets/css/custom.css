@@ -4966,9 +4966,9 @@ th.table-head-days {
   -ms-transform: translateX(0) !important;
 }
 
-html.menu-opened body {
+/* html.menu-opened body {
   overflow: hidden;
-}
+} */
 
 #mobile_btn {
   display: none;
@@ -29184,9 +29184,9 @@ ul.benifits-col li i {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.left-panel::-webkit-scrollbar {
+/* .left-panel::-webkit-scrollbar {
   display: none;
-}
+} */
 @media (max-width: 991.98px) {
   .left-panel {
     display: none;

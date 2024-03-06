@@ -1,11 +1,8 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LIGO from "../assets/images/P2CARE.png";
-import LIGO2 from "../assets/images/p2c_logo.jpg";
-import patient2 from "../assets/img/patients/patient2.jpg";
 import { FaUser } from "react-icons/fa";
 import "./Header.css";
-import WP from "../assets/images/WP.svg";
 
 import { useState } from "react";
 import { baseUrl } from "../utils/baseUrl";
@@ -16,7 +13,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const { user } = useSelector((state) => state?.auth);
-  const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,15 +21,13 @@ const Header = () => {
     window.location.reload();
   };
 
-  const handleToggle = () => {
+  const handleUsertoggle = () => {
     setIsMobile(!isMobile);
   };
 
   useEffect(() => {
     dispatch(GetContact());
   }, []);
-
-  const { contact } = useSelector((state) => state.content);
 
   return (
     <>
@@ -109,20 +103,21 @@ const Header = () => {
                       className="login-link position-relative"
                       id="mobile_btn"
                     >
-                      {" "}
                       <NavLink to="/appointments">Appointment</NavLink>
                     </li>
                     <li className="login-link position-relative menu-btn">
-                      {" "}
                       <Link onClick={handleLogout}>Logout</Link>
                     </li>
                     <ul className="  nav header-navbar-rht">
                       {/* <!-- User Menu --> */}
+
                       <li className="nav-item dropdown has-arrow logged-item">
                         <Link
                           to="#"
                           className="dropdown-toggle nav-link"
                           data-bs-toggle="dropdown"
+                          id="dropdownMenuButton15"
+                          onClick={handleUsertoggle}
                         >
                           <span className="user-img">
                             {user?.Profile ? (
@@ -131,7 +126,7 @@ const Header = () => {
                                   className="rounded-circle"
                                   src={`${baseUrl}user/${user?.Profile}`}
                                   width="31"
-                                  alt={user.Name}
+                                  alt={user?.Name}
                                 />
                               </>
                             ) : (
@@ -142,7 +137,10 @@ const Header = () => {
                             )}
                           </span>
                         </Link>
-                        <div className="dropdown-menu dropdown-menu-end">
+                        <div
+                          className={`dropdown-menu dropdown-menu-end `}
+                          aria-labelledby="dropdownMenuButton15"
+                        >
                           <div className="user-header">
                             <div className="avatar avatar-sm pt-2">
                               {user?.Profile ? (
@@ -170,14 +168,15 @@ const Header = () => {
                           <Link className="dropdown-item" to="/appointments">
                             Appointment
                           </Link>
-                          <Link className="dropdown-item" to="/login">
-                            <div
+                          <li className="dropdown-item">
+                            <Link
+                              to="/login"
                               onClick={handleLogout}
                               className="btn btn-primary log-btn"
                             >
                               <i className="fa fa-lock"></i>Logout
-                            </div>
-                          </Link>
+                            </Link>
+                          </li>
                         </div>
                       </li>
                       {/* <!-- /User Menu --> */}

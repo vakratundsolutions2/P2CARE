@@ -172,6 +172,9 @@ export const doctorSlice = createSlice({
         state.isSuccess = false;
         if (state.isError === true) {
           toast.error(action.payload.response.data.message);
+          setTimeout(() => {
+            window.location.reload();
+          }, 600);
         }
       });
     builder.addCase(getADoctor.pending, (state) => {
