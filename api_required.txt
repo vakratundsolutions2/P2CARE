@@ -1,0 +1,24 @@
+Required api keys
+
+For Backend ::
+	
+	1 MongoDB Url named "mongoUrl" -- MongoDB Atlas 
+	2 Razorpay TestId named "testID" -- Razorpay
+	3 Razorpay TestSecret named "testSECRET" -- Razorpay
+	4 Twilio Account Sid named "twilioAccountSid" -- twilio -- for otp verify 
+	5 Twilio Account Auth Token named "twilioAuthToken" -- twilio -- for otp verify 
+	6 Twilio Verify Sid named "twilioVerifySid" -- twilio -- for otp verify
+	7 Sendgrid Api key named "SENDGRID_API_KEY" -- Sendgrid -- for sending mail
+	8 Google cloud platform Username named "MAIL_USERNAME" -- GCP 
+	9 Google cloud platform Password named "MAIL_PASSWORD" -- GCP
+	10 Google cloud platform OAuth Client ID named "OAUTH_CLIENTID" -- GCP
+	10 Google cloud platform OAuth Client SECRET named "OAUTH_CLIENT_SECRET" -- GCP
+	11 Google cloud platform OAuth REFRESH TOKEN named "OAUTH_REFRESH_TOKEN" -- GCP
+
+For Frontend ::
+	
+	1 Razorpay Test Id named "VITE_TEST_ID" -- Razorpay
+ 	2 Razorpay Test Secret named "VITE_TEST_SECRET" -- Razorpay
+	3 Google maps search api named "VITE_GOOGLE_MAPS" -- maps.google
+
+	
